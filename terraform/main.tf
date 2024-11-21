@@ -1,97 +1,42 @@
-data "harvester_image" "img" {
-  display_name = var.img_display_name
-  namespace    = "harvester-public"
-}
+/* Core modules of the data analysis cluster. */
 
-data "harvester_ssh_key" "mysshkey" {
-  name      = var.keyname
-  namespace = var.namespace
+# Reusable names
+locals {
+  host_vm_name    = "${var.vm_name_prefix}-mgmt-${random_id.secret.hex}"
+  worker_vm_name  = "${var.vm_name_prefix}-worker-${random_id.secret.hex}"
+  storage_vm_name = "${var.vm_name_prefix}-storage-${random_id.secret.hex}"
 }
 
 resource "random_id" "secret" {
   byte_length = 5
 }
 
-resource "harvester_cloudinit_secret" "cloud-config" {
+# Cloud config with secret
+resource "harvester_cloudinit_secret" "cloud_config" {
   name      = "cloud-config-${random_id.secret.hex}"
   namespace = var.namespace
 
   user_data = templatefile("cloud-init.tmpl.yml", {
-      public_key_openssh = data.harvester_ssh_key.mysshkey.public_key
-    })
-}
-resource "harvester_virtualmachine" "loginvm" {
-  
-  count = 1
-
-  name                 = "${var.username}-login-${format("%02d", count.index + 1)}-${random_id.secret.hex}"
-  namespace            = var.namespace
-  restart_after_update = true
-
-  description = "Cluster Login Node"
-
-  cpu    = 2 
-  memory = "8Gi"
-
-  efi         = true
-  secure_boot = false
-
-  run_strategy    = "RerunOnFailure"
-  hostname        = "${var.username}-login-${format("%02d", count.index + 1)}-${random_id.secret.hex}"
-  reserved_memory = "100Mi"
-  machine_type    = "q35"
-
-  network_interface {
-    name           = "nic-1"
-    wait_for_lease = true
-    type           = "bridge"
-    network_name   = var.network_name
-  }
-
-  disk {
-    name       = "rootdisk"
-    type       = "disk"
-    size       = "50Gi"
-    bus        = "virtio"
-    boot_order = 1
-
-    image       = data.harvester_image.img.id
-    auto_delete = true
-  }
-
-  disk {
-    name       = "datadisk"
-    type       = "disk"
-    size       = "80Gi"
-    bus        = "virtio"
-    boot_order = 2
-
-    auto_delete = true
-  }
-
-  cloudinit {
-    user_data_secret_name = harvester_cloudinit_secret.cloud-config.name
-  }
+    public_key_openssh = data.harvester_ssh_key.mysshkey.public_key
+  })
 }
 
-resource "harvester_virtualmachine" "mgmtvm" {
-  
-  count = 1
-
-  name                 = "${var.username}-mgmt-${format("%02d", count.index + 1)}-${random_id.secret.hex}"
+# Host VM
+resource "harvester_virtualmachine" "host_vm" {
+  name                 = local.host_vm_name
   namespace            = var.namespace
   restart_after_update = true
 
   description = "Cluster Head Node"
 
-  cpu    = 1 
-  memory = "8Gi"
+  cpu    = var.host_vm_cores
+  memory = var.host_vm_ram
 
   efi         = true
   secure_boot = false
 
   run_strategy    = "RerunOnFailure"
-  hostname        = "${var.username}-mgmt-${format("%02d", count.index + 1)}-${random_id.secret.hex}"
+  hostname        = local.host_vm_name
   reserved_memory = "100Mi"
   machine_type    = "q35"
 
@@ -103,9 +48,9 @@ resource "harvester_virtualmachine" "mgmtvm" {
   }
 
   disk {
-    name       = "rootdisk"
+    name       = "root-disk"
     type       = "disk"
-    size       = "50Gi"
+    size       = var.host_vm_hdd
     bus        = "virtio"
     boot_order = 1
 
@@ -114,28 +59,28 @@ resource "harvester_virtualmachine" "mgmtvm" {
   }
 
   cloudinit {
-    user_data_secret_name = harvester_cloudinit_secret.cloud-config.name
+    user_data_secret_name = harvester_cloudinit_secret.cloud_config.name
   }
 }
 
-resource "harvester_virtualmachine" "workervm" {
-  
-  count = var.vm_count
+# Worker VMs
+resource "harvester_virtualmachine" "worker_vm" {
+  count = var.worker_vm_count
 
-  name                 = "${var.username}-worker-${format("%02d", count.index + 1)}-${random_id.secret.hex}"
+  name                 = "${local.worker_vm_name}-${format("%02d", count.index + 1)}"
   namespace            = var.namespace
   restart_after_update = true
 
   description = "Cluster Compute Node"
 
-  cpu    = 2
-  memory = "8Gi"
+  cpu    = var.worker_vm_cores
+  memory = var.worker_vm_ram
 
   efi         = true
   secure_boot = false
 
   run_strategy    = "RerunOnFailure"
-  hostname        = "${var.username}-worker-${format("%02d", count.index + 1)}-${random_id.secret.hex}"
+  hostname        = "${local.worker_vm_name}-${format("%02d", count.index + 1)}"
   reserved_memory = "100Mi"
   machine_type    = "q35"
 
@@ -147,9 +92,9 @@ resource "harvester_virtualmachine" "workervm" {
   }
 
   disk {
-    name       = "rootdisk"
+    name       = "root-disk"
     type       = "disk"
-    size       = "50Gi"
+    size       = var.worker_vm_hdd
     bus        = "virtio"
     boot_order = 1
 
@@ -158,6 +103,59 @@ resource "harvester_virtualmachine" "workervm" {
   }
 
   cloudinit {
-    user_data_secret_name = harvester_cloudinit_secret.cloud-config.name
+    user_data_secret_name = harvester_cloudinit_secret.cloud_config.name
+  }
+}
+
+# Storage VM
+resource "harvester_virtualmachine" "storage_vm" {
+  name                 = local.storage_vm_name
+  namespace            = var.namespace
+  restart_after_update = true
+
+  description = "Cluster Storage Node"
+
+  cpu    = var.storage_vm_cores
+  memory = var.storage_vm_ram
+
+  efi         = true
+  secure_boot = false
+
+  run_strategy    = "RerunOnFailure"
+  hostname        = local.storage_vm_name
+  reserved_memory = "100Mi"
+  machine_type    = "q35"
+
+  network_interface {
+    name           = "nic-1"
+    wait_for_lease = true
+    type           = "bridge"
+    network_name   = var.network_name
+  }
+
+  disk {
+    name       = "root-disk"
+    type       = "disk"
+    size       = var.storage_vm_hdd
+    bus        = "virtio"
+    boot_order = 1
+
+    image       = data.harvester_image.img.id
+    auto_delete = true
+  }
+
+  disk {
+    name       = "data-disk"
+    type       = "disk"
+    size       = var.storage_vm_hdd2
+    bus        = "virtio"
+    boot_order = 2
+
+    image       = data.harvester_image.img.id
+    auto_delete = true
+  }
+
+  cloudinit {
+    user_data_secret_name = harvester_cloudinit_secret.cloud_config.name
   }
 }
