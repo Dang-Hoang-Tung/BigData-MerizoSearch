@@ -1,8 +1,8 @@
 /* Default config file for data analysis cluster. */
 
-host_vm_cores = 2
-host_vm_ram   = "4Gi"
-host_vm_hdd   = "10Gi"
+mgmt_vm_cores = 2
+mgmt_vm_ram   = "4Gi"
+mgmt_vm_hdd   = "10Gi"
 
 worker_vm_count = 3
 worker_vm_cores = 4

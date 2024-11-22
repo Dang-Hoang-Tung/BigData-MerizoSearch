@@ -2,7 +2,7 @@
 
 # Reusable names
 locals {
-  host_vm_name    = "${var.vm_name_prefix}-host-${random_id.secret.hex}"
+  mgmt_vm_name    = "${var.vm_name_prefix}-mgmt-${random_id.secret.hex}"
   worker_vm_name  = "${var.vm_name_prefix}-worker-${random_id.secret.hex}"
   storage_vm_name = "${var.vm_name_prefix}-storage-${random_id.secret.hex}"
 }
@@ -21,22 +21,22 @@ resource "harvester_cloudinit_secret" "cloud_config" {
   })
 }
 
-# Host VM
-resource "harvester_virtualmachine" "host_vm" {
-  name                 = local.host_vm_name
+# Management VM
+resource "harvester_virtualmachine" "mgmt_vm" {
+  name                 = local.mgmt_vm_name
   namespace            = var.namespace
   restart_after_update = true
 
   description = "Cluster Head Node"
 
-  cpu    = var.host_vm_cores
-  memory = var.host_vm_ram
+  cpu    = var.mgmt_vm_cores
+  memory = var.mgmt_vm_ram
 
   efi         = true
   secure_boot = false
 
   run_strategy    = "RerunOnFailure"
-  hostname        = local.host_vm_name
+  hostname        = local.mgmt_vm_name
   reserved_memory = "100Mi"
   machine_type    = "q35"
 
@@ -50,7 +50,7 @@ resource "harvester_virtualmachine" "host_vm" {
   disk {
     name       = "root-disk"
     type       = "disk"
-    size       = var.host_vm_hdd
+    size       = var.mgmt_vm_hdd
     bus        = "virtio"
     boot_order = 1
 
