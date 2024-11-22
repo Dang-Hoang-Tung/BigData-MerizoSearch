@@ -2,7 +2,7 @@
 
 # Reusable names
 locals {
-  host_vm_name    = "${var.vm_name_prefix}-mgmt-${random_id.secret.hex}"
+  host_vm_name    = "${var.vm_name_prefix}-host-${random_id.secret.hex}"
   worker_vm_name  = "${var.vm_name_prefix}-worker-${random_id.secret.hex}"
   storage_vm_name = "${var.vm_name_prefix}-storage-${random_id.secret.hex}"
 }
