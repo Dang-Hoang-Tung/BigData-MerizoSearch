@@ -1,2 +1,2 @@
 # Ignore terraform installation modules
-**/*.terraform
+**.terraform
