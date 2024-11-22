@@ -8,52 +8,35 @@ def run(command):
     return subprocess.run(command, capture_output=True, encoding='UTF-8')
 
 def generate_inventory():
-    command = "terraform output --json mgmt_vm_ips".split()
-    ip_data = json.loads(run(command).stdout)
-    mgmt_node = ip_data.pop()
+    # Variables to be retrieved from Terraform output - keep in sync!
+    MGMT_IPS_KEY = "mgmt_vm_ips"
+    STORAGE_IPS_KEY = "storage_vm_ips"
+    WORKER_IPS_KEY = "worker_vm_ips"
+
+    get_ips_command = lambda ips_key: f"terraform output --json {ips_key}".split()
+
+    mgmt_ips = json.loads(run(get_ips_command(MGMT_IPS_KEY)).stdout)
+    storage_ips = json.loads(run(get_ips_command(STORAGE_IPS_KEY)).stdout)
+    worker_ips = json.loads(run(get_ips_command(WORKER_IPS_KEY)).stdout)
 
     host_vars = {}
+    for host_ip in mgmt_ips + storage_ips + worker_ips:
+        host_vars[host_ip] = { "ip": [host_ip] }
 
-    host_vars[mgmt_node] = { "ip": [mgmt_node] }
-    
-    command = "terraform output --json login_vm_ips".split()
-    ip_data = json.loads(run(command).stdout)
-    login_node = ip_data.pop()
-    host_vars[login_node] = { "ip": [login_node] }
+    _jd = {
+        "_meta": { "hostvars": host_vars},
 
-    counter = 0
-    workers = []
+        "all": { "children": ["mgmt_vm", "storage_vm", "worker_vms"] },
 
-    command = "terraform output --json worker_vm_ips".split()
-    ip_data = json.loads(run(command).stdout)
-
-    for a in ip_data:
-        name = a
-        host_vars[name] = { "ip": [a] }
-        workers.append(name)
-        counter += 1
-
-    _meta = {}
-    _meta["hostvars"] = host_vars
-    _all = { "children": ["mgmtnode", "loginnode", "workers"] }
-
-    _workers = { "hosts": workers }
-    _loginnode = { "hosts": [login_node] }
-    _mgmtnode = { "hosts" : [mgmt_node] }
-
-    _jd = {}
-    _jd["_meta"] = _meta
-    _jd["all"] = _all
-    _jd["workers"] = _workers
-    _jd["mgmtnode"] = _mgmtnode
-    _jd["loginnode"] = _loginnode
+        "mgmt_vm": { "hosts" : mgmt_ips },
+        "storage_vm": { "hosts": storage_ips },
+        "worker_vms": { "hosts": worker_ips }
+    }
 
     jd = json.dumps(_jd, indent=4)
     return jd
 
-
 if __name__ == "__main__":
-
     ap = argparse.ArgumentParser(
         description = "Generate a cluster inventory from Terraform.",
         prog = __file__
