@@ -19,18 +19,25 @@ def generate_inventory():
     storage_ips = json.loads(run(get_ips_command(STORAGE_IPS_KEY)).stdout)
     worker_ips = json.loads(run(get_ips_command(WORKER_IPS_KEY)).stdout)
 
-    host_vars = {}
-    for host_ip in mgmt_ips + storage_ips + worker_ips:
-        host_vars[host_ip] = { "ip": [host_ip] }
+    host_vars = {
+        "mgmt_vm": { "ansible_host": mgmt_ips[0] },
+        "storage_vm": { "ansible_host": storage_ips[0] },
+    }
+    
+    worker_vm_names = []
+    for i, worker_ip in enumerate(worker_ips):
+        name = f"worker_vm_{i}"
+        host_vars[name] = { "ansible_host": [worker_ip] }
+        worker_vm_names.append(name)
 
     _jd = {
         "_meta": { "hostvars": host_vars},
 
-        "all": { "children": ["mgmt_vm", "storage_vm", "worker_vms"] },
+        "all": { "children": ["ungrouped", "worker_vms"] },
+        
+        "ungrouped": {"children": ["mgmt_vm", "storage_vm"]},
 
-        "mgmt_vm": { "hosts" : mgmt_ips },
-        "storage_vm": { "hosts": storage_ips },
-        "worker_vms": { "hosts": worker_ips }
+        "worker_vms": { "hosts": worker_vm_names }
     }
 
     jd = json.dumps(_jd, indent=4)
@@ -55,5 +62,3 @@ if __name__ == "__main__":
         print(jd)
     else:
         raise ValueError("Expecting either --host $HOSTNAME or --list")
-
-    
