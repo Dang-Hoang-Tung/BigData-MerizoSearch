@@ -34,8 +34,6 @@ def generate_inventory():
         "_meta": { "hostvars": host_vars},
 
         "all": { "children": ["mgmt_vm", "storage_vm", "worker_vms"] },
-        
-        "ungrouped": {"children": ["mgmt_vm", "storage_vm"]},
 
         "worker_vms": { "hosts": worker_vm_names }
     }
