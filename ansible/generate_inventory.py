@@ -33,7 +33,7 @@ def generate_inventory():
     _jd = {
         "_meta": { "hostvars": host_vars},
 
-        "all": { "children": ["ungrouped", "worker_vms"] },
+        "all": { "children": ["mgmt_vm", "storage_vm", "worker_vms"] },
         
         "ungrouped": {"children": ["mgmt_vm", "storage_vm"]},
 
