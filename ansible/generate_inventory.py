@@ -33,9 +33,11 @@ def generate_inventory():
     _jd = {
         "_meta": { "hostvars": host_vars},
 
-        "all": { "children": ["mgmt_vm", "storage_vm", "worker_vms"] },
+        "all": { "children": ["cluster_vms"] },
 
-        "worker_vms": { "hosts": worker_vm_names }
+        "cluster_vms": { "children": ["mgmt_vm", "storage_vm", "worker_vms"] },
+
+        "worker_vms": { "hosts": worker_vm_names },
     }
 
     jd = json.dumps(_jd, indent=4)
