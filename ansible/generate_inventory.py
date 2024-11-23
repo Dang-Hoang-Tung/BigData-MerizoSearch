@@ -20,23 +20,22 @@ def generate_inventory():
     worker_ips = json.loads(run(get_ips_command(WORKER_IPS_KEY)).stdout)
 
     host_vars = {
-        "mgmt_vm": { "ansible_host": mgmt_ips[0] },
-        "storage_vm": { "ansible_host": storage_ips[0] },
+        "mgmt": { "ansible_host": mgmt_ips[0] },
+        "storage": { "ansible_host": storage_ips[0] },
     }
     
     worker_vm_names = []
     for i, worker_ip in enumerate(worker_ips):
-        name = f"worker_vm_{i}"
+        name = f"worker_{i}"
         host_vars[name] = { "ansible_host": worker_ip }
         worker_vm_names.append(name)
 
     _jd = {
         "_meta": { "hostvars": host_vars},
+        "all": { "children": ["mgmt_vms", "storage_vms", "worker_vms"] },
 
-        "all": { "children": ["cluster_vms"] },
-
-        "cluster_vms": { "children": ["mgmt_vm", "storage_vm", "worker_vms"] },
-
+        "mgmt_vms": { "hosts": ["mgmt"] },
+        "storage_vms": { "hosts": ["storage"] },
         "worker_vms": { "hosts": worker_vm_names },
     }
 
