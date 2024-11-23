@@ -27,7 +27,7 @@ def generate_inventory():
     worker_vm_names = []
     for i, worker_ip in enumerate(worker_ips):
         name = f"worker_vm_{i}"
-        host_vars[name] = { "ansible_host": [worker_ip] }
+        host_vars[name] = { "ansible_host": worker_ip }
         worker_vm_names.append(name)
 
     _jd = {
