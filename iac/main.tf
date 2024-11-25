@@ -2,18 +2,16 @@
 
 # Reusable names
 locals {
-  mgmt_vm_name    = "${var.vm_name_prefix}-mgmt-${random_id.secret.hex}"
-  worker_vm_name  = "${var.vm_name_prefix}-worker-${random_id.secret.hex}"
-  storage_vm_name = "${var.vm_name_prefix}-storage-${random_id.secret.hex}"
-}
+  cloud_config_name = "${var.cluster_name}-cloud-config"
 
-resource "random_id" "secret" {
-  byte_length = 5
+  mgmt_vm_name    = "${var.cluster_name}-mgmt"
+  worker_vm_name  = "${var.cluster_name}-worker"
+  storage_vm_name = "${var.cluster_name}-storage"
 }
 
 # Cloud config with secret
 resource "harvester_cloudinit_secret" "cloud_config" {
-  name      = "cloud-config-${random_id.secret.hex}"
+  name      = local.cloud_config_name
   namespace = var.namespace
 
   user_data = templatefile("cloud-init.tmpl.yml", {
@@ -23,22 +21,20 @@ resource "harvester_cloudinit_secret" "cloud_config" {
 
 # Management VM
 resource "harvester_virtualmachine" "mgmt_vm" {
-  name                 = local.mgmt_vm_name
-  namespace            = var.namespace
-  restart_after_update = true
-
-  description = "Cluster Head Node"
+  name        = local.mgmt_vm_name
+  hostname    = local.mgmt_vm_name
+  description = "Cluster head node"
+  namespace   = var.namespace
 
   cpu    = var.mgmt_vm_cores
   memory = var.mgmt_vm_ram
 
-  efi         = true
-  secure_boot = false
-
-  run_strategy    = "RerunOnFailure"
-  hostname        = local.mgmt_vm_name
-  reserved_memory = "100Mi"
-  machine_type    = "q35"
+  restart_after_update = true
+  efi                  = true
+  secure_boot          = false
+  run_strategy         = "RerunOnFailure"
+  reserved_memory      = "100Mi"
+  machine_type         = "q35"
 
   network_interface {
     name           = "nic-1"
@@ -63,68 +59,22 @@ resource "harvester_virtualmachine" "mgmt_vm" {
   }
 }
 
-# Worker VMs
-resource "harvester_virtualmachine" "worker_vm" {
-  count = var.worker_vm_count
-
-  name                 = "${local.worker_vm_name}-${format("%02d", count.index + 1)}"
-  namespace            = var.namespace
-  restart_after_update = true
-
-  description = "Cluster Compute Node"
-
-  cpu    = var.worker_vm_cores
-  memory = var.worker_vm_ram
-
-  efi         = true
-  secure_boot = false
-
-  run_strategy    = "RerunOnFailure"
-  hostname        = "${local.worker_vm_name}-${format("%02d", count.index + 1)}"
-  reserved_memory = "100Mi"
-  machine_type    = "q35"
-
-  network_interface {
-    name           = "nic-1"
-    wait_for_lease = true
-    type           = "bridge"
-    network_name   = var.network_name
-  }
-
-  disk {
-    name       = "root-disk"
-    type       = "disk"
-    size       = var.worker_vm_hdd
-    bus        = "virtio"
-    boot_order = 1
-
-    image       = data.harvester_image.img.id
-    auto_delete = true
-  }
-
-  cloudinit {
-    user_data_secret_name = harvester_cloudinit_secret.cloud_config.name
-  }
-}
-
 # Storage VM
 resource "harvester_virtualmachine" "storage_vm" {
-  name                 = local.storage_vm_name
-  namespace            = var.namespace
-  restart_after_update = true
-
-  description = "Cluster Storage Node"
+  name        = local.storage_vm_name
+  hostname    = local.storage_vm_name
+  description = "Cluster storage node"
+  namespace   = var.namespace
 
   cpu    = var.storage_vm_cores
   memory = var.storage_vm_ram
 
-  efi         = true
-  secure_boot = false
-
-  run_strategy    = "RerunOnFailure"
-  hostname        = local.storage_vm_name
-  reserved_memory = "100Mi"
-  machine_type    = "q35"
+  restart_after_update = true
+  efi                  = true
+  secure_boot          = false
+  run_strategy         = "RerunOnFailure"
+  reserved_memory      = "100Mi"
+  machine_type         = "q35"
 
   network_interface {
     name           = "nic-1"
@@ -150,6 +100,48 @@ resource "harvester_virtualmachine" "storage_vm" {
     size       = var.storage_vm_hdd2
     bus        = "virtio"
     boot_order = 2
+
+    image       = data.harvester_image.img.id
+    auto_delete = true
+  }
+
+  cloudinit {
+    user_data_secret_name = harvester_cloudinit_secret.cloud_config.name
+  }
+}
+
+# Worker VMs
+resource "harvester_virtualmachine" "worker_vm" {
+  count = var.worker_vm_count
+
+  name        = "${local.worker_vm_name}-${count.index + 1}"
+  hostname    = "${local.worker_vm_name}-${count.index + 1}"
+  description = "Cluster compute node"
+  namespace   = var.namespace
+
+  cpu    = var.worker_vm_cores
+  memory = var.worker_vm_ram
+
+  restart_after_update = true
+  efi                  = true
+  secure_boot          = false
+  run_strategy         = "RerunOnFailure"
+  reserved_memory      = "100Mi"
+  machine_type         = "q35"
+
+  network_interface {
+    name           = "nic-1"
+    wait_for_lease = true
+    type           = "bridge"
+    network_name   = var.network_name
+  }
+
+  disk {
+    name       = "root-disk"
+    type       = "disk"
+    size       = var.worker_vm_hdd
+    bus        = "virtio"
+    boot_order = 1
 
     image       = data.harvester_image.img.id
     auto_delete = true

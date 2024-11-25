@@ -18,7 +18,7 @@ variable "keyname" {
   default = "ucabhtd-cnc"
 }
 
-variable "vm_name_prefix" {
+variable "cluster_name" {
   type    = string
   default = "data-analysis"
 }
@@ -26,56 +26,56 @@ variable "vm_name_prefix" {
 # Machine specs
 
 variable "mgmt_vm_cores" {
-  type = number
+  type    = number
   default = 2
 }
 
 variable "mgmt_vm_ram" {
-  type = string
+  type    = string
   default = "4Gi"
 }
 
 variable "mgmt_vm_hdd" {
-  type = string
+  type    = string
   default = "10Gi"
 }
 
 variable "worker_vm_count" {
-  type = number
+  type    = number
   default = 3
 }
 
 variable "worker_vm_cores" {
-  type = number
+  type    = number
   default = 4
 }
 
 variable "worker_vm_ram" {
-  type = string
+  type    = string
   default = "32Gi"
 }
 
 variable "worker_vm_hdd" {
-  type = string
+  type    = string
   default = "25Gi"
 }
 
 variable "storage_vm_cores" {
-  type = number
+  type    = number
   default = 4
 }
 
 variable "storage_vm_ram" {
-  type = string
+  type    = string
   default = "8Gi"
 }
 
 variable "storage_vm_hdd" {
-  type = string
+  type    = string
   default = "10Gi"
 }
 
 variable "storage_vm_hdd2" {
-  type = string
+  type    = string
   default = "200Gi"
 }
