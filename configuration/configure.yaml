@@ -1,0 +1,8 @@
+---
+- import_playbook: c1-set-up.yaml
+- import_playbook: c2-dev-tools.yaml
+- import_playbook: c3-hostname.yaml
+- import_playbook: c4-configure-ssh.yaml
+- import_playbook: c5-install-hadoop.yaml
+- import_playbook: c6-spark-install.yaml
+- import_playbook: c7-second-disk.yaml

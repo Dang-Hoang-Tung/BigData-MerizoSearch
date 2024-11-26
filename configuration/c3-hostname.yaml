@@ -1,0 +1,29 @@
+- name: Set hostname for management node
+  hosts: mgmt_group
+  become: true
+  become_user: root
+  tasks:
+    - name: Set hostname
+      ansible.builtin.hostname:
+        name: mgmt_node
+        use: systemd
+
+- name: Set hostname for storage node
+  hosts: storage_group
+  become: true
+  become_user: root
+  tasks:
+    - name: Set hostname
+      ansible.builtin.hostname:
+        name: storage_node
+        use: systemd
+
+- name: Set hostname for worker nodes
+  hosts: worker_group
+  become: true
+  become_user: root
+  tasks:
+    - name: Set hostname
+      ansible.builtin.hostname:
+        name: worker_node_{{lookup('ansible.utils.index_of', groups["worker_group"], 'eq', inventory_hostname) + 1 }}
+        use: systemd
