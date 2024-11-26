@@ -5,7 +5,7 @@
   tasks:
     - name: Set hostname
       ansible.builtin.hostname:
-        name: mgmt_node
+        name: mgmt-node
         use: systemd
 
 - name: Set hostname for storage node
@@ -15,7 +15,7 @@
   tasks:
     - name: Set hostname
       ansible.builtin.hostname:
-        name: storage_node
+        name: storage-node
         use: systemd
 
 - name: Set hostname for worker nodes
@@ -25,5 +25,5 @@
   tasks:
     - name: Set hostname
       ansible.builtin.hostname:
-        name: worker_node_{{lookup('ansible.utils.index_of', groups["worker_group"], 'eq', inventory_hostname) + 1 }}
+        name: worker-node-{{lookup('ansible.utils.index_of', groups["worker_group"], 'eq', inventory_hostname) + 1 }}
         use: systemd
