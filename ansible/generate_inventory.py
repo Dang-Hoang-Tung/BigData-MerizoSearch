@@ -4,20 +4,22 @@ import json
 import subprocess
 import argparse
 
+# Variables to be retrieved from Terraform output - keep in sync!
+MGMT_IPS_KEY = "mgmt_vm_ips"
+STORAGE_IPS_KEY = "storage_vm_ips"
+WORKER_IPS_KEY = "worker_vm_ips"
+
 def run(command):
     return subprocess.run(command, capture_output=True, encoding='UTF-8')
 
-def generate_inventory():
-    # Variables to be retrieved from Terraform output - keep in sync!
-    MGMT_IPS_KEY = "mgmt_vm_ips"
-    STORAGE_IPS_KEY = "storage_vm_ips"
-    WORKER_IPS_KEY = "worker_vm_ips"
+def get_ips_from_terraform_output(ips_key):
+    get_ips_command = f"terraform output --json {ips_key}".split()
+    return json.loads(run(get_ips_command).stdout)
 
-    get_ips_command = lambda ips_key: f"terraform output --json {ips_key}".split()
-
-    mgmt_ips = json.loads(run(get_ips_command(MGMT_IPS_KEY)).stdout)
-    storage_ips = json.loads(run(get_ips_command(STORAGE_IPS_KEY)).stdout)
-    worker_ips = json.loads(run(get_ips_command(WORKER_IPS_KEY)).stdout)
+def generate_inventory(get_ips):
+    mgmt_ips = get_ips(MGMT_IPS_KEY)
+    storage_ips = get_ips(STORAGE_IPS_KEY)
+    worker_ips = get_ips(WORKER_IPS_KEY)
 
     host_vars = {
         "mgmt": { "ansible_host": mgmt_ips[0] },
@@ -31,12 +33,15 @@ def generate_inventory():
         worker_vm_names.append(name)
 
     _jd = {
+        # Metadata
         "_meta": { "hostvars": host_vars},
-        "all": { "children": ["mgmt_vms", "storage_vms", "worker_vms"] },
+        "all": { "children": ["mgmt_group", "storage_group", "worker_group"] },
+        "ungrouped": { "hosts": [] },
 
-        "mgmt_vms": { "hosts": ["mgmt"] },
-        "storage_vms": { "hosts": ["storage"] },
-        "worker_vms": { "hosts": worker_vm_names },
+        # Groups
+        "mgmt_group": { "hosts": ["mgmt"] },
+        "storage_group": { "hosts": ["storage"] },
+        "worker_group": { "hosts": worker_vm_names },
     }
 
     jd = json.dumps(_jd, indent=4)
@@ -51,13 +56,14 @@ if __name__ == "__main__":
     mo = ap.add_mutually_exclusive_group()
     mo.add_argument("--list",action="store", nargs="*", default="dummy", help="Show JSON of all managed hosts")
     mo.add_argument("--host",action="store", help="Display vars related to the host")
+    mo.add_argument("--test",action="store_true", help="Run test and print")
 
     args = ap.parse_args()
 
     if args.host:
         print(json.dumps({}))
     elif len(args.list) >= 0:
-        jd = generate_inventory()
+        jd = generate_inventory(get_ips_from_terraform_output)
         print(jd)
     else:
         raise ValueError("Expecting either --host $HOSTNAME or --list")
