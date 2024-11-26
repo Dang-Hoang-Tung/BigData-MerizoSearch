@@ -141,7 +141,7 @@
         dest: hadoop-3.4.0/etc/hadoop/workers
 
 - name: Configure Hadoop datanode on workers
-  hosts: workers
+  hosts: worker_group
   tasks:
     - name: Create datanode
       ansible.builtin.file:
