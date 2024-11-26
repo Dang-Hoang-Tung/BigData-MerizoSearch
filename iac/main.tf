@@ -9,9 +9,13 @@ locals {
   storage_vm_name = "${var.cluster_name}-storage"
 }
 
+resource "random_id" "secret" {
+  byte_length = 5
+}
+
 # Cloud config with secret
 resource "harvester_cloudinit_secret" "cloud_config" {
-  name      = local.cloud_config_name
+  name      = "${local.cloud_config_name}-${random_id.secret.hex}"
   namespace = var.namespace
 
   user_data = templatefile("cloud-init.tmpl.yml", {
