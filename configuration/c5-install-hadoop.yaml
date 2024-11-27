@@ -152,7 +152,10 @@
   hosts: mgmt_group
   tasks:
     - name: format cluster
-      ansible.builtin.shell: hdfs namenode -format
+      ansible.builtin.expect:
+        command: hdfs namenode -format
+        responses:
+          '.*': 'Y'
     - name: start dfs
       ansible.builtin.shell: nohup /home/almalinux/hadoop-3.4.0/sbin/start-dfs.sh
     - name: start yarn
