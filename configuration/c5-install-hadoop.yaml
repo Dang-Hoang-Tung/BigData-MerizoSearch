@@ -50,11 +50,11 @@
         block: |
           <property>
               <name>fs.default.name</name>
-              <value>hdfs://mgmt-node:9000/</value>
+              <value>hdfs://mgmtnode:9000/</value>
           </property>
           <property>
               <name>fs.default.FS</name>
-              <value>hdfs://mgmt-node:9000/</value>
+              <value>hdfs://mgmtnode:9000/</value>
           </property>
         state: present
     - name: config hdfs-site.xml
@@ -75,7 +75,7 @@
           </property>
           <property>
               <name>dfs.namenode.http-address</name>
-              <value>mgmt-node:50070</value>
+              <value>mgmtnode:50070</value>
           </property>
           <property>
               <name>dfs.replication</name>
@@ -90,15 +90,15 @@
         block: |
           <property>
               <name>yarn.resourcemanager.resource-tracker.address</name>
-              <value>mgmt-node:8025</value>
+              <value>mgmtnode:8025</value>
           </property>
           <property>
               <name>yarn.resourcemanager.scheduler.address</name>
-              <value>mgmt-node:8035</value>
+              <value>mgmtnode:8035</value>
           </property>
           <property>
               <name>yarn.resourcemanager.address</name>
-              <value>mgmt-node:8050</value>
+              <value>mgmtnode:8050</value>
           </property>
           <property>
               <name>yarn.log-aggregation-enable</name>
@@ -113,7 +113,7 @@
         block: |
           <property>
               <name>mapreduce.job.tracker</name>
-              <value>mgmt-node:5431</value>
+              <value>mgmtnode:5431</value>
           </property>
           <property>
               <name>mapred.framework.name</name>
@@ -129,7 +129,7 @@
         state: present
 
 - name: Configure Hadoop datanode on workers
-  hosts: worker_group
+  hosts: workergroup
   tasks:
     - name: Create datanode
       ansible.builtin.file:
@@ -137,7 +137,7 @@
         state: directory
 
 - name: Start Hadoop cluster
-  hosts: mgmt_group
+  hosts: mgmtgroup
   tasks:
     - name: Create namenode directory
       ansible.builtin.file:

@@ -1,5 +1,5 @@
 - name: Set up second disk
-  hosts: storage_group
+  hosts: storagegroup
   become: true
   become_user: root
   tasks:
