@@ -22,26 +22,26 @@ def generate_inventory(get_ips):
     worker_ips = get_ips(WORKER_IPS_KEY)
 
     host_vars = {
-        "mgmt_node": { "ansible_host": mgmt_ips[0] },
-        "storage_node": { "ansible_host": storage_ips[0] },
+        "mgmtnode": { "ansible_host": mgmt_ips[0] },
+        "storagenode": { "ansible_host": storage_ips[0] },
     }
     
     worker_nodes = []
     for i, worker_ip in enumerate(worker_ips):
-        name = f"worker_node_{i}"
+        name = f"workernode{i + 1}"
         host_vars[name] = { "ansible_host": worker_ip }
         worker_nodes.append(name)
 
     _jd = {
         # Metadata
         "_meta": { "hostvars": host_vars},
-        "all": { "children": ["mgmt_group", "storage_group", "worker_group"] },
+        "all": { "children": ["mgmtgroup", "storagegroup", "workergroup"] },
         "ungrouped": { "hosts": [] },
 
         # Groups
-        "mgmt_group": { "hosts": ["mgmt_node"] },
-        "storage_group": { "hosts": ["storage_node"] },
-        "worker_group": { "hosts": worker_nodes },
+        "mgmtgroup": { "hosts": ["mgmtnode"] },
+        "storagegroup": { "hosts": ["storagenode"] },
+        "workergroup": { "hosts": worker_nodes },
     }
 
     jd = json.dumps(_jd, indent=4)
