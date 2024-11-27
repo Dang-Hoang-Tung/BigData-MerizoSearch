@@ -1,3 +1,3 @@
-{% for node in groups["worker_group"] %}
-{{node}} worker-node-{{ lookup('ansible.utils.index_of', groups["worker_group"], 'eq', node) + 1 }}
+{% for hostname in groups["worker_group"] %}
+{{hostvars[hostname].ansible_host}} {{hostname}}
 {% endfor %}
