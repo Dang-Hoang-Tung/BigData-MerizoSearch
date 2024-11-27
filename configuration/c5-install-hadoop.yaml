@@ -128,18 +128,6 @@
           export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
         state: present
 
-- name: Configure Hadoop namenode and worker file on mgmt
-  hosts: mgmt_group
-  tasks:
-    - name: Create namenode
-      ansible.builtin.file:
-        path: /opt/hadoop_tmp/hdfs/namenode
-        state: directory
-    - name: Generate worker file
-      ansible.builtin.template:
-        src: files/workers.j2
-        dest: hadoop-3.4.0/etc/hadoop/workers
-
 - name: Configure Hadoop datanode on workers
   hosts: worker_group
   tasks:
@@ -151,12 +139,17 @@
 - name: Start Hadoop cluster
   hosts: mgmt_group
   tasks:
-    - name: format cluster
-      ansible.builtin.expect:
-        command: hdfs namenode -format
-        responses:
-          '.*': 'Y'
-    - name: start dfs
-      ansible.builtin.shell: nohup /home/almalinux/hadoop-3.4.0/sbin/start-dfs.sh
-    - name: start yarn
-      ansible.builtin.shell: nohup /home/almalinux/hadoop-3.4.0/sbin/start-yarn.sh
+    - name: Create namenode directory
+      ansible.builtin.file:
+        path: /opt/hadoop_tmp/hdfs/namenode
+        state: directory
+    - name: Generate workers file
+      ansible.builtin.template:
+        src: files/workers.j2
+        dest: hadoop-3.4.0/etc/hadoop/workers
+    - name: Format hdfs cluster
+      ansible.builtin.shell: hdfs namenode -format
+    - name: Start dfs
+      ansible.builtin.shell: /home/almalinux/hadoop-3.4.0/sbin/start-dfs.sh
+    - name: Start yarn
+      ansible.builtin.shell: /home/almalinux/hadoop-3.4.0/sbin/start-yarn.sh
