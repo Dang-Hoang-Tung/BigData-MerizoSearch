@@ -4,5 +4,5 @@
 - import_playbook: c3-customize-environment.yaml
 - import_playbook: c4-set-up-ssh.yaml
 - import_playbook: c5-install-hadoop.yaml
-- import_playbook: c6-install-spark.yaml
-- import_playbook: c7-start-cluster.yaml
+- import_playbook: c6-start-cluster.yaml
+- import_playbook: c7-install-spark.yaml

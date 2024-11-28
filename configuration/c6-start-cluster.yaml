@@ -1,0 +1,8 @@
+
+- name: Start Hadoop cluster
+  hosts: mgmtgroup
+  tasks:
+    - name: Start dfs
+      ansible.builtin.shell: nohup /home/almalinux/hadoop-3.4.0/sbin/start-dfs.sh
+    - name: Start yarn
+      ansible.builtin.shell: nohup /home/almalinux/hadoop-3.4.0/sbin/start-yarn.sh

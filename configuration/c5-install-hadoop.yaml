@@ -122,10 +122,24 @@
         src: files/workers.j2
         dest: hadoop-3.4.0/etc/hadoop/workers
 
-- name: Configure Hadoop datanode on workers
-  hosts: workergroup
+# - name: Configure Hadoop datanode on workers
+#   hosts: workergroup
+#   tasks:
+#     - name: Create datanode
+#       ansible.builtin.file:
+#         path: /opt/hadoop_tmp/hdfs/datanode
+#         state: directory
+
+- name: Configure Hadoop on mgmt
+  hosts: mgmtgroup
   tasks:
-    - name: Create datanode
-      ansible.builtin.file:
-        path: /opt/hadoop_tmp/hdfs/datanode
-        state: directory
+    # - name: Create namenode directory
+    #   ansible.builtin.file:
+    #     path: /opt/hadoop_tmp/hdfs/namenode
+    #     state: directory
+    - name: Generate workers file
+      ansible.builtin.template:
+        src: files/workers.j2
+        dest: hadoop-3.4.0/etc/hadoop/workers
+    - name: Format hdfs cluster
+      ansible.builtin.shell: hdfs namenode -format
