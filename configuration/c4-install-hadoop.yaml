@@ -1,21 +1,3 @@
-- name: Add Hadoop directories
-  hosts: all
-  become: true
-  become_user: root
-  tasks:
-    - name: Add hadoop_tmp directory
-      ansible.builtin.file:
-        path: /opt/hadoop_tmp
-        owner: almalinux
-        group: almalinux
-        state: directory
-    - name: Add hdfs directory
-      ansible.builtin.file:
-        path: /opt/hadoop_tmp/hdfs
-        owner: almalinux
-        group: almalinux
-        state: directory
-
 - name: Install and configure Hadoop on all nodes
   hosts: all
   tasks:

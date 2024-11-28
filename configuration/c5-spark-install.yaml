@@ -1,7 +1,7 @@
-- name: Install and configure spark
+- name: Install and configure Spark
   hosts: all
   tasks:
-    - name: Download spark .jar
+    - name: Download Spark .jar
       ansible.builtin.get_url:
         dest: /home/almalinux/spark.tgz
         url: "https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3-scala2.13.tgz"
