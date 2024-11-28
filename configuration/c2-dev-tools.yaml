@@ -1,4 +1,4 @@
-- name: Install tools
+- name: Install tools and customize environment
   hosts: all
   become: true
   become_user: root
@@ -29,12 +29,34 @@
           - ufw
           - java-11-openjdk
         state: latest
+
+    # Customize locale and time-zone
     - name: Set en-GB localization
       shell: "localectl set-locale en_GB.UTF-8"
     - name: Set time-zone
       shell: "timedatectl set-timezone Europe/London"
+
+    # Customize hosts file and hostname
     - name: Create hosts file
       ansible.builtin.blockinfile:
         block: "{{ lookup('template', 'files/hostfile.j2') }}"
         dest: /etc/hosts
         insertafter: "EOF"
+    - name: Set hostname
+      ansible.builtin.hostname:
+        name: "{{inventory_hostname}}"
+        use: systemd
+
+    # Create hadoop_tmp and hdfs directories
+    - name: Add hadoop_tmp directory
+      ansible.builtin.file:
+        path: /opt/hadoop_tmp
+        owner: almalinux
+        group: almalinux
+        state: directory
+    - name: Add hdfs directory
+      ansible.builtin.file:
+        path: /opt/hadoop_tmp/hdfs
+        owner: almalinux
+        group: almalinux
+        state: directory
