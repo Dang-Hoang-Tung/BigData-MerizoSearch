@@ -1,23 +1,23 @@
 output "mgmt_vm_ips" {
-  value = harvester_virtualmachine.mgmt_vm[*].network_interface[0].ip_address
+  value = module.mgmt_vm.ips
 }
 
 output "mgmt_vm_ids" {
-  value = harvester_virtualmachine.mgmt_vm[*].id
+  value = module.mgmt_vm.ids
 }
 
 output "worker_vm_ips" {
-  value = harvester_virtualmachine.worker_vm[*].network_interface[0].ip_address
+  value = concat(module.worker_vm[*].ips)
 }
 
 output "worker_vm_ids" {
-  value = harvester_virtualmachine.worker_vm[*].id
+  value = concat(module.worker_vm[*].ids)
 }
 
 output "storage_vm_ips" {
-  value = harvester_virtualmachine.storage_vm[*].network_interface[0].ip_address
+  value = module.storage_vm.ips
 }
 
 output "storage_vm_ids" {
-  value = harvester_virtualmachine.storage_vm[*].id
+  value = module.storage_vm.ids
 }
