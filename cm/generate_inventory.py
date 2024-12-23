@@ -17,7 +17,7 @@ def get_ips(ips_key):
     bash_command = f"(cd {TERRAFORM_RELATIVE_PATH} && terraform output --json {ips_key})".split()
     return json.loads(run(bash_command).stdout)
 
-def generate_inventory(get_ips):
+def generate_inventory():
     mgmt_ips = get_ips(MGMT_IPS_KEY)
     storage_ips = get_ips(STORAGE_IPS_KEY)
     worker_ips = get_ips(WORKER_IPS_KEY)
