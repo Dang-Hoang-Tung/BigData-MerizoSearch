@@ -13,9 +13,9 @@ WORKER_IPS_KEY = "worker_vm_ips"
 def run(command):
     return subprocess.run(command, capture_output=True, encoding='UTF-8')
 
-def get_ips_from_terraform_output(ips_key):
-    get_ips_command = f"(cd {TERRAFORM_RELATIVE_PATH} && terraform output --json {ips_key})".split()
-    return json.loads(run(get_ips_command).stdout)
+def get_ips(ips_key):
+    bash_command = f"(cd {TERRAFORM_RELATIVE_PATH} && terraform output --json {ips_key})".split()
+    return json.loads(run(bash_command).stdout)
 
 def generate_inventory(get_ips):
     mgmt_ips = get_ips(MGMT_IPS_KEY)
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     if args.host:
         print(json.dumps({}))
     elif len(args.list) >= 0:
-        jd = generate_inventory(get_ips_from_terraform_output)
+        jd = generate_inventory()
         print(jd)
     else:
         raise ValueError("Expecting either --host $HOSTNAME or --list")
