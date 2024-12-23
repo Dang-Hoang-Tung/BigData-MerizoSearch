@@ -4,7 +4,8 @@ import json
 import subprocess
 import argparse
 
-# Variables to be retrieved from Terraform output - keep in sync!
+# Variables to retrieve Terraform output - keep in sync!
+TERRAFORM_RELATIVE_PATH = "../iac"
 MGMT_IPS_KEY = "mgmt_vm_ips"
 STORAGE_IPS_KEY = "storage_vm_ips"
 WORKER_IPS_KEY = "worker_vm_ips"
@@ -13,7 +14,7 @@ def run(command):
     return subprocess.run(command, capture_output=True, encoding='UTF-8')
 
 def get_ips_from_terraform_output(ips_key):
-    get_ips_command = f"terraform output --json {ips_key}".split()
+    get_ips_command = f"(cd {TERRAFORM_RELATIVE_PATH} && terraform output --json {ips_key})".split()
     return json.loads(run(get_ips_command).stdout)
 
 def generate_inventory(get_ips):
