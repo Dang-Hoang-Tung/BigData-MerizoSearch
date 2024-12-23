@@ -18,14 +18,9 @@ data "harvester_image" "img" {
   namespace    = "harvester-public"
 }
 
-# TODO: at the end, choose a cloud_config name and remove this random variable
-resource "random_id" "secret" {
-  byte_length = 5
-}
-
 # Cloud config with secret
 resource "harvester_cloudinit_secret" "cloud_config" {
-  name      = "${local.cloud_config_name}-${random_id.secret.hex}"
+  name      = local.cloud_config_name
   namespace = var.namespace
 
   user_data = templatefile("cloud-init.tmpl.yml", {

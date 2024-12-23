@@ -1,6 +1,9 @@
-variable "img_display_name" {
+# System variables
+
+variable "cluster_name" {
   type    = string
-  default = "almalinux-9.4-20240805"
+  default = "ucabhtd-data-analysis"
+  # default = "ucabhtd-merizo-search"
 }
 
 variable "username" {
@@ -23,9 +26,9 @@ variable "keyname" {
   default = "ucabhtd-cnc"
 }
 
-variable "cluster_name" {
+variable "img_display_name" {
   type    = string
-  default = "data-analysis"
+  default = "almalinux-9.4-20240805"
 }
 
 # Machine specs

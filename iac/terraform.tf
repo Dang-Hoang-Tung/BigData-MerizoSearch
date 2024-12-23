@@ -6,10 +6,7 @@ terraform {
       source  = "harvester/harvester"
       version = "0.6.4"
     }
-
-    random = {
-      source  = "hashicorp/random"
-      version = "3.6.1"
-    }
   }
 }
+
+provider "harvester" {}
