@@ -5,8 +5,8 @@ resource "harvester_virtualmachine" "vm" {
   description = var.description
   namespace   = var.namespace
 
-  cpu    = var.storage_vm_cores
-  memory = var.storage_vm_ram
+  cpu    = var.cores
+  memory = var.ram
 
   restart_after_update = true
   efi                  = true
