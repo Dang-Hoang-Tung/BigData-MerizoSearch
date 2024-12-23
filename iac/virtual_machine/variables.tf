@@ -26,6 +26,10 @@ variable "root_disk_size" {
   type = string
 }
 
+variable "root_disk_image" {
+  type = string
+}
+
 variable "data_disk_size" {
   type    = string
   default = null

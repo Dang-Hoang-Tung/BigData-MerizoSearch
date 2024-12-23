@@ -13,6 +13,11 @@ data "harvester_ssh_key" "mysshkey" {
   namespace = var.namespace
 }
 
+data "harvester_image" "img" {
+  display_name = var.img_display_name
+  namespace    = "harvester-public"
+}
+
 # TODO: at the end, choose a cloud_config name and remove this random variable
 resource "random_id" "secret" {
   byte_length = 5
@@ -41,6 +46,7 @@ module "mgmt_vm" {
 
   network_name           = var.network_name
   root_disk_size         = var.mgmt_vm_hdd
+  root_disk_image        = data.harvester_image.img.id
   cloud_init_secret_name = harvester_cloudinit_secret.cloud_config.name
 }
 
@@ -57,6 +63,7 @@ module "storage_vm" {
 
   network_name           = var.network_name
   root_disk_size         = var.storage_vm_hdd
+  root_disk_image        = data.harvester_image.img.id
   data_disk_size         = var.storage_vm_hdd2
   cloud_init_secret_name = harvester_cloudinit_secret.cloud_config.name
 }
@@ -75,5 +82,6 @@ module "worker_vm" {
 
   network_name           = var.network_name
   root_disk_size         = var.worker_vm_hdd
+  root_disk_image        = data.harvester_image.img.id
   cloud_init_secret_name = harvester_cloudinit_secret.cloud_config.name
 }

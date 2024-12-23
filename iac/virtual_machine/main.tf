@@ -1,10 +1,4 @@
 # Reusable module for creating a virtual machine
-
-data "harvester_image" "img" {
-  display_name = var.img_display_name
-  namespace    = "harvester-public"
-}
-
 resource "harvester_virtualmachine" "vm" {
   name        = var.name
   hostname    = var.name
@@ -35,7 +29,7 @@ resource "harvester_virtualmachine" "vm" {
     bus         = "virtio"
     boot_order  = 1
     auto_delete = true
-    image       = data.harvester_image.img.id
+    image       = var.root_disk_image
   }
 
   dynamic "disk" {
