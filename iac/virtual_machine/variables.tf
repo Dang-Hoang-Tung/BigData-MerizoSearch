@@ -15,7 +15,7 @@ variable "cores" {
 }
 
 variable "ram" {
-  type = number
+  type = string
 }
 
 variable "network_name" {
