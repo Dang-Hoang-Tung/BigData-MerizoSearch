@@ -38,3 +38,8 @@ variable "data_disk_size" {
 variable "cloud_init_secret_name" {
   type = string
 }
+
+variable "tags" {
+  type    = map(string)
+  default = null
+}

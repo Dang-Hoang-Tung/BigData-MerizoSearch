@@ -48,4 +48,6 @@ resource "harvester_virtualmachine" "vm" {
   cloudinit {
     user_data_secret_name = var.cloud_init_secret_name
   }
+
+  tags = var.tags
 }

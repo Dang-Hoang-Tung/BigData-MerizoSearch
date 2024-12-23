@@ -48,6 +48,15 @@ module "mgmt_vm" {
   root_disk_size         = var.mgmt_vm_hdd
   root_disk_image        = data.harvester_image.img.id
   cloud_init_secret_name = harvester_cloudinit_secret.cloud_config.name
+
+  tags = {
+    condenser_ingress_isEnabled     = true
+    condenser_ingress_isAllowed     = true
+    condenser_ingress_hdfs_hostname = "hdfs-${var.username}"
+    condenser_ingress_hdfs_port     = 9870
+    condenser_ingress_yarn_hostname = "yarn-${var.username}"
+    condenser_ingress_yarn_port     = 8088
+  }
 }
 
 # Storage VM

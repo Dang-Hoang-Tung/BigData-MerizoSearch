@@ -3,6 +3,11 @@ variable "img_display_name" {
   default = "almalinux-9.4-20240805"
 }
 
+variable "username" {
+  type    = string
+  default = "ucabhtd"
+}
+
 variable "namespace" {
   type    = string
   default = "ucabhtd-comp0235-ns"
