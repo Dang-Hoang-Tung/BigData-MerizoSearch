@@ -1,5 +1,5 @@
-output "ip_address" {
-  value = harvester_virtualmachine.vm.network_interface[0].ip_address
+output "ip_addresses" {
+  value = harvester_virtualmachine.vm.network_interface[*].ip_address
 }
 
 output "id" {

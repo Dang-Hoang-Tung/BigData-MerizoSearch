@@ -1,5 +1,5 @@
 output "mgmt_vm_ips" {
-  value = module.mgmt_vm[*].ip_address
+  value = concat(module.mgmt_vm[*].ip_addresses)
 }
 
 output "mgmt_vm_ids" {
@@ -7,7 +7,7 @@ output "mgmt_vm_ids" {
 }
 
 output "storage_vm_ips" {
-  value = module.storage_vm[*].ip_address
+  value = concat(module.storage_vm[*].ip_addresses)
 }
 
 output "storage_vm_ids" {
@@ -15,7 +15,7 @@ output "storage_vm_ids" {
 }
 
 output "worker_vm_ips" {
-  value = module.worker_vm[*].ip_address
+  value = concat(module.worker_vm[*].ip_addresses)
 }
 
 output "worker_vm_ids" {
