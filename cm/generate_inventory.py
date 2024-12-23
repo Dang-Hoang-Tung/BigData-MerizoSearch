@@ -14,7 +14,7 @@ def run(command):
     return subprocess.run(command, capture_output=True, encoding='UTF-8')
 
 def get_ips(ips_key):
-    bash_command = f"(cd {TERRAFORM_RELATIVE_PATH} && terraform output --json {ips_key})".split()
+    bash_command = f"cd {TERRAFORM_RELATIVE_PATH} && terraform output --json {ips_key}".split()
     return json.loads(run(bash_command).stdout)
 
 def generate_inventory(get_ips):
