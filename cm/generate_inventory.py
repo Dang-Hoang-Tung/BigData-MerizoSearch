@@ -10,6 +10,44 @@ MGMT_IPS_KEY = "mgmt_vm_ips"
 STORAGE_IPS_KEY = "storage_vm_ips"
 WORKER_IPS_KEY = "worker_vm_ips"
 
+def get_terraform_output(output_key=None):
+    """
+    Get Terraform output from a specified directory.
+
+    Args:
+        output_key (str): Specific key to fetch from the outputs. If None, return all outputs.
+
+    Returns:
+        dict or str: Entire output as a dictionary if output_key is None, otherwise the value of the specific key.
+    """
+    try:
+        # Run the `terraform output -json` command
+        result = subprocess.run(
+            ["terraform", "output", "-json"],
+            cwd=TERRAFORM_RELATIVE_PATH,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+
+        # Parse the JSON output
+        outputs = json.loads(result.stdout)
+
+        if output_key:
+            # Return the specific output value if a key is provided
+            return outputs.get(output_key, {}).get("value")
+        else:
+            # Return all outputs as a dictionary
+            return {key: value["value"] for key, value in outputs.items()}
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error running Terraform: {e.stderr}")
+        raise
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        raise
+
 def run(command):
     return subprocess.run(command, capture_output=True, encoding='UTF-8')
 
@@ -18,9 +56,9 @@ def get_ips(ips_key):
     return json.loads(run(bash_command).stdout)
 
 def generate_inventory():
-    mgmt_ips = get_ips(MGMT_IPS_KEY)
-    storage_ips = get_ips(STORAGE_IPS_KEY)
-    worker_ips = get_ips(WORKER_IPS_KEY)
+    mgmt_ips = get_terraform_output(MGMT_IPS_KEY)
+    storage_ips = get_terraform_output(STORAGE_IPS_KEY)
+    worker_ips = get_terraform_output(WORKER_IPS_KEY)
 
     host_vars = {
         "mgmtnode": { "ansible_host": mgmt_ips[0] },
