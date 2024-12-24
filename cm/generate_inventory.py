@@ -18,8 +18,7 @@ ANSIBLE_ALL_GROUPS = [ANSIBLE_MGMT_GROUP, ANSIBLE_STORAGE_GROUP, ANSIBLE_WORKER_
 # Ansible hosts
 ANSIBLE_MGMT_NODE = "mgmtnode"
 ANSIBLE_STORAGE_NODE = "storagenode"
-ANSIBLE_WORKER_NODE = "workernode"
-ANSIBLE_ALL_NODES = [ANSIBLE_MGMT_NODE, ANSIBLE_STORAGE_NODE, ANSIBLE_WORKER_NODE]
+ANSIBLE_WORKER_NODE_PREFIX = "workernode"
 
 def get_ips(ips_key):
     command = f"terraform output --json {ips_key}".split()
@@ -38,14 +37,14 @@ def generate_inventory():
     
     worker_nodes = []
     for i, worker_ip in enumerate(worker_ips):
-        name = f"{ANSIBLE_WORKER_NODE}{i + 1}"
+        name = f"{ANSIBLE_WORKER_NODE_PREFIX}{i + 1}"
         host_vars[name] = { "ansible_host": worker_ip }
         worker_nodes.append(name)
 
     _jd = {
         # Metadata
         "_meta": { "hostvars": host_vars},
-        "all": { "children": ANSIBLE_ALL_GROUPS, "hosts": ANSIBLE_ALL_NODES },
+        "all": { "children": ANSIBLE_ALL_GROUPS },
         "ungrouped": { "hosts": [] },
 
         # Groups
