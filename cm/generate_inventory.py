@@ -13,7 +13,7 @@ TERRAFORM_WORKER_IPS_KEY = "worker_vm_ips"
 ANSIBLE_MGMT_GROUP = "mgmtgroup"
 ANSIBLE_STORAGE_GROUP = "storagegroup"
 ANSIBLE_WORKER_GROUP = "workergroup"
-all_groups = [ANSIBLE_MGMT_GROUP, ANSIBLE_STORAGE_GROUP, ANSIBLE_WORKER_GROUP]
+ANSIBLE_ALL_GROUPS = [ANSIBLE_MGMT_GROUP, ANSIBLE_STORAGE_GROUP, ANSIBLE_WORKER_GROUP]
 
 # Ansible hosts
 ANSIBLE_MGMT_NODE = "mgmtnode"
@@ -44,7 +44,7 @@ def generate_inventory():
     _jd = {
         # Metadata
         "_meta": { "hostvars": host_vars},
-        "all": { "children": all_groups },
+        "all": { "children": ANSIBLE_ALL_GROUPS },
         "ungrouped": { "hosts": [] },
 
         # Groups
