@@ -43,23 +43,41 @@
 - name: Unpack the data
   hosts: storagegroup
   tasks:
+    - name: Create HUMANDB directory
+      ansible.builtin.file:
+        path: data/UP000005640_9606_HUMAN_v4
+        state: directory
+        mode: "0755"
+        owner: almalinux
+        group: almalinux
     - name: Unpack the HUMANDB archive
       ansible.builtin.unarchive:
         remote_src: true
-        src: /data/almalinux/UP000005640_9606_HUMAN_v4.tar
-        dest: data
-        creates: data/UP000005640_9606_HUMAN_v4
+        src: data/UP000005640_9606_HUMAN_v4.tar
+        dest: data/UP000005640_9606_HUMAN_v4
 
+    - name: Create ECOLIDB directory
+      ansible.builtin.file:
+        path: data/UP000000625_83333_ECOLI_v4
+        state: directory
+        mode: "0755"
+        owner: almalinux
+        group: almalinux
     - name: Unpack the ECOLIDB archive
       ansible.builtin.unarchive:
         remote_src: true
-        src: /data/almalinux/UP000000625_83333_ECOLI_v4.tar
-        dest: data
-        creates: data/UP000000625_83333_ECOLI_v4
+        src: ~/data/UP000000625_83333_ECOLI_v4.tar
+        dest: data/UP000000625_83333_ECOLI_v4
 
+    - name: Create CATHDB directory
+      ansible.builtin.file:
+        path: data/cath_foldclassdb
+        state: directory
+        mode: "0755"
+        owner: almalinux
+        group: almalinux
     - name: Unpack the CATHDB archive
       ansible.builtin.unarchive:
         remote_src: true
-        src: /data/almalinux/cath_foldclassdb.tar.gz
-        dest: data
-        creates: data/cath_foldclassdb
+        src: ~/data/cath_foldclassdb.tar.gz
+        dest: data/cath_foldclassdb
