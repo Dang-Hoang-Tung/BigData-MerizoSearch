@@ -1,0 +1,23 @@
+- name: Gather the data
+  hosts: storagegroup
+  tasks:
+    - name: Create temp folder for incomplete downloads on larger volume
+      ansible.builtin.file:
+        path: data/tmp
+        state: directory
+        mode: '0755'
+    - name: Fetch the HUMANDB data 
+      ansible.builtin.get_url:
+        url: "https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000005640_9606_HUMAN_v4.tar"
+        dest: data
+        tmp_dest: data/tmp
+    - name: Fetch the ECOLIDB data
+      ansible.builtin.get_url:
+        url: "https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000000625_83333_ECOLI_v4.tar"
+        dest: data
+        tmp_dest: data/tmp
+    - name: Fetch the CATHDB data
+      ansible.builtin.get_url:
+        url: "http://bioinfadmin.cs.ucl.ac.uk/downloads/merizo_search/cath_foldclassdb.tar.gz"
+        dest: data
+        tmp_dest: data/tmp
