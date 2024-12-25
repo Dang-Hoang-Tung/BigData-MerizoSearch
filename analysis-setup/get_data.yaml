@@ -53,7 +53,7 @@
     - name: Unpack the HUMANDB archive
       ansible.builtin.unarchive:
         remote_src: true
-        src: ~/data/UP000005640_9606_HUMAN_v4.tar
+        src: /home/almalinux/data/almalinux/UP000005640_9606_HUMAN_v4.tar
         dest: data/UP000005640_9606_HUMAN_v4
 
     - name: Create ECOLIDB directory
@@ -66,7 +66,7 @@
     - name: Unpack the ECOLIDB archive
       ansible.builtin.unarchive:
         remote_src: true
-        src: ~/data/UP000000625_83333_ECOLI_v4.tar
+        src: /home/almalinux/data/almalinux/UP000000625_83333_ECOLI_v4.tar
         dest: data/UP000000625_83333_ECOLI_v4
 
     - name: Create CATHDB directory
@@ -79,5 +79,5 @@
     - name: Unpack the CATHDB archive
       ansible.builtin.unarchive:
         remote_src: true
-        src: ~/data/cath_foldclassdb.tar.gz
+        src: /home/almalinux/data/almalinux/cath_foldclassdb.tar.gz
         dest: data/cath_foldclassdb
