@@ -10,7 +10,11 @@
         dest: /home/almalinux/
         remote_src: true
         src: /home/almalinux/hadoop.tar.gz
-    # TODO: Rename directory, but use a variable for the directory name
+        # TODO: Rename directory, but use a variable for the directory name
+        # creates: /home/almalinux/hadoop-home
+        # extra_opts:
+        #   - --transform
+        #   - s/^hadoop-[0-9.]+/hadoop-home/
     # - name: Rename Hadoop directory
     #   ansible.builtin.command: mv /home/almalinux/hadoop-3.4.0 /home/almalinux/hadoop-home
     #   args:
