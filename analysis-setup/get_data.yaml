@@ -53,7 +53,7 @@
     - name: Unpack the HUMANDB archive
       ansible.builtin.unarchive:
         remote_src: true
-        src: data/UP000005640_9606_HUMAN_v4.tar
+        src: ~/data/UP000005640_9606_HUMAN_v4.tar
         dest: data/UP000005640_9606_HUMAN_v4
 
     - name: Create ECOLIDB directory
