@@ -1,20 +1,22 @@
 - name: Install and configure Spark
   hosts: all
+  vars_files:
+    - variables.yaml
   tasks:
     - name: Download Spark .jar
       ansible.builtin.get_url:
-        url: "https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3-scala2.13.tgz"
-        dest: /home/almalinux/spark.tgz
+        url: "{{ spark_download_url }}"
+        dest: "{{ spark_archive_file_path }}"
     - name: Unpack tgz file
       ansible.builtin.unarchive:
-        src: /home/almalinux/spark.tgz
-        dest: /home/almalinux/
+        src: "{{ spark_archive_file_path }}"
+        dest: "{{ working_dir }}"
         remote_src: true
-        creates: /home/almalinux/spark-home
+        creates: "{{ spark_home_dir }}"
         extra_opts:
           - --transform
-          - s/.*/spark-home/
+          - "s/^spark-[a-zA-Z0-9.]*[a-zA-Z0-9]/{{ spark_home_dir_name }}/"
     - name: Write config file
       ansible.builtin.template:
         src: files/spark-defaults.conf.j2
-        dest: /home/almalinux/spark-home/conf/spark-defaults.conf
+        dest: "{{ spark_config_dir }}/spark-defaults.conf"
