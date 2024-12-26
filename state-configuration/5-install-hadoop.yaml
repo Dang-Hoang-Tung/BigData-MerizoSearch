@@ -6,14 +6,14 @@
     - name: Download Hadoop
       ansible.builtin.get_url:
         url: "{{ hadoop_download_url }}"
-        dest: "{{ hadoop_archive_file_dir }}"
+        dest: "{{ hadoop_archive_file_path }}"
     - name: Delete Hadoop home directory
       ansible.builtin.file:
         path: "{{ hadoop_home_dir }}"
         state: absent
     - name: Unpack Hadoop tgz file
       ansible.builtin.unarchive:
-        src: "{{ hadoop_archive_file_dir }}"
+        src: "{{ hadoop_archive_file_path }}"
         dest: "{{ working_dir }}"
         remote_src: true
         extra_opts:
