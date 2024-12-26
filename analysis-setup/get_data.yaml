@@ -50,11 +50,20 @@
         mode: "0755"
         owner: almalinux
         group: almalinux
+    - name: Count files in the HUMANDB archive
+      ansible.builtin.command:
+        cmd: "tar -tf /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar | wc -l"
+      register: humandb_original_count
+    - name: Count files in the HUMANDB directory
+      ansible.builtin.command:
+        cmd: "ls -1 /home/almalinux/data/UP000005640_9606_HUMAN_v4 | wc -l"
+      register: humandb_unpacked_count
     - name: Unpack the HUMANDB archive
       ansible.builtin.unarchive:
         remote_src: true
         src: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
         dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+      when: humandb_unpacked_count.stdout | int < humandb_original_count.stdout | int
 
     - name: Create ECOLIDB directory
       ansible.builtin.file:
@@ -63,11 +72,20 @@
         mode: "0755"
         owner: almalinux
         group: almalinux
+    - name: Count files in the ECOLIDB archive
+      ansible.builtin.command:
+        cmd: "tar -tf /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar | wc -l"
+      register: ecolidb_original_count
+    - name: Count files in the ECOLIDB directory
+      ansible.builtin.command:
+        cmd: "ls -1 /home/almalinux/data/UP000000625_83333_ECOLI_v4 | wc -l"
+      register: ecolidb_unpacked_count
     - name: Unpack the ECOLIDB archive
       ansible.builtin.unarchive:
         remote_src: true
         src: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
         dest: /home/almalinux/data/UP000000625_83333_ECOLI_v4
+      when: ecolidb_unpacked_count.stdout | int < ecolidb_original_count.stdout | int
 
     - name: Create CATHDB directory
       ansible.builtin.file:
@@ -76,8 +94,17 @@
         mode: "0755"
         owner: almalinux
         group: almalinux
+    - name: Count files in the CATHDB archive
+      ansible.builtin.command:
+        cmd: "tar -tf /home/almalinux/data/cath_foldclassdb.tar.gz | wc -l"
+      register: cathdb_original_count
+    - name: Count files in the CATHDB directory
+      ansible.builtin.command:
+        cmd: "ls -1 /home/almalinux/data/cath_foldclassdb | wc -l"
+      register: cathdb_unpacked_count
     - name: Unpack the CATHDB archive
       ansible.builtin.unarchive:
         remote_src: true
         src: /home/almalinux/data/cath_foldclassdb.tar.gz
         dest: /home/almalinux/data/cath_foldclassdb
+      when: cathdb_unpacked_count.stdout | int < cathdb_original_count.stdout | int
