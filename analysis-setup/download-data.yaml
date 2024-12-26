@@ -41,7 +41,6 @@
       when: not cathdb.stat.exists
 
     - name: Remove temp folder
-      ansible.builtin.shell:
-        cmd: |
-          rm -rf /home/almalinux/data/tmp
-        removes: /home/almalinux/data/tmp
+      ansible.builtin.file:
+        path: /home/almalinux/data/tmp
+        state: absent
