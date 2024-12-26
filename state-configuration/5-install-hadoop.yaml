@@ -14,7 +14,7 @@
         # creates: /home/almalinux/hadoop-home
         # extra_opts:
         #   - --transform
-        #   - s/^hadoop-[0-9.]+/hadoop-home/
+        #   - s/.*/hadoop-home/
     # - name: Rename Hadoop directory
     #   ansible.builtin.command: mv /home/almalinux/hadoop-3.4.0 /home/almalinux/hadoop-home
     #   args:

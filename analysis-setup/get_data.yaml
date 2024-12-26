@@ -39,6 +39,11 @@
         dest: /home/almalinux/data
         tmp_dest: /home/almalinux/data/tmp
       when: not cathdb.stat.exists
+    
+    - name: Remove temp folder
+      ansible.builtin.shell:
+        cmd: "rm -rf /home/almalinux/data/tmp"
+      removes: /home/almalinux/data/tmp
 
 - name: Unpack the data
   hosts: storagegroup
