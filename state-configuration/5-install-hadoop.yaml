@@ -18,11 +18,7 @@
         remote_src: true
         extra_opts:
           - --transform
-          - "s/^hadoop-3.4.0/{{ hadoop_home_dir_name }}/"
-    # - name: Rename Hadoop directory
-    #   ansible.builtin.shell: 
-    #     cmd: |
-    #       mv {{ working_dir }}/hadoop-3.4.0 {{ hadoop_home_dir }}
+          - "s/^hadoop-[0-9.]*[0-9]/{{ hadoop_home_dir_name }}/"
     - name: Set Hadoop environment variables
       ansible.builtin.blockinfile:
         path: "{{ working_dir }}/.bashrc"
