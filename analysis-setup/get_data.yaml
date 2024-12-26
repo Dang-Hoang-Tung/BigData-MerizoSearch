@@ -63,7 +63,7 @@
         remote_src: true
         src: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
         dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
-      when: humandb_unpacked_count.stdout | int < humandb_original_count.stdout | int
+      when: humandb_unpacked_count.stdout != humandb_original_count.stdout
 
     - name: Create ECOLIDB directory
       ansible.builtin.file:
@@ -85,7 +85,7 @@
         remote_src: true
         src: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
         dest: /home/almalinux/data/UP000000625_83333_ECOLI_v4
-      when: ecolidb_unpacked_count.stdout | int < ecolidb_original_count.stdout | int
+      when: ecolidb_unpacked_count.stdout != ecolidb_original_count.stdout
 
     - name: Create CATHDB directory
       ansible.builtin.file:
@@ -107,4 +107,4 @@
         remote_src: true
         src: /home/almalinux/data/cath_foldclassdb.tar.gz
         dest: /home/almalinux/data/cath_foldclassdb
-      when: cathdb_unpacked_count.stdout | int < cathdb_original_count.stdout | int
+      when: cathdb_unpacked_count.stdout != cathdb_original_count.stdout
