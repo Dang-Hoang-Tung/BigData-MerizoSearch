@@ -70,10 +70,10 @@
         dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
       when: humandb_original_count.stdout > humandb_extracted_count.stdout
 
-    # - name: Count extracted files in HUMANDB directory
-    #   ansible.builtin.shell:
-    #     cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f ! -name '*.gz' | wc -l"
-    #   count: humandb_extracted_count_before
+    - name: Count extracted files in HUMANDB directory
+      ansible.builtin.shell:
+        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f ! -name '*.gz' | wc -l"
+      count: humandb_extracted_count_before
     # - name: Unarchive each .gz file
     #   ansible.builtin.shell:
     #     cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | xargs -n1 gunzip -n"
