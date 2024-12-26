@@ -1,18 +1,14 @@
 - name: Sync data to hdfs
   hosts: storagegroup
   tasks:
-    - name: Create analysis_data directory
-      ansible.builtin.shell:
-        cmd: hdfs dfs -mkdir -p /analysis_data
-
     - name: Copy HUMANDB data to HDFS
       ansible.builtin.shell:
-        cmd: hdfs dfs -copyFromLocal /home/almalinux/data/UP000005640_9606_HUMAN_v4 /data
+        cmd: hdfs dfs -copyFromLocal /home/almalinux/data/UP000005640_9606_HUMAN_v4 /data/UP000005640_9606_HUMAN_v4
 
     - name: Copy ECOLIDB data to HDFS
       ansible.builtin.shell:
-        cmd: hdfs dfs -copyFromLocal /home/almalinux/data/UP000000625_83333_ECOLI_v4 /data
+        cmd: hdfs dfs -copyFromLocal /home/almalinux/data/UP000000625_83333_ECOLI_v4 /data/UP000000625_83333_ECOLI_v4
 
     - name: Copy CATHDB data to HDFS
       ansible.builtin.shell:
-        cmd: hdfs dfs -copyFromLocal /home/almalinux/data/cath_foldclassdb /data
+        cmd: hdfs dfs -copyFromLocal /home/almalinux/data/cath_foldclassdb /data/cath_foldclassdb
