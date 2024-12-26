@@ -61,7 +61,7 @@
       register: humandb_original_count
     - name: Count files in the HUMANDB directory
       ansible.builtin.shell:
-        cmd: "ls -1 /home/almalinux/data/UP000005640_9606_HUMAN_v4 | wc -l"
+        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | wc -l"
       register: humandb_unpacked_count
     - name: Unpack the HUMANDB archive
       ansible.builtin.unarchive:
@@ -70,25 +70,26 @@
         dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
       when: humandb_unpacked_count.stdout != humandb_original_count.stdout
 
-    - name: Find all ".gz" files in the directory
-      ansible.builtin.find:
-        paths: /home/almalinux/data/UP000005640_9606_HUMAN_v4
-        patterns: "*.gz"
-        file_type: file
-      register: gz_files
+    - name: Count .gz files in HUMANDB directory
+      ansible.builtin.shell:
+        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | wc -l"
+      count: humandb_gz_count
+    - name: Count unpacked files in HUMANDB directory
+      ansible.builtin.shell:
+        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f ! -name '*.gz' | wc -l"
+      count: humandb_unpacked_count_before
     - name: Unarchive each .gz file
       ansible.builtin.shell:
-        cmd: "gunzip {{ item.path }}"
-        creates: "{{ item.path | regex_replace('.gz$', '') }}"
-      loop: "{{ gz_files.files }}"
-      register: loop_results
-    - name: Display the number of loops executed
-      ansible.builtin.debug:
-        msg: "Number of loops executed: {{ loop_results.results | length }}"
-    # - name: Remove the .gz files
-    #   ansible.builtin.shell:
-    #     cmd: "rm *.gz"
-    #   when: loop_results | length == 0
+        cmd: "ls /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | xargs -n1 gunzip -n"
+      when: humandb_gz_count.stdout > humandb_unpacked_count_before.stdout
+    - name: Count unpacked files in HUMANDB directory
+      ansible.builtin.shell:
+        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f ! -name '*.gz' | wc -l"
+      count: humandb_unpacked_count_after
+    - name: Remove the .gz files
+      ansible.builtin.shell:
+        cmd: "rm *.gz"
+      when: humandb_gz_count.stdout == humandb_unpacked_count_after.stdout
 
     - name: Create ECOLIDB directory
       ansible.builtin.file:
@@ -103,7 +104,7 @@
       register: ecolidb_original_count
     - name: Count files in the ECOLIDB directory
       ansible.builtin.shell:
-        cmd: "ls -1 /home/almalinux/data/UP000000625_83333_ECOLI_v4 | wc -l"
+        cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | wc -l"
       register: ecolidb_unpacked_count
     - name: Unpack the ECOLIDB archive
       ansible.builtin.unarchive:
@@ -111,6 +112,27 @@
         src: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
         dest: /home/almalinux/data/UP000000625_83333_ECOLI_v4
       when: ecolidb_unpacked_count.stdout != ecolidb_original_count.stdout
+
+    - name: Count .gz files in ECOLIDB directory
+      ansible.builtin.shell:
+        cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | wc -l"
+      count: humandb_gz_count
+    - name: Count unpacked files in HUMANDB directory
+      ansible.builtin.shell:
+        cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4 -type f ! -name '*.gz' | wc -l"
+      count: humandb_unpacked_count_before
+    - name: Unarchive each .gz file
+      ansible.builtin.shell:
+        cmd: "ls /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | xargs -n1 gunzip -n"
+      when: humandb_gz_count.stdout != humandb_unpacked_count_before.stdout
+    - name: Count unpacked files in HUMANDB directory
+      ansible.builtin.shell:
+        cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4 -type f ! -name '*.gz' | wc -l"
+      count: humandb_unpacked_count_after
+    - name: Remove the .gz files
+      ansible.builtin.shell:
+        cmd: "rm *.gz"
+      when: humandb_gz_count.stdout == humandb_unpacked_count_after.stdout
 
     - name: Create CATHDB directory
       ansible.builtin.file:
@@ -125,11 +147,11 @@
       register: cathdb_original_count
     - name: Count files in the CATHDB directory
       ansible.builtin.shell:
-        cmd: "ls -1 /home/almalinux/data/cath_foldclassdb | wc -l"
+        cmd: "find /home/almalinux/data/cath_foldclassdb -type f -name '*.gz' | wc -l"
       register: cathdb_unpacked_count
     - name: Unpack the CATHDB archive
       ansible.builtin.unarchive:
         remote_src: true
         src: /home/almalinux/data/cath_foldclassdb.tar.gz
         dest: /home/almalinux/data/cath_foldclassdb
-      when: cathdb_unpacked_count.stdout != cathdb_original_count.stdout
+      when: cathdb_unpacked_count.stdout < cathdb_original_count.stdout
