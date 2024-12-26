@@ -18,7 +18,7 @@
         remote_src: true
         extra_opts:
           - --transform
-          - "s/.*/{{ hadoop_home_dir_name }}/"
+          - "s/^hadoop-3.4.0/{{ hadoop_home_dir_name }}/"
     # - name: Rename Hadoop directory
     #   ansible.builtin.shell: 
     #     cmd: |
