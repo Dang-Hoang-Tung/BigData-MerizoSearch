@@ -94,11 +94,11 @@
         creates: "{{ item.path | regex_replace('.gz$', '') }}"
         remote_src: yes
       loop: "{{ gz_files.files }}"
-      when: non_gz_files.matched | length < gz_files.matched | length
+      when: non_gz_files.matched < gz_files.matched
     - name: Remove the .gz files
       ansible.builtin.shell:
         cmd: "rm *.gz"
-      when: non_gz_files.matched | length == gz_files.matched | length
+      when: non_gz_files.matched == gz_files.matched
 
     - name: Create ECOLIDB directory
       ansible.builtin.file:
