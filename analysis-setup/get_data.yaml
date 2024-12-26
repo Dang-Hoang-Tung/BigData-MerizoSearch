@@ -70,6 +70,38 @@
         dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
       when: humandb_unpacked_count.stdout != humandb_original_count.stdout
 
+    - name: Count ".gz" files in the directory
+      ansible.builtin.find:
+        paths: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+        patterns: "*.gz"
+        file_type: file
+        use_regex: yes
+        recurse: no
+      register: gz_files
+    - name: Count non-".gz" files in the directory
+      ansible.builtin.find:
+        paths: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+        patterns: "*"
+        exclude: "*.gz"
+        file_type: file
+        use_regex: yes
+        recurse: no
+      register: non_gz_files
+    - name: Unarchive each .gz file
+      ansible.builtin.unarchive:
+        src: "{{ item.path }}"
+        dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+        creates: "{{ item.path | regex_replace('\\.gz$', '') }}"
+        remote_src: yes
+      with_items: "{{ gz_files.files }}"
+      when: non_gz_files.matched | length < gz_files.matched | length
+    - name: Remove the .gz files
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      with_items: "{{ gz_files.files }}"
+      when: non_gz_files.matched | length == gz_files.matched | length
+
     - name: Create ECOLIDB directory
       ansible.builtin.file:
         path: /home/almalinux/data/UP000000625_83333_ECOLI_v4
