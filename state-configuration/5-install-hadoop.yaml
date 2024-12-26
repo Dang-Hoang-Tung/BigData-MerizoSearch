@@ -1,34 +1,30 @@
 - name: Install and configure Hadoop on all nodes
   hosts: all
+  vars_files:
+    - variables.yaml
   tasks:
     - name: Download Hadoop
       ansible.builtin.get_url:
-        dest: /home/almalinux/hadoop.tar.gz
-        url: "https://dlcdn.apache.org/hadoop/common/hadoop-3.4.0/hadoop-3.4.0.tar.gz"
+        url: "{{ hadoop_download_url }}"
+        dest: "{{ hadoop_archive_dir }}"
     - name: Unpack Hadoop tgz file
       ansible.builtin.unarchive:
-        dest: /home/almalinux/
+        src: "{{ hadoop_archive_dir }}"
+        dest: "{{ working_dir }}"
         remote_src: true
-        src: /home/almalinux/hadoop.tar.gz
-        # TODO: Rename directory, but use a variable for the directory name
-        # creates: /home/almalinux/hadoop-home
-        # extra_opts:
-        #   - --transform
-        #   - s/.*/hadoop-home/
-    # - name: Rename Hadoop directory
-    #   ansible.builtin.command: mv /home/almalinux/hadoop-3.4.0 /home/almalinux/hadoop-home
-    #   args:
-    #     creates: /home/almalinux/hadoop-home
-    #     removes: /home/almalinux/hadoop-3.4.0
+        creates: "{{ hadoop_home_dir }}"
+        extra_opts:
+          - --transform
+          - s/.*/{{ hadoop_home_dir_name }}/
     - name: Set Hadoop environment variables
       ansible.builtin.blockinfile:
-        path: /home/almalinux/.bashrc
+        path: "{{ working_dir }}/.bashrc"
         block: |
           export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
-          export HADOOP_HOME=/home/almalinux/hadoop-3.4.0
+          export HADOOP_HOME={{ hadoop_home_dir }}
           export HADOOP_INSTALL=$HADOOP_HOME
           export YARN_HOME=$HADOOP_HOME
-          export PATH=$PATH:$HADOOP_INSTALL/bin:$HOME/spark-3.5.3-bin-hadoop3-scala2.13/bin
+          export PATH=$PATH:$HADOOP_INSTALL/bin:$HOME/{{ spark_home_dir_name }}/bin
           export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
           export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
           export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
@@ -36,7 +32,7 @@
         state: present
     - name: config core-site.xml
       ansible.builtin.blockinfile:
-        path: /home/almalinux/hadoop-3.4.0/etc/hadoop/core-site.xml
+        path: "{{ hadoop_config_dir }}/core-site.xml"
         insertafter: <configuration>
         marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
         block: |
@@ -51,28 +47,28 @@
         state: present
     - name: config hdfs-site.xml
       ansible.builtin.blockinfile:
-        path: /home/almalinux/hadoop-3.4.0/etc/hadoop/hdfs-site.xml
+        path: "{{ hadoop_config_dir }}/hdfs-site.xml"
         insertafter: <configuration>
         marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
         block: |
           <property>
               <name>dfs.datanode.data.dir</name>
-              <value>/opt/hadoop_tmp/hdfs/datanode</value>
+              <value>{{ hdfs_datanode_dir }}</value>
               <final>true</final>
           </property>
           <property>
               <name>dfs.namenode.name.dir</name>
-              <value>/opt/hadoop_tmp/hdfs/namenode</value>
+              <value>{{ hdfs_namenode_dir }}</value>
               <final>true</final>
           </property>
           <property>
               <name>dfs.replication</name>
-              <value>2</value> # Based on the number of workers you have
+              <value>1</value>
           </property>
         state: present
     - name: config yarn-site.xml
       ansible.builtin.blockinfile:
-        path: /home/almalinux/hadoop-3.4.0/etc/hadoop/yarn-site.xml
+        path: "{{ hadoop_config_dir }}/yarn-site.xml"
         insertafter: <configuration>
         marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
         block: |
@@ -95,7 +91,7 @@
         state: present
     - name: config mapred-site.xml
       ansible.builtin.blockinfile:
-        path: /home/almalinux/hadoop-3.4.0/etc/hadoop/mapred-site.xml
+        path: "{{ hadoop_config_dir }}/mapred-site.xml"
         insertafter: <configuration>
         marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
         block: |
@@ -122,7 +118,7 @@
         state: present
     - name: fix JAVA_HOME in Hadoop Env script
       ansible.builtin.blockinfile:
-        path: /home/almalinux/hadoop-3.4.0/etc/hadoop/hadoop-env.sh
+        path: "{{ hadoop_config_dir }}/hadoop-env.sh"
         insertafter: "# export JAVA_HOME="
         block: |
           export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
@@ -133,19 +129,23 @@
   tasks:
     - name: Create datanode folder
       ansible.builtin.file:
-        path: /opt/hadoop_tmp/hdfs/datanode
+        path: "{{ hdfs_datanode_dir }}"
         state: directory
 
 - name: Configure hdfs on mgmt node
   hosts: mgmtgroup
   tasks:
+    # - name: Delete namenode folder
+    #   ansible.builtin.file:
+    #     path: "{{ hdfs_namenode_dir }}"
+    #     state: absent
     - name: Create namenode folder
       ansible.builtin.file:
-        path: /opt/hadoop_tmp/hdfs/namenode
+        path: "{{ hdfs_namenode_dir }}"
         state: directory
     - name: Generate workers file
       ansible.builtin.template:
         src: files/workers.j2
-        dest: hadoop-3.4.0/etc/hadoop/workers
+        dest: "{{ hadoop_config_dir }}/workers"
     - name: Format hdfs cluster
       ansible.builtin.shell: hdfs namenode -format
