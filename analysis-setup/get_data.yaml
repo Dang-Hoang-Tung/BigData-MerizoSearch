@@ -3,62 +3,62 @@
   tasks:
     - name: Create temp folder for incomplete downloads on larger volume
       ansible.builtin.file:
-        path: data/tmp
+        path: /home/almalinux/data/tmp
         state: directory
         mode: "0755"
 
     - name: Check status of HUMANDB archive
       ansible.builtin.stat:
-        path: data/UP000005640_9606_HUMAN_v4.tar
+        path: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
       register: humandb
     - name: Fetch the HUMANDB data
       ansible.builtin.get_url:
         url: "https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000005640_9606_HUMAN_v4.tar"
-        dest: data
-        tmp_dest: data/tmp
+        dest: /home/almalinux/data
+        tmp_dest: /home/almalinux/data/tmp
       when: not humandb.stat.exists
 
     - name: Check status of ECOLIDB archive
       ansible.builtin.stat:
-        path: data/UP000000625_83333_ECOLI_v4.tar
+        path: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
       register: ecolidb
     - name: Fetch the ECOLIDB data
       ansible.builtin.get_url:
         url: "https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000000625_83333_ECOLI_v4.tar"
-        dest: data
-        tmp_dest: data/tmp
+        dest: /home/almalinux/data
+        tmp_dest: /home/almalinux/data/tmp
       when: not ecolidb.stat.exists
 
     - name: Check status of CATHDB archive
       ansible.builtin.stat:
-        path: data/cath_foldclassdb.tar.gz
+        path: /home/almalinux/data/cath_foldclassdb.tar.gz
       register: cathdb
     - name: Fetch the CATHDB data
       ansible.builtin.get_url:
         url: "http://bioinfadmin.cs.ucl.ac.uk/downloads/merizo_search/cath_foldclassdb.tar.gz"
-        dest: data
-        tmp_dest: data/tmp
+        dest: /home/almalinux/data
+        tmp_dest: /home/almalinux/data/tmp
       when: not cathdb.stat.exists
 
 - name: Unpack the data
   hosts: storagegroup
-  become: true
-  become_user: root
-  become_method: sudo
   tasks:
     - name: Create HUMANDB directory
       ansible.builtin.file:
-        path: data/UP000005640_9606_HUMAN_v4
+        path: /home/almalinux/data/UP000005640_9606_HUMAN_v4
         state: directory
         mode: "0755"
         owner: almalinux
         group: almalinux
     - name: Unpack the HUMANDB archive
-      ansible.builtin.command: tar -xf data/UP000005640_9606_HUMAN_v4.tar -C data/UP000005640_9606_HUMAN_v4
+      ansible.builtin.unarchive:
+        remote_src: true
+        src: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
+        dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
 
     - name: Create ECOLIDB directory
       ansible.builtin.file:
-        path: data/UP000000625_83333_ECOLI_v4
+        path: /home/almalinux/data/UP000000625_83333_ECOLI_v4
         state: directory
         mode: "0755"
         owner: almalinux
@@ -66,12 +66,12 @@
     - name: Unpack the ECOLIDB archive
       ansible.builtin.unarchive:
         remote_src: true
-        src: data/UP000000625_83333_ECOLI_v4.tar
-        dest: data/UP000000625_83333_ECOLI_v4
+        src: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
+        dest: /home/almalinux/data/UP000000625_83333_ECOLI_v4
 
     - name: Create CATHDB directory
       ansible.builtin.file:
-        path: data/cath_foldclassdb
+        path: /home/almalinux/data/cath_foldclassdb
         state: directory
         mode: "0755"
         owner: almalinux
@@ -79,5 +79,5 @@
     - name: Unpack the CATHDB archive
       ansible.builtin.unarchive:
         remote_src: true
-        src: data/cath_foldclassdb.tar.gz
-        dest: data/cath_foldclassdb
+        src: /home/almalinux/data/cath_foldclassdb.tar.gz
+        dest: /home/almalinux/data/cath_foldclassdb
