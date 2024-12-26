@@ -77,11 +77,9 @@
         file_type: file
       register: gz_files
     - name: Unarchive each .gz file
-      ansible.builtin.unarchive:
-        src: "{{ item.path }}"
-        dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+      ansible.builtin.shell:
+        cmd: "gunzip {{ item.path }}"
         creates: "{{ item.path | regex_replace('.gz$', '') }}"
-        remote_src: yes
       loop: "{{ gz_files.files }}"
       register: loop_results
     - name: Display the number of loops executed
