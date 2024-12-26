@@ -25,22 +25,10 @@
         dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
       when: humandb_original_count.stdout > humandb_extracted_count.stdout
 
-    # - name: Extract each .gz file
-    #   ansible.builtin.shell:
-    #     cmd: |
-    #       find /home/almalinux/data/UP000005640_9606_HUMAN_v4/ -type f -name "*.gz" |
-    #         xargs -r -I {} bash -c '{gunzip -n {} && rm {}}'
-
-    # - name: Find all .gz files in the directory
-    #   ansible.builtin.find:
-    #     paths: /home/almalinux/data/UP000005640_9606_HUMAN_v4
-    #     patterns: "*.gz"
-    #   register: gz_files
-    # - name: Decompress each .gz file
-    #   ansible.builtin.shell: gunzip -n {{ item.path }} && rm {{ item.path }}
-    #   loop: "{{ gz_files.files }}"
-    #   when: gz_files.matched > 0
-    #   ignore_errors: yes
+    - name: Extract each .gz file
+      ansible.builtin.shell:
+        chdir: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+        cmd: gunzip *.gz
 
     - name: Create ECOLIDB directory
       ansible.builtin.file:
@@ -66,16 +54,10 @@
         dest: /home/almalinux/data/UP000000625_83333_ECOLI_v4
       when: ecolidb_original_count.stdout > ecolidb_extracted_count.stdout
 
-    - name: Find all .gz files in the directory
-      ansible.builtin.find:
-        paths: /home/almalinux/data/UP000000625_83333_ECOLI_v4
-        patterns: "*.gz"
-      register: gz_files
-    - name: Decompress each .gz file
-      ansible.builtin.shell: gunzip -n {{ item.path }} && rm {{ item.path }}
-      loop: "{{ gz_files.files }}"
-      when: gz_files.matched > 0
-      ignore_errors: yes
+    - name: Extract each .gz file
+      ansible.builtin.shell:
+        chdir: /home/almalinux/data/UP000000625_83333_ECOLI_v4
+        cmd: gunzip *.gz
 
     - name: Create CATHDB directory
       ansible.builtin.file:
