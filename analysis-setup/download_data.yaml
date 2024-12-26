@@ -1,0 +1,46 @@
+- name: Download the data
+  hosts: storagegroup
+  tasks:
+    - name: Create temp folder for incomplete downloads on larger volume
+      ansible.builtin.file:
+        path: /home/almalinux/data/tmp
+        state: directory
+        mode: "0755"
+
+    - name: Check status of HUMANDB archive
+      ansible.builtin.stat:
+        path: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
+      register: humandb
+    - name: Fetch the HUMANDB data
+      ansible.builtin.get_url:
+        url: "https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000005640_9606_HUMAN_v4.tar"
+        dest: /home/almalinux/data
+        tmp_dest: /home/almalinux/data/tmp
+      when: not humandb.stat.exists
+
+    - name: Check status of ECOLIDB archive
+      ansible.builtin.stat:
+        path: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
+      register: ecolidb
+    - name: Fetch the ECOLIDB data
+      ansible.builtin.get_url:
+        url: "https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000000625_83333_ECOLI_v4.tar"
+        dest: /home/almalinux/data
+        tmp_dest: /home/almalinux/data/tmp
+      when: not ecolidb.stat.exists
+
+    - name: Check status of CATHDB archive
+      ansible.builtin.stat:
+        path: /home/almalinux/data/cath_foldclassdb.tar.gz
+      register: cathdb
+    - name: Fetch the CATHDB data
+      ansible.builtin.get_url:
+        url: "http://bioinfadmin.cs.ucl.ac.uk/downloads/merizo_search/cath_foldclassdb.tar.gz"
+        dest: /home/almalinux/data
+        tmp_dest: /home/almalinux/data/tmp
+      when: not cathdb.stat.exists
+
+    - name: Remove temp folder
+      ansible.builtin.shell:
+        cmd: "rm -rf /home/almalinux/data/tmp"
+        removes: /home/almalinux/data/tmp
