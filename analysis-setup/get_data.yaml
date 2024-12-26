@@ -70,22 +70,22 @@
         dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
       when: humandb_original_count.stdout > humandb_extracted_count.stdout
 
-    - name: Count extracted files in HUMANDB directory
-      ansible.builtin.shell:
-        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f ! -name \"*.gz\" | wc -l"
-      count: humandb_extracted_count_before
-    - name: Unarchive each .gz file
-      ansible.builtin.shell:
-        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | xargs -n1 gunzip -n"
-      when: humandb_original_count.stdout > humandb_extracted_count_before.stdout
-    - name: Count extracted files in HUMANDB directory
-      ansible.builtin.shell:
-        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f ! -name '*.gz' | wc -l"
-      count: humandb_extracted_count_after
-    - name: Remove the .gz files
-      ansible.builtin.shell:
-        cmd: "rm *.gz"
-      when: humandb_original_count.stdout == humandb_extracted_count_after.stdout
+    # - name: Count extracted files in HUMANDB directory
+    #   ansible.builtin.shell:
+    #     cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f ! -name '*.gz' | wc -l"
+    #   count: humandb_extracted_count_before
+    # - name: Unarchive each .gz file
+    #   ansible.builtin.shell:
+    #     cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | xargs -n1 gunzip -n"
+    #   when: humandb_original_count.stdout > humandb_extracted_count_before.stdout
+    # - name: Count extracted files in HUMANDB directory
+    #   ansible.builtin.shell:
+    #     cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f ! -name '*.gz' | wc -l"
+    #   count: humandb_extracted_count_after
+    # - name: Remove the .gz files
+    #   ansible.builtin.shell:
+    #     cmd: "rm *.gz"
+    #   when: humandb_original_count.stdout == humandb_extracted_count_after.stdout
 
     - name: Create ECOLIDB directory
       ansible.builtin.file:
@@ -109,22 +109,22 @@
         dest: /home/almalinux/data/UP000000625_83333_ECOLI_v4
       when: ecolidb_extracted_count.stdout > ecolidb_original_count.stdout
 
-    - name: Count extracted files in ecolidb directory
-      ansible.builtin.shell:
-        cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4 -type f ! -name '*.gz' | wc -l"
-      count: ecolidb_extracted_count_before
-    - name: Unarchive each .gz file
-      ansible.builtin.shell:
-        cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | xargs -n1 gunzip -n"
-      when: ecolidb_original_count.stdout > ecolidb_extracted_count_before.stdout
-    - name: Count extracted files in ecolidb directory
-      ansible.builtin.shell:
-        cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4 -type f ! -name '*.gz' | wc -l"
-      count: ecolidb_extracted_count_after
-    - name: Remove the .gz files
-      ansible.builtin.shell:
-        cmd: "rm *.gz"
-      when: ecolidb_original_count.stdout == ecolidb_extracted_count_after.stdout
+    # - name: Count extracted files in ecolidb directory
+    #   ansible.builtin.shell:
+    #     cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4 -type f ! -name '*.gz' | wc -l"
+    #   count: ecolidb_extracted_count_before
+    # - name: Unarchive each .gz file
+    #   ansible.builtin.shell:
+    #     cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | xargs -n1 gunzip -n"
+    #   when: ecolidb_original_count.stdout > ecolidb_extracted_count_before.stdout
+    # - name: Count extracted files in ecolidb directory
+    #   ansible.builtin.shell:
+    #     cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4 -type f ! -name '*.gz' | wc -l"
+    #   count: ecolidb_extracted_count_after
+    # - name: Remove the .gz files
+    #   ansible.builtin.shell:
+    #     cmd: "rm *.gz"
+    #   when: ecolidb_original_count.stdout == ecolidb_extracted_count_after.stdout
 
     - name: Create CATHDB directory
       ansible.builtin.file:
