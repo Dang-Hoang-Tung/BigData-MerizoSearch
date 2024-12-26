@@ -16,7 +16,7 @@
     - name: Count files in the HUMANDB directory
       ansible.builtin.shell:
         cmd: |
-          find /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | wc -l
+          find /home/almalinux/data/UP000005640_9606_HUMAN_v4/ -type f -name "*.gz" | wc -l
       register: humandb_extracted_count
     - name: Extract the HUMANDB archive
       ansible.builtin.unarchive:
@@ -28,11 +28,11 @@
     - name: Extract each .gz file
       ansible.builtin.shell:
         cmd: |
-          ls /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | xargs -n1 gunzip -n
+          find /home/almalinux/data/UP000005640_9606_HUMAN_v4/ -type f -name "*.gz" | xargs -n1 gunzip -n
     - name: Remove the .gz files
       ansible.builtin.shell:
         cmd: |
-          rm /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz
+          find /home/almalinux/data/UP000005640_9606_HUMAN_v4/ -type f -name "*.gz" | xargs rm
 
     - name: Create ECOLIDB directory
       ansible.builtin.file:
@@ -49,7 +49,7 @@
     - name: Count files in the ECOLIDB directory
       ansible.builtin.shell:
         cmd: |
-          find /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | wc -l
+          find /home/almalinux/data/UP000000625_83333_ECOLI_v4/ -type f -name "*.gz" | wc -l
       register: ecolidb_extracted_count
     - name: Extract the ECOLIDB archive
       ansible.builtin.unarchive:
@@ -61,11 +61,11 @@
     - name: Extract each .gz file
       ansible.builtin.shell:
         cmd: |
-          ls /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | xargs -n1 gunzip -n
+          find /home/almalinux/data/UP000000625_83333_ECOLI_v4/ -type f -name "*.gz" | xargs -n1 gunzip -n
     - name: Remove the .gz files
       ansible.builtin.shell:
         cmd: |
-          rm /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz
+          find /home/almalinux/data/UP000000625_83333_ECOLI_v4/ -type f -name "*.gz" | xargs rm
 
     - name: Create CATHDB directory
       ansible.builtin.file:
@@ -82,7 +82,7 @@
     - name: Count files in the CATHDB directory
       ansible.builtin.shell:
         cmd: |
-          find /home/almalinux/data/cath_foldclassdb/*.gz | wc -l
+          find /home/almalinux/data/cath_foldclassdb/ -type f -name "*.gz" | wc -l
       register: cathdb_extracted_count
     - name: Extract the CATHDB archive
       ansible.builtin.unarchive:
