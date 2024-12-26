@@ -3,7 +3,7 @@
 working_dir: /home/almalinux
 
 hadoop_download_url: https://dlcdn.apache.org/hadoop/common/hadoop-3.4.0/hadoop-3.4.0.tar.gz
-hadoop_archive_dir: /home/almalinux/hadoop.tar.gz
+hadoop_archive_file_path: /home/almalinux/hadoop.tar.gz
 hadoop_home_dir_name: hadoop-home
 hadoop_home_dir: /home/almalinux/hadoop-home
 hadoop_config_dir: /home/almalinux/hadoop-home/etc/hadoop
@@ -12,7 +12,7 @@ hdfs_namenode_dir: /opt/hadoop_tmp/hdfs/namenode
 hdfs_datanode_dir: /opt/hadoop_tmp/hdfs/datanode
 
 spark_download_url: https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3-scala2.13.tgz
-spark_archive_dir: /home/almalinux/spark.tgz
-spark_home_dir: /home/almalinux/spark-home
+spark_archive_file_path: /home/almalinux/spark.tgz
 spark_home_dir_name: spark-home
+spark_home_dir: /home/almalinux/spark-home
 spark_config_dir: /home/almalinux/spark-home/conf
