@@ -1,8 +1,10 @@
 
 - name: Start Hadoop cluster
   hosts: mgmtgroup
+  vars_files:
+    - variables.yaml
   tasks:
     - name: Start dfs
-      ansible.builtin.shell: nohup /home/almalinux/hadoop-3.4.0/sbin/start-dfs.sh
+      ansible.builtin.shell: "nohup {{ hadoop_sbin_dir }}/start-dfs.sh"
     - name: Start yarn
-      ansible.builtin.shell: nohup /home/almalinux/hadoop-3.4.0/sbin/start-yarn.sh
+      ansible.builtin.shell: "nohup {{ hadoop_sbin_dir }}/start-yarn.sh"

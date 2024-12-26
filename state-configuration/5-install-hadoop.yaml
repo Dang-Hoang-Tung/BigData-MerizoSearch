@@ -129,6 +129,8 @@
 
 - name: Configure hdfs on worker nodes
   hosts: workergroup
+  vars_files:
+    - variables.yaml
   tasks:
     - name: Create datanode folder
       ansible.builtin.file:
@@ -137,6 +139,8 @@
 
 - name: Configure hdfs on mgmt node
   hosts: mgmtgroup
+  vars_files:
+    - variables.yaml
   tasks:
     # - name: Delete namenode folder
     #   ansible.builtin.file:

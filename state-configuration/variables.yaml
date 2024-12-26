@@ -7,6 +7,7 @@ hadoop_archive_file_path: /home/almalinux/hadoop.tar.gz
 hadoop_home_dir_name: hadoop-home
 hadoop_home_dir: /home/almalinux/hadoop-home
 hadoop_config_dir: /home/almalinux/hadoop-home/etc/hadoop
+hadoop_sbin_dir: /home/almalinux/hadoop-home/sbin
 
 hdfs_namenode_dir: /opt/hadoop_tmp/hdfs/namenode
 hdfs_datanode_dir: /opt/hadoop_tmp/hdfs/datanode
