@@ -70,27 +70,21 @@
         dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
       when: humandb_unpacked_count.stdout != humandb_original_count.stdout
 
-    - name: Find all ".gz" files in the directory
-      ansible.builtin.find:
-        paths: /home/almalinux/data/UP000005640_9606_HUMAN_v4
-        patterns: "*.gz"
-        file_type: file
-      register: gz_files
-    - name: Unarchive each .gz file
-      ansible.builtin.unarchive:
-        src: "{{ item.path }}"
-        dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
-        creates: "{{ item.path | regex_replace('.gz$', '') }}"
-        remote_src: yes
-      loop: "{{ gz_files.files }}"
-      register: loop_results
-    - name: Display the number of loops executed
-      ansible.builtin.debug:
-        msg: "Number of loops executed: {{ loop_results.results | length }}"
-    # - name: Remove the .gz files
-    #   ansible.builtin.shell:
-    #     cmd: "rm *.gz"
-    #   when: loop_results | length == 0
+    - name: Extract all .gz files in the HUMANDB directory
+      ansible.builtin.shell:
+        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f -name '*.gz' | xargs -n1 gunzip -n"
+    - name: Count all .gz files in the HUMANDB directory
+      ansible.builtin.shell:
+        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f -name '*.gz' | wc -l"
+      register: count_gz_files
+    - name: Count all non .gz files in the HUMANDB directory
+      ansible.builtin.shell:
+        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f ! -name '*.gz' | wc -l"
+      register: count_non_gz_files
+    - name: Remove the .gz files
+      ansible.builtin.shell:
+        cmd: "rm *.gz"
+      when: count_gz_files == count_non_gz_files
 
     - name: Create ECOLIDB directory
       ansible.builtin.file:
