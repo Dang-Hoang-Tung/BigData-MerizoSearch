@@ -28,7 +28,7 @@
     - name: Extract each .gz file
       ansible.builtin.shell:
         cmd: |
-          find /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | xargs -n1 gunzip -n
+          ls /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | xargs -n1 gunzip -n
     - name: Remove the .gz files
       ansible.builtin.shell:
         cmd: |
@@ -61,7 +61,7 @@
     - name: Extract each .gz file
       ansible.builtin.shell:
         cmd: |
-          find /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | xargs -n1 gunzip-n"
+          ls /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | xargs -n1 gunzip -n
     - name: Remove the .gz files
       ansible.builtin.shell:
         cmd: |
