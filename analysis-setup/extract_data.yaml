@@ -28,11 +28,8 @@
     - name: Extract each .gz file
       ansible.builtin.shell:
         cmd: |
-          find /home/almalinux/data/UP000005640_9606_HUMAN_v4/ -type f -name "*.gz" | xargs -n1 gunzip -n
-    - name: Remove the .gz files
-      ansible.builtin.shell:
-        cmd: |
-          find /home/almalinux/data/UP000005640_9606_HUMAN_v4/ -type f -name "*.gz" | xargs rm
+          find /home/almalinux/data/UP000005640_9606_HUMAN_v4/ -type f -name "*.gz" |
+            xargs -r -I {} bash -c '{gunzip -n {} && rm {}}'
 
     - name: Create ECOLIDB directory
       ansible.builtin.file:
@@ -61,11 +58,8 @@
     - name: Extract each .gz file
       ansible.builtin.shell:
         cmd: |
-          find /home/almalinux/data/UP000000625_83333_ECOLI_v4/ -type f -name "*.gz" | xargs -n1 gunzip -n
-    - name: Remove the .gz files
-      ansible.builtin.shell:
-        cmd: |
-          find /home/almalinux/data/UP000000625_83333_ECOLI_v4/ -type f -name "*.gz" | xargs rm
+          find /home/almalinux/data/UP000000625_83333_ECOLI_v4/ -type f -name "*.gz" |
+            xargs -r -I {} bash -c '{gunzip -n {} && rm {}}'
 
     - name: Create CATHDB directory
       ansible.builtin.file:
