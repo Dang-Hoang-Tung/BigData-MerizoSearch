@@ -39,7 +39,7 @@
         dest: /home/almalinux/data
         tmp_dest: /home/almalinux/data/tmp
       when: not cathdb.stat.exists
-    
+
     - name: Remove temp folder
       ansible.builtin.shell:
         cmd: "rm -rf /home/almalinux/data/tmp"
@@ -90,16 +90,14 @@
     - name: Unarchive each .gz file
       ansible.builtin.unarchive:
         src: "{{ item.path }}"
-        dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
-        creates: "{{ item.path | regex_replace('\\.gz$', '') }}"
+        dest: "{{ item.path | regex_replace('.gz$', '') }}"
+        creates: "{{ item.path | regex_replace('.gz$', '') }}"
         remote_src: yes
-      with_items: "{{ gz_files.files }}"
+      loop: "{{ gz_files.files }}"
       when: non_gz_files.matched | length < gz_files.matched | length
     - name: Remove the .gz files
-      ansible.builtin.file:
-        path: "{{ item.path }}"
-        state: absent
-      with_items: "{{ gz_files.files }}"
+      ansible.builtin.shell:
+        cmd: "rm *.gz"
       when: non_gz_files.matched | length == gz_files.matched | length
 
     - name: Create ECOLIDB directory
