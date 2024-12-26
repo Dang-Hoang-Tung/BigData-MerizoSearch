@@ -5,16 +5,18 @@
       ansible.builtin.file:
         path: /home/almalinux/data/UP000005640_9606_HUMAN_v4
         state: directory
-        mode: "0755"
+        mode: 0755
         owner: almalinux
         group: almalinux
     - name: Count files in the HUMANDB archive
       ansible.builtin.shell:
-        cmd: "tar -tf /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar | wc -l"
+        cmd: |
+          tar -tf /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar | wc -l
       register: humandb_original_count
     - name: Count files in the HUMANDB directory
       ansible.builtin.shell:
-        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | wc -l"
+        cmd: |
+          find /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | wc -l
       register: humandb_extracted_count
     - name: Extract the HUMANDB archive
       ansible.builtin.unarchive:
@@ -23,27 +25,31 @@
         dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
       when: humandb_original_count.stdout > humandb_extracted_count.stdout
 
-    - name: Unarchive each .gz file
+    - name: Extract each .gz file
       ansible.builtin.shell:
-        cmd: "find /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | xargs -n1 gunzip -n"
+        cmd: |
+          find /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz | xargs -n1 gunzip -n
     - name: Remove the .gz files
       ansible.builtin.shell:
-        cmd: "rm /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz"
+        cmd: |
+          rm /home/almalinux/data/UP000005640_9606_HUMAN_v4/*.gz
 
     - name: Create ECOLIDB directory
       ansible.builtin.file:
         path: /home/almalinux/data/UP000000625_83333_ECOLI_v4
         state: directory
-        mode: "0755"
+        mode: 0755
         owner: almalinux
         group: almalinux
     - name: Count files in the ECOLIDB archive
       ansible.builtin.shell:
-        cmd: "tar -tf /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar | wc -l"
+        cmd: |
+          tar -tf /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar | wc -l
       register: ecolidb_original_count
     - name: Count files in the ECOLIDB directory
       ansible.builtin.shell:
-        cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | wc -l"
+        cmd: |
+          find /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | wc -l
       register: ecolidb_extracted_count
     - name: Extract the ECOLIDB archive
       ansible.builtin.unarchive:
@@ -52,27 +58,31 @@
         dest: /home/almalinux/data/UP000000625_83333_ECOLI_v4
       when: ecolidb_original_count.stdout > ecolidb_extracted_count.stdout
 
-    - name: Unarchive each .gz file
+    - name: Extract each .gz file
       ansible.builtin.shell:
-        cmd: "find /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | xargs -n1 gunzip -n"
+        cmd: |
+          find /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz | xargs -n1 gunzip-n"
     - name: Remove the .gz files
       ansible.builtin.shell:
-        cmd: "rm /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz"
+        cmd: |
+          rm /home/almalinux/data/UP000000625_83333_ECOLI_v4/*.gz
 
     - name: Create CATHDB directory
       ansible.builtin.file:
         path: /home/almalinux/data/cath_foldclassdb
         state: directory
-        mode: "0755"
+        mode: 0755
         owner: almalinux
         group: almalinux
     - name: Count files in the CATHDB archive
       ansible.builtin.shell:
-        cmd: "tar -tf /home/almalinux/data/cath_foldclassdb.tar.gz | wc -l"
+        cmd: |
+          tar -tf /home/almalinux/data/cath_foldclassdb.tar.gz | wc -l
       register: cathdb_original_count
     - name: Count files in the CATHDB directory
       ansible.builtin.shell:
-        cmd: "find /home/almalinux/data/cath_foldclassdb/*.gz | wc -l"
+        cmd: |
+          find /home/almalinux/data/cath_foldclassdb/*.gz | wc -l
       register: cathdb_extracted_count
     - name: Extract the CATHDB archive
       ansible.builtin.unarchive:
