@@ -75,8 +75,6 @@
         paths: /home/almalinux/data/UP000005640_9606_HUMAN_v4
         patterns: "*.gz"
         file_type: file
-        use_regex: yes
-        recurse: no
       register: gz_files
     - name: Count non-".gz" files in the directory
       ansible.builtin.find:
@@ -84,8 +82,6 @@
         patterns: "*"
         exclude: "*.gz"
         file_type: file
-        use_regex: yes
-        recurse: no
       register: non_gz_files
     - name: Unarchive each .gz file
       ansible.builtin.unarchive:
