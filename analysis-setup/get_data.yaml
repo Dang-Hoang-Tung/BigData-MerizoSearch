@@ -42,6 +42,9 @@
 
 - name: Unpack the data
   hosts: storagegroup
+  become: true
+  become_user: root
+  become_method: sudo
   tasks:
     - name: Create HUMANDB directory
       ansible.builtin.file:
