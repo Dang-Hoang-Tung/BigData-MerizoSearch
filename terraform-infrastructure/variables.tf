@@ -2,8 +2,7 @@
 
 variable "cluster_name" {
   type    = string
-  default = "ucabhtd-data-analysis"
-  # default = "ucabhtd-merizo-search"
+  default = "merizo-search"
 }
 
 variable "username" {

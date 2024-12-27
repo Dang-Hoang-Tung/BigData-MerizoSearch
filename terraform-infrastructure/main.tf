@@ -2,10 +2,10 @@
 
 # Reusable names
 locals {
-  cloud_config_name = "${var.cluster_name}-cloud-config"
-  mgmt_vm_name      = "${var.cluster_name}-mgmt"
-  worker_vm_name    = "${var.cluster_name}-worker"
-  storage_vm_name   = "${var.cluster_name}-storage"
+  cloud_config_name = "${var.cluster_name}-cloud-config-${random_id.secret.hex}"
+  mgmt_vm_name      = "${var.cluster_name}-mgmt-${random_id.secret.hex}"
+  worker_vm_name    = "${var.cluster_name}-worker-${random_id.secret.hex}"
+  storage_vm_name   = "${var.cluster_name}-storage-${random_id.secret.hex}"
 }
 
 data "harvester_ssh_key" "mysshkey" {
@@ -16,6 +16,10 @@ data "harvester_ssh_key" "mysshkey" {
 data "harvester_image" "img" {
   display_name = var.img_display_name
   namespace    = "harvester-public"
+}
+
+resource "random_id" "secret" {
+  byte_length = 8
 }
 
 # Cloud config with secret
