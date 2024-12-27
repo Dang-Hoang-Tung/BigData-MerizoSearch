@@ -40,15 +40,15 @@ All commands should be run from the _project root directory_ (except terraform, 
 
 ## Infrastructure Provision
 
-> Command: `(cd infrastructure/terraform && terraform init && terraform apply -auto-approve)`
+> Command: `(cd terraform-infrastructure && terraform init && terraform apply -auto-approve)`
 
 Or individually:
 
 ```bash
-cd infrastructure/terraform
+cd terraform-infrastructure
 terraform init
 terraform apply -auto-approve
-cd ../..
+cd ..
 ```
 
 ## Configuration Management
@@ -71,16 +71,16 @@ cd ../..
 
 ## Terraform
 
-> Command: `(cd infrastructure/terraform && terraform fmt -check -recursive && terraform init && terraform validate)`
+> Command: `(cd terraform-infrastructure && terraform fmt -check -recursive && terraform init && terraform validate)`
 
 Or individually:
 
 ```bash
-cd infrastructure/terraform
+cd terraform-infrastructure
 terraform fmt -check -recursive
 terraform init
 terraform validate
-cd ../..
+cd ..
 ```
 
 ## Pipeline code
