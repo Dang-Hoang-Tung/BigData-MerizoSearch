@@ -1,10 +1,24 @@
-
 - name: Start Hadoop cluster
   hosts: mgmtgroup
   vars_files:
     - variables.yaml
   tasks:
-    - name: Start dfs
-      ansible.builtin.shell: "nohup {{ hadoop_sbin_dir }}/start-dfs.sh"
-    - name: Start yarn
-      ansible.builtin.shell: "nohup {{ hadoop_sbin_dir }}/start-yarn.sh"
+    - name: Check if Hadoop daemons are running
+      ansible.builtin.shell: "ps -ef | grep -w {{ item }} | grep -v grep"
+      loop: ["namenode", "datanode", "resourcemanager", "nodemanager"]
+      ignore_errors: true
+      register: daemon_statuses
+
+    - name: Collate daemon statuses - check if all daemons are running
+      ansible.builtin.set_fact:
+        hadoop_daemons_running: "{{ daemon_statuses.results | selectattr('rc', 'equalto', 0) | list | length == 4 }}"
+
+    # Start Hadoop daemons
+    # If any daemon is not running, we will stop all daemons and start them again
+    - name: Start (or restart) Hadoop daemons
+      ansible.builtin.shell: |
+        {{ hadoop_sbin_dir }}/stop-yarn.sh && 
+        {{ hadoop_sbin_dir }}/stop-dfs.sh && 
+        nohup {{ hadoop_sbin_dir }}/start-dfs.sh && 
+        nohup {{ hadoop_sbin_dir }}/start-yarn.sh
+      when: hadoop_daemons_running == "False"
