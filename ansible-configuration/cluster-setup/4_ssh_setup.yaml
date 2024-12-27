@@ -39,5 +39,5 @@
       ansible.builtin.shell: cat /home/almalinux/.ssh/id_ed25519.pub >> /home/almalinux/.ssh/authorized_keys
     - name: Send SSH config file
       ansible.builtin.copy:
-        src: ./files/ssh-config
+        src: ./files/ssh_config
         dest: /home/almalinux/.ssh/config

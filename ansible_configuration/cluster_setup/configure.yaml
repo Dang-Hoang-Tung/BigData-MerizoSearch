@@ -1,8 +1,0 @@
----
-- import_playbook: 1-update-system.yaml
-- import_playbook: 2-format-storage.yaml
-- import_playbook: 3-customize-environment.yaml
-- import_playbook: 4-set-up-ssh.yaml
-- import_playbook: 5-install-hadoop.yaml
-- import_playbook: 6-start-cluster.yaml
-- import_playbook: 7-install-spark.yaml

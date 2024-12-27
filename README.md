@@ -7,10 +7,10 @@ This repository contains the solution to the coursework for module COMP0235 Engi
 ```
 project-root
 │
-├── terraform_infrastructure   # Terraform for infrastructure
+├── terraform-infrastructure   # Terraform for infrastructure
 │   └── modules                # - Reusable Terraform modules
 │
-├── ansible_configuration      # Ansible playbooks and roles
+├── ansible-configuration      # Ansible playbooks and roles
 │   ├── cluster-setup          # - Updating machines and initialising the cluster
 │   └── pipeline-setup         # - Gathering data and preparing the analysis pipeline
 │
@@ -18,6 +18,8 @@ project-root
 │   ├── pipeline               # - Pipeline scripts
 │   └── aggregate              # - Aggregation script
 ```
+
+In this project, folders use kebab-case and files use snake_case.
 
 ## Cluster Specifications
 

@@ -23,14 +23,14 @@ resource "harvester_cloudinit_secret" "cloud_config" {
   name      = local.cloud_config_name
   namespace = var.namespace
 
-  user_data = templatefile("cloud-init.tmpl.yml", {
+  user_data = templatefile("cloud_init.tmpl.yml", {
     public_key_openssh = data.harvester_ssh_key.mysshkey.public_key
   })
 }
 
 # Management VM
 module "mgmt_vm" {
-  source = "./modules/virtual_machine"
+  source = "./modules/virtual-machine"
 
   name        = local.mgmt_vm_name
   description = "Cluster head node"
@@ -56,7 +56,7 @@ module "mgmt_vm" {
 
 # Storage VM
 module "storage_vm" {
-  source = "./modules/virtual_machine"
+  source = "./modules/virtual-machine"
 
   name        = local.storage_vm_name
   description = "Cluster storage node"
@@ -74,7 +74,7 @@ module "storage_vm" {
 
 # Worker VMs
 module "worker_vm" {
-  source = "./modules/virtual_machine"
+  source = "./modules/virtual-machine"
   count  = var.worker_vm_count
 
   name        = "${local.worker_vm_name}-${count.index + 1}"
