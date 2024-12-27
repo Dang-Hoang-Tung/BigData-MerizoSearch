@@ -15,7 +15,7 @@
         remote_src: true
         extra_opts:
           - --transform
-          - "s/^spark-[a-zA-Z0-9.]*[a-zA-Z0-9]/{{ spark_home_dir_name }}/"
+          - "s/^spark[a-zA-Z0-9._-]*/{{ spark_home_dir_name }}/"
     - name: Write config file
       ansible.builtin.template:
         src: files/spark-defaults.conf.j2

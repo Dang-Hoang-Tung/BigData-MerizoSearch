@@ -17,6 +17,9 @@
         remote_src: true
         src: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
         dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+        extra_opts:
+          - --wildcards
+          - "*.pdb.gz"
     - name: Extract each .gz file
       ansible.builtin.shell:
         chdir: /home/almalinux/data/UP000005640_9606_HUMAN_v4
@@ -38,6 +41,9 @@
         remote_src: true
         src: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
         dest: /home/almalinux/data/UP000000625_83333_ECOLI_v4
+        extra_opts:
+          - --wildcards
+          - "*.pdb.gz"
     - name: Extract each .gz file
       ansible.builtin.shell:
         chdir: /home/almalinux/data/UP000000625_83333_ECOLI_v4
