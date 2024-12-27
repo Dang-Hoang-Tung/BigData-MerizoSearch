@@ -27,6 +27,8 @@ These specifications adhere to the constraints of the given task. However, the c
 | Storage   | Long-term storage  | storagenode                               | 1        | 4       | 8GB       | 10GB     | 200GB     |
 | **Total** | **-**              | **-**                                     | **5**    | **18**  | **108GB** | **95GB** | **200GB** |
 
+---
+
 # Execution Instructions
 
 All commands should be run from the _project root directory_ (except terraform, which is handled in the listed commands). Please use `screen` or `tmux` to persist the session as the scripts can take a long time to execute.
@@ -54,15 +56,15 @@ cd ../..
 
 > Command: ``
 
-## Pipeline Execution
+## Analysis Execution
 
 > Command: ``
 
+---
+
 # Testing Instructions
 
-## Pipeline Tests
-
-## Terraform Tests
+## Terraform
 
 > Command: `(cd infrastructure/terraform && terraform fmt -check -recursive && terraform init && terraform validate)`
 
@@ -75,3 +77,5 @@ terraform init
 terraform validate
 cd ../..
 ```
+
+## Pipeline code
