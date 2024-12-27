@@ -67,7 +67,7 @@
           </property>
           <property>
               <name>dfs.replication</name>
-              <value>1</value>
+              <value>2</value>
           </property>
         state: present
     - name: config yarn-site.xml
@@ -143,17 +143,26 @@
   vars_files:
     - variables.yaml
   tasks:
-    # - name: Delete namenode folder
-    #   ansible.builtin.file:
-    #     path: "{{ hdfs_namenode_dir }}"
-    #     state: absent
-    - name: Create namenode folder
-      ansible.builtin.file:
-        path: "{{ hdfs_namenode_dir }}"
-        state: directory
     - name: Generate workers file
       ansible.builtin.template:
         src: files/workers.j2
         dest: "{{ hadoop_config_dir }}/workers"
-    - name: Format hdfs cluster
-      ansible.builtin.shell: hdfs namenode -format
+    - name: Check status of namenode directory
+      ansible.builtin.stat:
+        path: "{{ hdfs_namenode_dir }}"
+      register: hdfs_namenode_dir_status
+    - name: Create namenode directory
+      ansible.builtin.file:
+        path: "{{ hdfs_namenode_dir }}"
+        state: directory
+      when: not hdfs_namenode_dir_status.stat.exists
+    - name: Debug whether the directory contains anything
+      ansible.builtin.debug:
+        msg: >
+          The directory {{ '/path/to/directory' if dir_status.stat.exists and dir_status.stat.isdir and dir_status.stat.size > 0 
+          else 'is empty or does not exist' }}.
+    # - name: Format hdfs cluster
+    #   ansible.builtin.shell: hdfs namenode -format
+    #   when: hdfs_namenode_dir_status.stat.exists and 
+    #         hdfs_namenode_dir_status.stat.isdir and 
+    #         hdfs_namenode_dir_status.stat.size == 0
