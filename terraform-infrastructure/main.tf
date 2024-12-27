@@ -2,10 +2,10 @@
 
 # Reusable names
 locals {
-  cloud_config_name = "${var.cluster_name}-cloud-config-${random_id.secret.hex}"
-  mgmt_vm_name      = "${var.cluster_name}-mgmt-${random_id.secret.hex}"
-  worker_vm_name    = "${var.cluster_name}-worker-${random_id.secret.hex}"
-  storage_vm_name   = "${var.cluster_name}-storage-${random_id.secret.hex}"
+  cloud_config_name     = "${var.cluster_name}-cloud-config-${random_id.secret.hex}"
+  mgmt_vm_name          = "${var.cluster_name}-mgmt-${random_id.secret.hex}"
+  storage_vm_name       = "${var.cluster_name}-storage-${random_id.secret.hex}"
+  worker_vm_name_prefix = "${var.cluster_name}-worker"
 }
 
 data "harvester_ssh_key" "mysshkey" {
@@ -82,7 +82,7 @@ module "worker_vm" {
   source = "./modules/virtual-machine"
   count  = var.worker_vm_count
 
-  name        = "${local.worker_vm_name}-${count.index + 1}"
+  name        = "${local.worker_vm_name_prefix}-${count.index + 1}-${random_id.secret.hex}"
   description = "Cluster compute node"
   namespace   = var.namespace
 
