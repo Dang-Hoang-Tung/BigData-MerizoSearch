@@ -36,7 +36,8 @@ These specifications adhere to the constraints of the given task. However, the c
 
 # Execution Instructions
 
-All commands should be run from the _project root directory_ (except terraform, which is handled in the listed commands). Please use `screen` or `tmux` to persist the session as the scripts can take a long time to execute.
+- The commands listed should be run from the _project root directory_ (for terraform, changing directory is explicitly handled).
+- Please use `screen` or `tmux` to persist the session as the scripts can take a long time to execute.
 
 ## Infrastructure Provision
 
@@ -68,6 +69,8 @@ cd ..
 ---
 
 # Testing Instructions
+
+- The commands listed should be run from the _project root directory_ (for terraform, changing directory is explicitly handled).
 
 ## Terraform
 
