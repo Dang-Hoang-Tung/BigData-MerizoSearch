@@ -3,8 +3,11 @@
 import json
 import subprocess
 import argparse
+import os
+import sys
 
 # Terraform output variables - keep in sync!
+TERRAFORM_DIRECTORY = "../terraform"
 TERRAFORM_MGMT_IPS_KEY = "mgmt_vm_ips"
 TERRAFORM_STORAGE_IPS_KEY = "storage_vm_ips"
 TERRAFORM_WORKER_IPS_KEY = "worker_vm_ips"
@@ -20,15 +23,31 @@ ANSIBLE_MGMT_NODE = "mgmtnode"
 ANSIBLE_STORAGE_NODE = "storagenode"
 ANSIBLE_WORKER_NODE_PREFIX = "workernode"
 
-def get_ips(ips_key):
-    command = f"terraform output --json {ips_key}".split()
-    output = subprocess.run(command, capture_output=True, encoding='UTF-8').stdout
-    return json.loads(output)
+def get_terraform_output(ips_key):
+    original_dir = os.getcwd()
+    try:
+        os.chdir(TERRAFORM_DIRECTORY)
+        result = subprocess.run(['terraform', 'output', '--json', ips_key], capture_output=True, encoding='UTF-8')
+        terraform_output = json.loads(result.stdout)
+        return terraform_output
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing Terraform: {e}", file=sys.stderr)
+        sys.exit(1)
+    except Exception as e:
+        print(f"Unexpected error: {e}", file=sys.stderr)
+        sys.exit(1)
+    finally:
+        os.chdir(original_dir)
+
+# def get_ips(ips_key):
+#     command = f"terraform output --json {ips_key}".split()
+#     output = subprocess.run(command, capture_output=True, encoding='UTF-8').stdout
+#     return json.loads(output)
 
 def generate_inventory():
-    mgmt_ips = get_ips(TERRAFORM_MGMT_IPS_KEY)
-    storage_ips = get_ips(TERRAFORM_STORAGE_IPS_KEY)
-    worker_ips = get_ips(TERRAFORM_WORKER_IPS_KEY)
+    mgmt_ips = get_terraform_output(TERRAFORM_MGMT_IPS_KEY)
+    storage_ips = get_terraform_output(TERRAFORM_STORAGE_IPS_KEY)
+    worker_ips = get_terraform_output(TERRAFORM_WORKER_IPS_KEY)
 
     host_vars = {
         ANSIBLE_MGMT_NODE: { "ansible_host": mgmt_ips[0] },
