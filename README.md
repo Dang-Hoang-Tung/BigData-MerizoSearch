@@ -52,11 +52,11 @@ cd ../..
 
 > Command: ``
 
-### Pipeline Setup
+### Analysis Setup
 
 > Command: ``
 
-## Analysis Execution
+## Pipeline Execution
 
 > Command: ``
 
