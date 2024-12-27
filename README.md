@@ -12,13 +12,11 @@ project-root
 │
 ├── ansible_configuration      # Ansible playbooks and roles
 │   ├── cluster-setup          # - Updating machines and initialising the cluster
-│   ├── pipeline-setup         # - Gathering data and preparing the analysis pipeline
-│   └── templates              # - Jinja2 templates
+│   └── pipeline-setup         # - Gathering data and preparing the analysis pipeline
 │
 ├── python_application         # Application code
 │   ├── pipeline               # - Pipeline scripts
-│   ├── aggregate              # - Aggregation script
-│   └── tests                  # - Tests
+│   └── aggregate              # - Aggregation script
 ```
 
 ## Cluster Specifications
