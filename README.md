@@ -12,7 +12,7 @@ project-root
 │   ├── ansible     # Ansible playbooks and roles
 │   └── templates   # Jinja2 templates
 ├── application
-│   ├── python      # Pipeline scripts
+│   ├── pipeline    # Pipeline scripts
 │   └── tests       # Tests
 ```
 
