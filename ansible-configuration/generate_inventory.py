@@ -7,7 +7,7 @@ import os
 import sys
 
 # Terraform output variables - keep in sync!
-TERRAFORM_DIRECTORY = "infrastructure"
+TERRAFORM_DIRECTORY = "terraform-infrastructure"
 TERRAFORM_MGMT_IPS_KEY = "mgmt_vm_ips"
 TERRAFORM_STORAGE_IPS_KEY = "storage_vm_ips"
 TERRAFORM_WORKER_IPS_KEY = "worker_vm_ips"
