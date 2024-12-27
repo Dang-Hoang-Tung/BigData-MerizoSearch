@@ -45,16 +45,17 @@ module "mgmt_vm" {
   cloud_init_secret_name = harvester_cloudinit_secret.cloud_config.name
 
   tags = {
+    # Ingress configurations
     "condenser.ingress.isEnabled"     = true
     "condenser.ingress.isAllowed"     = true
-    "condenser.ingress.hdfs/hostname" = "hdfs-${var.username}"
-    "condenser.ingress.hdfs/port"     = 9870
-    "condenser.ingress.yarn/hostname" = "yarn-${var.username}"
-    "condenser.ingress.yarn/port"     = 8088
+    "condenser.ingress.hdfs-hostname" = "hdfs-${var.username}"
+    "condenser.ingress.hdfs-port"     = 9870
+    "condenser.ingress.yarn-hostname" = "yarn-${var.username}"
+    "condenser.ingress.yarn-port"     = 8088
   }
 }
 
-# Storage VM
+# Storage VMw
 module "storage_vm" {
   source = "./modules/virtual-machine"
 
