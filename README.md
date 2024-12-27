@@ -2,7 +2,7 @@
 
 This repository contains the solution to the coursework for module COMP0235 Engineering for Data Analysis 1 (2024/2025).
 
-## Directory structure
+## Directory Structure
 
 ```
 project-root
@@ -16,7 +16,7 @@ project-root
 │   └── tests       # Tests
 ```
 
-## Cluster specifications
+## Cluster Specifications
 
 These specifications adhere to the constraints of the given task. However, the code is flexible to modify the cluster as requirements change.
 
@@ -27,17 +27,15 @@ These specifications adhere to the constraints of the given task. However, the c
 | Storage   | Long-term storage  | storagenode                               | 1        | 4       | 8GB       | 10GB     | 200gb     |
 | **Total** | **-**              | **-**                                     | **5**    | **18**  | **108GB** | **95GB** | **200GB** |
 
-# Instructions
+# Execution Instructions
 
 All commands should be run from the _project root directory_. Please use `screen` or `tmux` to persist the session as the scripts can take a long time to execute.
 
-## Provisioning infrastructure
+## Infrastructure Provision
 
-**Command**:
+> Command: `(cd infrastructure/terraform && terraform init && terraform apply -auto-approve)`
 
-`(cd infrastructure/terraform && terraform init && terraform apply -auto-approve)`
-
-Individually:
+Or individually:
 
 ```bash
 cd infrastructure/terraform
@@ -46,22 +44,34 @@ terraform apply -auto-approve
 cd ../..
 ```
 
-## Configuring machines
+## Configuration Management
 
-### Initial state
-
-> Command: ``
-
-### Pipeline setup
+### Initial State
 
 > Command: ``
 
-## Running the pipeline
-
-### Application
+### Pipeline Setup
 
 > Command: ``
 
-### Tests
+## Pipeline Execution
 
 > Command: ``
+
+# Testing Instructions
+
+## Pipeline Tests
+
+## Terraform Tests
+
+> Command: `(cd infrastructure/terraform && terraform fmt -check -recursive && terraform init && terraform validate)`
+
+Or individually:
+
+```bash
+cd infrastructure/terraform
+terraform fmt -check -recursive
+terraform init
+terraform validate
+cd ../..
+```
