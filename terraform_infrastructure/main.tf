@@ -30,7 +30,7 @@ resource "harvester_cloudinit_secret" "cloud_config" {
 
 # Management VM
 module "mgmt_vm" {
-  source = "./virtual_machine"
+  source = "./modules/virtual_machine"
 
   name        = local.mgmt_vm_name
   description = "Cluster head node"
@@ -56,7 +56,7 @@ module "mgmt_vm" {
 
 # Storage VM
 module "storage_vm" {
-  source = "./virtual_machine"
+  source = "./modules/virtual_machine"
 
   name        = local.storage_vm_name
   description = "Cluster storage node"
@@ -74,7 +74,7 @@ module "storage_vm" {
 
 # Worker VMs
 module "worker_vm" {
-  source = "./virtual_machine"
+  source = "./modules/virtual_machine"
   count  = var.worker_vm_count
 
   name        = "${local.worker_vm_name}-${count.index + 1}"

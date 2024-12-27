@@ -6,14 +6,19 @@ This repository contains the solution to the coursework for module COMP0235 Engi
 
 ```
 project-root
-├── infrastructure
-│   └── terraform   # Terraform code for infrastructure
-├── configuration
-│   ├── ansible     # Ansible playbooks and roles
-│   └── templates   # Jinja2 templates
-├── application
-│   ├── pipeline    # Pipeline scripts
-│   └── tests       # Tests
+│
+├── terraform_infrastructure   # Terraform for infrastructure
+│   └── modules                # - Reusable Terraform modules
+│
+├── ansible_configuration      # Ansible playbooks and roles
+│   ├── cluster-setup          # - Updating machines and initialising the cluster
+│   ├── pipeline-setup         # - Gathering data and preparing the analysis pipeline
+│   └── templates              # - Jinja2 templates
+│
+├── python_application         # Application code
+│   ├── pipeline               # - Pipeline scripts
+│   ├── aggregate              # - Aggregation script
+│   └── tests                  # - Tests
 ```
 
 ## Cluster Specifications
