@@ -24,12 +24,12 @@ These specifications adhere to the constraints of the given task. However, the c
 | --------- | ------------------ | ----------------------------------------- | -------- | ------- | --------- | -------- | --------- |
 | Host      | Cluster head       | mgmtnode                                  | 1        | 2       | 4GB       | 10GB     | -         |
 | Worker    | Pipeline execution | workernode1<br>workernode2<br>workernode3 | 3        | 4       | 32GB      | 25GB     | -         |
-| Storage   | Long-term storage  | storagenode                               | 1        | 4       | 8GB       | 10GB     | 200gb     |
+| Storage   | Long-term storage  | storagenode                               | 1        | 4       | 8GB       | 10GB     | 200GB     |
 | **Total** | **-**              | **-**                                     | **5**    | **18**  | **108GB** | **95GB** | **200GB** |
 
 # Execution Instructions
 
-All commands should be run from the _project root directory_. Please use `screen` or `tmux` to persist the session as the scripts can take a long time to execute.
+All commands should be run from the _project root directory_ (except terraform, which is handled in the listed commands). Please use `screen` or `tmux` to persist the session as the scripts can take a long time to execute.
 
 ## Infrastructure Provision
 
