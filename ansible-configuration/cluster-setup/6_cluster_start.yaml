@@ -20,8 +20,8 @@
       ansible.builtin.shell: 
         chdir: "{{ hadoop_sbin_dir }}"
         cmd: |
-          stop-yarn.sh && 
-          stop-dfs.sh && 
-          nohup start-dfs.sh && 
-          nohup start-yarn.sh
+          ./stop-yarn.sh && 
+          ./stop-dfs.sh && 
+          nohup ./start-dfs.sh && 
+          nohup ./start-yarn.sh
       when: hadoop_daemons_running == "False"

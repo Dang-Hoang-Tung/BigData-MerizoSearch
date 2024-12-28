@@ -3,14 +3,15 @@
   vars_files:
     - variables.yaml
   tasks:
+    - name: Stop any running Hadoop daemons
+      ansible.builtin.shell:
+        chdir: "{{ hadoop_sbin_dir }}"
+        cmd: "./stop-yarn.sh && ./stop-dfs.sh"
+      ignore_errors: true
     - name: Download Hadoop
       ansible.builtin.get_url:
         url: "{{ hadoop_download_url }}"
         dest: "{{ hadoop_archive_file_path }}"
-    - name: Delete Hadoop home directory
-      ansible.builtin.file:
-        path: "{{ hadoop_home_dir }}"
-        state: absent
     - name: Unpack Hadoop tgz file
       ansible.builtin.unarchive:
         src: "{{ hadoop_archive_file_path }}"
@@ -147,21 +148,15 @@
       ansible.builtin.template:
         src: files/workers.j2
         dest: "{{ hadoop_config_dir }}/workers"
-    - name: Check status of namenode directory
-      ansible.builtin.stat:
-        path: "{{ hdfs_namenode_dir }}"
-      register: hdfs_namenode_dir_status
     - name: Create namenode directory
       ansible.builtin.file:
         path: "{{ hdfs_namenode_dir }}"
         state: directory
-      when: not hdfs_namenode_dir_status.stat.exists
-    - name: Debug whether the directory contains anything
-      ansible.builtin.debug:
-        msg: >
-          The directory size is {{ hdfs_namenode_dir_status.stat.size if hdfs_namenode_dir_status.stat.exists and hdfs_namenode_dir_status.stat.isdir and hdfs_namenode_dir_status.stat.size > 0 else 'empty or does not exist' }}.
-    # - name: Format hdfs cluster
-    #   ansible.builtin.shell: hdfs namenode -format
-    #   when: hdfs_namenode_dir_status.stat.exists and 
-    #         hdfs_namenode_dir_status.stat.isdir and 
-    #         hdfs_namenode_dir_status.stat.size == 0
+    - name: Check status of namenode directory
+      ansible.builtin.stat:
+        path: "{{ hdfs_namenode_dir }}/current"
+      register: namenode_formatted
+    - name: Format hdfs cluster
+      ansible.builtin.shell: hdfs namenode -format
+      # Idempotent: if namenode is already formatted, will not format again
+      when: not namenode_formatted.stat.exists
