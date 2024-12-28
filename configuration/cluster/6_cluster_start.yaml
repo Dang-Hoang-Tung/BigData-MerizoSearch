@@ -3,16 +3,15 @@
   vars_files:
     - variables.yaml
   tasks:
-    - name: Check if Hadoop daemons are running
-      ansible.builtin.shell: "ps -ef | grep -w {{ item }} | grep -v grep"
-      loop: ["namenode", "datanode", "resourcemanager", "nodemanager"]
+    - name: Check if NameNode daemon is running
+      ansible.builtin.shell: "ps -ef | grep -w namenode | grep -v grep"
+      register: namenode_status
       ignore_errors: true
-      register: daemon_statuses
 
-    - name: Collate daemon statuses
-      ansible.builtin.set_fact:
-        # All return codes should be 0 if all 4 daemons are running
-        hadoop_daemons_stopped: "{{ daemon_statuses.results | selectattr('rc', 'equalto', 1) | list | length > 0 }}"
+    - name: Check if ResourceManager daemon is running
+      ansible.builtin.shell: "ps -ef | grep -w resourcemanager | grep -v grep"
+      register: resourcemanager_status
+      ignore_errors: true
 
     # Start Hadoop daemons
     # If any daemon is not running, we will stop all daemons and start them again
@@ -24,4 +23,5 @@
           ./stop-dfs.sh && 
           nohup ./start-dfs.sh && 
           nohup ./start-yarn.sh
-      when: hadoop_daemons_stopped
+      # Return code 0 means success - all daemons are running
+      when: namenode_status.rc != 0 or resourcemanager_status.rc != 0
