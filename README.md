@@ -5,25 +5,26 @@ This repository contains the solution to the coursework for module COMP0235 Engi
 ## Directory Structure
 
 ```
-project-root
+project
 │
-├── terraform-infrastructure   # Terraform for infrastructure
-│   └── modules                # - Reusable Terraform modules
+├── infrastructure   # (Terraform) Provision infrastructure
+│   └── modules      # - Reusable infra modules
 │
-├── ansible-configuration      # Ansible playbooks and roles
-│   ├── cluster-setup          # - Updating machines and initialising the cluster
-│   └── pipeline-setup         # - Gathering data and preparing the analysis pipeline
+├── configuration    # (Ansible) Configure machines
+│   ├── cluster      # - Cluster setup
+│   └── pipeline     # - Data and pipeline setup
 │
-├── python_application         # Application code
-│   ├── pipeline               # - Pipeline scripts
-│   └── aggregate              # - Aggregation script
+├── application      # (Python) Run analysis
+│   ├── pipeline     # - Pipeline
+│   └── aggregate    # - Results aggregation
 ```
 
-In this project, folders use kebab-case and files use snake_case.
+In this project, folders use `kebab-case` and files use `snake_case`.
 
 ## Cluster Specifications
 
-These specifications adhere to the constraints of the given task. However, the code is flexible to modify the cluster as requirements change.
+These are the default specifications. They adhere to the constraints of the given task.
+However, the code is flexible to changes in requirements.
 
 | _Type_    | _Purpose_          | _Machine IDs_                             | _Number_ | _Cores_ | _RAM_     | _HDD1_   | _HDD2_    |
 | --------- | ------------------ | ----------------------------------------- | -------- | ------- | --------- | -------- | --------- |
@@ -36,7 +37,7 @@ These specifications adhere to the constraints of the given task. However, the c
 
 # Execution Instructions
 
-- The commands listed should be run from the _project root directory_ (for terraform, changing directory is explicitly handled).
+- The commands should be run from the _project root directory_ (especially for Ansible, see below).
 - Please use `screen` or `tmux` to persist the session as the scripts can take a long time to execute.
 
 ## Infrastructure Provision
@@ -54,6 +55,11 @@ cd ..
 
 ## Configuration Management
 
+The Ansible inventory is generated using the [inventory.py](configuration/inventory.py) script.
+This script uses a relative directory in order to reach into the [infrastructure](./infrastructure)
+module and retrieve the terraform output, which is parsed into an Ansible-friendly JSON inventory.
+Therefore, all Ansible scripts should be run from the _project root directory_.
+
 ### Initial State
 
 > Command: ``
@@ -68,9 +74,9 @@ cd ..
 
 ---
 
-# Testing Instructions
+# Testing
 
-- The commands listed should be run from the _project root directory_ (for terraform, changing directory is explicitly handled).
+Not required for execution, just tests.
 
 ## Terraform
 
