@@ -9,10 +9,10 @@
       ignore_errors: true
       register: daemon_statuses
 
-    - name: Collate daemon statuses - check if all daemons are running
+    - name: Collate daemon statuses
       ansible.builtin.set_fact:
         # All return codes should be 0 if all 4 daemons are running
-        hadoop_daemons_running: "{{ daemon_statuses.results | selectattr('rc', 'equalto', 0) | list | length == 4 }}"
+        hadoop_daemons_stopped: "{{ daemon_statuses.results | selectattr('rc', 'equalto', 1) | list }}"
 
     # Start Hadoop daemons
     # If any daemon is not running, we will stop all daemons and start them again
@@ -24,4 +24,4 @@
           ./stop-dfs.sh && 
           nohup ./start-dfs.sh && 
           nohup ./start-yarn.sh
-      when: hadoop_daemons_running == "False"
+      when: hadoop_daemons_stopped | length > 0
