@@ -1,0 +1,4 @@
+---
+- import_playbook: download_data.yaml
+- import_playbook: extract_data.yaml
+- import_playbook: distribute_data.yaml
