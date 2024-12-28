@@ -12,7 +12,7 @@
     - name: Collate daemon statuses - check if all daemons are running
       ansible.builtin.set_fact:
         # All return codes should be 0 if all 4 daemons are running
-        hadoop_daemons_running: "{{ [item for item in daemon_statuses.results if item.rc == 0] | length == 4 }}"
+        hadoop_daemons_running: "{{ daemon_statuses.results | selectattr('rc', 'equalto', 0) | list | length == 4 }}"
 
     # Start Hadoop daemons
     # If any daemon is not running, we will stop all daemons and start them again
