@@ -7,12 +7,12 @@
 
     - name: Copy HUMANDB data to HDFS
       ansible.builtin.shell:
-        cmd: hdfs dfs -copyFromLocal /home/almalinux/data/UP000005640_9606_HUMAN_v4 /analysis_data/UP000005640_9606_HUMAN_v4
+        cmd: hdfs dfs -put /home/almalinux/data/UP000005640_9606_HUMAN_v4 /analysis_data/UP000005640_9606_HUMAN_v4
 
     - name: Copy ECOLIDB data to HDFS
       ansible.builtin.shell:
-        cmd: hdfs dfs -copyFromLocal /home/almalinux/data/UP000000625_83333_ECOLI_v4 /analysis_data/UP000000625_83333_ECOLI_v4
+        cmd: hdfs dfs -put /home/almalinux/data/UP000000625_83333_ECOLI_v4 /analysis_data/UP000000625_83333_ECOLI_v4
 
     - name: Copy CATHDB data to HDFS
       ansible.builtin.shell:
-        cmd: hdfs dfs -copyFromLocal /home/almalinux/data/cath_foldclassdb /analysis_data/cath_foldclassdb
+        cmd: hdfs dfs -put /home/almalinux/data/cath_foldclassdb /analysis_data/cath_foldclassdb
