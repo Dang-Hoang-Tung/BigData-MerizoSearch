@@ -15,7 +15,7 @@
         remote_src: true
         extra_opts:
           - --transform
-          - "s/^hadoop-[0-9].[0-9].[0-9]/{{ hadoop_home_dir_name }}/"
+          - "s/^hadoop[a-zA-Z0-9._-]*/{{ hadoop_home_dir_name }}/"
     - name: Set Hadoop environment variables
       ansible.builtin.blockinfile:
         path: "{{ working_dir }}/.bashrc"
