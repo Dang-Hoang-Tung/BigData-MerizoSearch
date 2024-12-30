@@ -18,5 +18,5 @@
           - "s/^spark[a-zA-Z0-9._-]*/{{ spark_home_dir_name }}/"
     - name: Write config file
       ansible.builtin.template:
-        src: files/spark-defaults.conf.j2
+        src: files/spark_defaults.conf.j2
         dest: "{{ spark_config_dir }}/spark-defaults.conf"
