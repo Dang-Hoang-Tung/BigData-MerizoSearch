@@ -11,6 +11,6 @@
     ansible.builtin.git:
       repo: "https://github.com/psipred/merizo_search"
       dest: "/home/almalinux/merizo_search"
-  - name: "Set up software"
+  - name: "Install python dependencies"
     ansible.builtin.pip:
-      name: "/home/almalinux/mz-application"
+      requirements: "/home/almalinux/mz-application/requirements.txt"
