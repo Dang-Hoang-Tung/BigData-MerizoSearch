@@ -3,14 +3,15 @@
   become: true
   become_user: root
   tasks:
-  - name: "Clone application repo"
-    ansible.builtin.git:
-      repo: "https://github.com/CodingPengwing/mz-application.git"
-      dest: "/home/almalinux/mz-application"
-  - name: "Clone merizo-search repo"
-    ansible.builtin.git:
-      repo: "https://github.com/psipred/merizo_search"
-      dest: "/home/almalinux/merizo_search"
-  - name: "Install python dependencies"
-    ansible.builtin.pip:
-      requirements: "/home/almalinux/mz-application/requirements.txt"
+    - name: "Distribute application repo"
+      ansible.builtin.copy:
+        # Copy local files to remote machines (Ansible should run at the root of the project)
+        src: "./application"
+        dest: "/home/almalinux/mz-application"
+    - name: "Download merizo-search repo"
+      ansible.builtin.git:
+        repo: "https://github.com/psipred/merizo_search"
+        dest: "/home/almalinux/merizo_search"
+    - name: "Install python dependencies"
+      ansible.builtin.pip:
+        requirements: "/home/almalinux/mz-application/requirements.txt"
