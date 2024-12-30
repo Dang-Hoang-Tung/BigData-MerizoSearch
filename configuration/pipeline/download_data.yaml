@@ -15,14 +15,14 @@
         url: "https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000005640_9606_HUMAN_v4.tar"
         dest: /home/almalinux/data
         tmp_dest: "{{ tmp_dir }}"
-        creates: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
+      creates: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
 
     - name: Download the ECOLIDB data
       ansible.builtin.get_url:
         url: "https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000000625_83333_ECOLI_v4.tar"
         dest: /home/almalinux/data
         tmp_dest: "{{ tmp_dir }}"
-        creates: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
+      creates: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
 
     - name: Remove temp folder
       ansible.builtin.file:
