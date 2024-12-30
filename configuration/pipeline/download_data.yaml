@@ -1,9 +1,12 @@
 - name: Download the HUMANDB and ECOLIDB data
   hosts: storagegroup
+  vars:
+    tmp_dir: /home/almalinux/data/tmp
+    data_dir: /home/almalinux/data
   tasks:
     - name: Create temp folder for incomplete downloads
       ansible.builtin.file:
-        path: /home/almalinux/data/tmp
+        path: "{{ tmp_dir }}"
         state: directory
         mode: 0755
 
@@ -11,17 +14,19 @@
       ansible.builtin.get_url:
         url: "https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000005640_9606_HUMAN_v4.tar"
         dest: /home/almalinux/data
-        tmp_dest: /home/almalinux/data/tmp
+        tmp_dest: "{{ tmp_dir }}"
+        creates: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
 
     - name: Download the ECOLIDB data
       ansible.builtin.get_url:
         url: "https://ftp.ebi.ac.uk/pub/databases/alphafold/latest/UP000000625_83333_ECOLI_v4.tar"
         dest: /home/almalinux/data
-        tmp_dest: /home/almalinux/data/tmp
+        tmp_dest: "{{ tmp_dir }}"
+        creates: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
 
     - name: Remove temp folder
       ansible.builtin.file:
-        path: /home/almalinux/data/tmp
+        path: "{{ tmp_dir }}"
         state: absent
 
 - name: Download the CATHDB data
