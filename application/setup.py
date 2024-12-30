@@ -9,5 +9,5 @@ setup(name='merizo_search_pipeline',
       author_email='ucabhtd@ucl.ac.uk',
       url='TBC',
       packages=['pipeline'],
-      install_requires=['einops', 'matplotlib', 'natsort', 'networkx', 'numpy<2.0', 'rotary_embedding_torch', 'scipy', 'setuptools', 'https://download.pytorch.org/whl/cpu/torch-1.0.1-cp37-cp37m-linux_x86_64.whl#sha256=c612200fed3ef0d2243e3517d7cc529eadc2521c62ad1413a6558a6b6d2c3d33']
+      install_requires=['einops', 'matplotlib', 'natsort', 'networkx', 'numpy<2.0', 'rotary_embedding_torch', 'scipy', 'setuptools', 'https://download.pytorch.org/whl/cpu-cxx11-abi/torch-2.0.1%2Bcpu.cxx11.abi-cp39-cp39-linux_x86_64.whl#sha256=f670e76e4e051ac51ca14bcaac7cefa48c14998a30744e0431981c53ca9211a7']
      )
