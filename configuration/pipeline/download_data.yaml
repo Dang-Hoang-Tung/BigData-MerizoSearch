@@ -29,6 +29,20 @@
         tmp_dest: /home/almalinux/data/tmp
       when: not ecolidb.stat.exists
 
+    - name: Remove temp folder
+      ansible.builtin.file:
+        path: /home/almalinux/data/tmp
+        state: absent
+
+- name: Download the data
+  hosts: workergroup
+  tasks:
+    - name: Create temp folder for incomplete downloads
+      ansible.builtin.file:
+        path: /home/almalinux/data/tmp
+        state: directory
+        mode: 0755
+
     - name: Check existence of CATHDB archive
       ansible.builtin.stat:
         path: /home/almalinux/data/cath_foldclassdb.tar.gz
