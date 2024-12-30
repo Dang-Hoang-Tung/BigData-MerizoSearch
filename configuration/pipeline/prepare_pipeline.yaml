@@ -1,5 +1,5 @@
 - name: Prepare pipeline
-  hosts: all
+  hosts: workergroup
   become: true
   become_user: root
   tasks:
