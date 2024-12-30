@@ -13,15 +13,20 @@
       register: resourcemanager_status
       ignore_errors: true
 
-    # Start Hadoop daemons
-    # If any daemon is not running, we will stop all daemons and start them again
+    - name: Skip if both Hadoop deamons are already running
+      meta: end_play
+      # Return code 0 means success (grep returned at least 1 process) - daemon is running
+      when: namenode_status.rc == 0 and resourcemanager_status.rc == 0
+
+    # If some daemons are not running, we will stop all daemons and start them again
+    - name: Stop all Hadoop daemons
+      ansible.builtin.shell:
+        chdir: "{{ hadoop_sbin_dir }}"
+        cmd: ./stop-yarn.sh && ./stop-dfs.sh
+      ignore_errors: true
+      when: namenode_status.rc == 1 or resourcemanager_status.rc == 1
+
     - name: Start (or restart) Hadoop daemons
       ansible.builtin.shell: 
         chdir: "{{ hadoop_sbin_dir }}"
-        cmd: |
-          ./stop-yarn.sh && 
-          ./stop-dfs.sh && 
-          nohup ./start-dfs.sh && 
-          nohup ./start-yarn.sh
-      # Return code 0 means success - all daemons are running
-      when: namenode_status.rc != 0 or resourcemanager_status.rc != 0
+        cmd: nohup ./start-dfs.sh && nohup ./start-yarn.sh

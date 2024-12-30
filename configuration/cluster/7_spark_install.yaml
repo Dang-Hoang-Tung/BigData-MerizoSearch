@@ -7,6 +7,7 @@
       ansible.builtin.get_url:
         url: "{{ spark_download_url }}"
         dest: "{{ spark_archive_file_path }}"
+
     - name: Unpack tgz file
       ansible.builtin.unarchive:
         src: "{{ spark_archive_file_path }}"
@@ -16,6 +17,7 @@
         extra_opts:
           - --transform
           - "s/^spark[a-zA-Z0-9._-]*/{{ spark_home_dir_name }}/"
+
     - name: Write config file
       ansible.builtin.template:
         src: files/spark_defaults.conf.j2

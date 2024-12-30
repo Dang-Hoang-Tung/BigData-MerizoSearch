@@ -2,7 +2,17 @@
   hosts: storagegroup
   become: true
   become_user: root
+  vars:
+    data_disk_dir: /home/almalinux/data
   tasks:
+    - name: Check if data disk is present
+      ansible.builtin.stat:
+        path: "{{ data_disk_dir }}"
+      register: data_disk
+    - name: Skip formatting if disk is already present
+      meta: end_play
+      when: data_disk.stat.exists
+
     - name: Partition disk
       community.general.parted:
         name: "data"

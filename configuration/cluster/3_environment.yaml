@@ -2,6 +2,8 @@
   hosts: all
   become: true
   become_user: root
+  vars_files:
+    - variables.yaml
   tasks:
     - name: Install dev tools, python3, java
       ansible.builtin.dnf:
@@ -44,19 +46,13 @@
         insertafter: "EOF"
     - name: Set hostname
       ansible.builtin.hostname:
-        name: "{{inventory_hostname}}"
+        name: "{{ inventory_hostname }}"
         use: systemd
 
-    # Create hadoop_tmp and hdfs directories
-    - name: Add hadoop_tmp directory
-      ansible.builtin.file:
-        path: /opt/hadoop_tmp
-        owner: almalinux
-        group: almalinux
-        state: directory
+    # Create hdfs directory
     - name: Add hdfs directory
       ansible.builtin.file:
-        path: /opt/hadoop_tmp/hdfs
+        path: "{{ hdfs_dir }}"
         owner: almalinux
         group: almalinux
         state: directory

@@ -9,6 +9,7 @@ hadoop_home_dir: /home/almalinux/hadoop-home
 hadoop_config_dir: /home/almalinux/hadoop-home/etc/hadoop
 hadoop_sbin_dir: /home/almalinux/hadoop-home/sbin
 
+hdfs_dir: /opt/hadoop_tmp/hdfs
 hdfs_namenode_dir: /opt/hadoop_tmp/hdfs/namenode
 hdfs_datanode_dir: /opt/hadoop_tmp/hdfs/datanode
 
