@@ -37,22 +37,50 @@
         path: "{{ tmp_dir }}"
         state: absent
 
-- name: Download the CATHDB data
-  hosts: workergroup
-  tasks:
-    - name: Create temp folder for incomplete downloads
+    - name: Delete HUMANDB directory
       ansible.builtin.file:
-        path: /home/almalinux/tmp
+        path: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+        state: absent
+    - name: Create HUMANDB directory
+      ansible.builtin.file:
+        path: /home/almalinux/data/UP000005640_9606_HUMAN_v4
         state: directory
         mode: 0755
+        owner: almalinux
+        group: almalinux
+    - name: Extract the HUMANDB archive
+      ansible.builtin.unarchive:
+        remote_src: true
+        src: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
+        dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+        extra_opts:
+          - --wildcards
+          - "*.pdb.gz"
+    - name: Extract each .gz file
+      ansible.builtin.shell:
+        chdir: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+        cmd: gunzip *.gz
 
-    - name: Download the CATHDB data
-      ansible.builtin.get_url:
-        url: "http://bioinfadmin.cs.ucl.ac.uk/downloads/merizo_search/cath_foldclassdb.tar.gz"
-        dest: /home/almalinux
-        tmp_dest: /home/almalinux/tmp
-
-    - name: Remove temp folder
+    - name: Delete ECOLIDB directory
       ansible.builtin.file:
-        path: /home/almalinux/tmp
+        path: /home/almalinux/data/UP000000625_83333_ECOLI_v4
         state: absent
+    - name: Create ECOLIDB directory
+      ansible.builtin.file:
+        path: /home/almalinux/data/UP000000625_83333_ECOLI_v4
+        state: directory
+        mode: 0755
+        owner: almalinux
+        group: almalinux
+    - name: Extract the ECOLIDB archive
+      ansible.builtin.unarchive:
+        remote_src: true
+        src: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
+        dest: /home/almalinux/data/UP000000625_83333_ECOLI_v4
+        extra_opts:
+          - --wildcards
+          - "*.pdb.gz"
+    - name: Extract each .gz file
+      ansible.builtin.shell:
+        chdir: /home/almalinux/data/UP000000625_83333_ECOLI_v4
+        cmd: gunzip *.gz
