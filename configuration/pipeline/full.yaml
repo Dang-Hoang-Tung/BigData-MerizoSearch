@@ -1,5 +1,5 @@
 ---
 - import_playbook: prepare_pipeline.yaml
 - import_playbook: download_data.yaml
-- import_playbook: extract_data.yaml
+- import_playbook: download_cathdb.yaml
 - import_playbook: distribute_data.yaml
