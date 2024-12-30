@@ -3,10 +3,14 @@
   become: true
   become_user: root
   tasks:
-  - name: "Clone git repo"
+  - name: "Clone application repo"
     ansible.builtin.git:
       repo: "https://github.com/CodingPengwing/mz-application.git"
       dest: "/home/almalinux/mz-application"
+  - name: "Clone merizo-search repo"
+    ansible.builtin.git:
+      repo: "https://github.com/psipred/merizo_search"
+      dest: "/home/almalinux/merizo_search"
   - name: "Set up software"
     ansible.builtin.pip:
       name: "/home/almalinux/mz-application"
