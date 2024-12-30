@@ -6,7 +6,7 @@
   - name: "Clone git repo"
     ansible.builtin.git:
       repo: "https://github.com/CodingPengwing/mz-application.git"
-      dest: "/home/almalinux"
+      dest: "/home/almalinux/mz-application"
   - name: "Set up software"
     ansible.builtin.pip:
       name: "/home/almalinux/mz-application"
