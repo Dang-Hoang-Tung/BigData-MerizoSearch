@@ -2,10 +2,25 @@
   hosts: all
   become: true
   become_user: root
+  vars:
+    system_updated_file: "~/system_updated"
   tasks:
+    - name: Check if system is already updated
+      ansible.builtin.stat:
+        path: "{{ system_updated_file }}"
+      register: system_updated
+    - name: Skip if system is already updated
+      meta: end_play
+      when: system_updated.stat.exists
+
     - name: Update packages
       ansible.builtin.dnf:
         name: "*"
         state: latest
     - name: Post-update reboot
       reboot:
+
+    - name: Confirm system is up to date
+      ansible.builtin.file:
+        path: "{{ system_updated_file }}"
+        state: touch
