@@ -37,10 +37,6 @@
         path: "{{ tmp_dir }}"
         state: absent
 
-    - name: Delete HUMANDB directory
-      ansible.builtin.file:
-        path: /home/almalinux/data/UP000005640_9606_HUMAN_v4
-        state: absent
     - name: Create HUMANDB directory
       ansible.builtin.file:
         path: /home/almalinux/data/UP000005640_9606_HUMAN_v4
@@ -61,10 +57,6 @@
         chdir: /home/almalinux/data/UP000005640_9606_HUMAN_v4
         cmd: gunzip *.gz
 
-    - name: Delete ECOLIDB directory
-      ansible.builtin.file:
-        path: /home/almalinux/data/UP000000625_83333_ECOLI_v4
-        state: absent
     - name: Create ECOLIDB directory
       ansible.builtin.file:
         path: /home/almalinux/data/UP000000625_83333_ECOLI_v4
