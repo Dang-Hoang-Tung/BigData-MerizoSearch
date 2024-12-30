@@ -9,7 +9,7 @@
       ansible.builtin.stat:
         path: "{{ system_updated_file }}"
       register: system_updated
-    - name: Skip if system is already updated
+    - name: End play if system is already updated
       meta: end_play
       when: system_updated.stat.exists
 

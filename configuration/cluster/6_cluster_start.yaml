@@ -13,7 +13,7 @@
       register: resourcemanager_status
       ignore_errors: true
 
-    - name: Skip if both Hadoop deamons are already running
+    - name: End play if both Hadoop deamons are already running
       meta: end_play
       # Return code 0 means success (grep returned at least 1 process) - daemon is running
       when: namenode_status.rc == 0 and resourcemanager_status.rc == 0
