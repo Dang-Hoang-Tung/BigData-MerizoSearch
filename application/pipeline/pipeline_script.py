@@ -61,6 +61,14 @@ def pipeline(filepath, id, outpath):
     # STEP 2
     run_parser(id, outpath)
 
+def run_test(spark_context, data_dir):
+    rdd = spark_context.wholeTextFiles(data_dir)
+    filenames = rdd.keys().collect()
+    print(filenames)
+    rdd_coalesced = rdd.coalesce(1)
+    rdd_coalesced.saveAsTextFile("/output.txt")
+    return filenames
+
 if __name__ == "__main__":
     pdbfiles = read_dir(sys.argv[1])
     p = multiprocessing.Pool(1)
