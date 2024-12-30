@@ -65,7 +65,7 @@ def run_test(spark_context, data_dir):
     rdd = spark_context.wholeTextFiles(data_dir)
     filenames = rdd.keys().collect()
     print(filenames)
-    rdd_coalesced = rdd.coalesce(1)
+    rdd_coalesced = rdd.keys().coalesce(1)
     rdd_coalesced.saveAsTextFile("/output.txt")
     return filenames
 
