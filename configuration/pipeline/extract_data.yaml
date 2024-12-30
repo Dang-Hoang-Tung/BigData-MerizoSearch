@@ -49,6 +49,9 @@
         chdir: /home/almalinux/data/UP000000625_83333_ECOLI_v4
         cmd: gunzip *.gz
 
+- name: Download the CATHDB data
+  hosts: workergroup
+  tasks:
     - name: Create CATHDB directory
       ansible.builtin.file:
         path: /home/almalinux/data/cath_foldclassdb

@@ -12,7 +12,3 @@
     - name: Copy ECOLIDB data to HDFS
       ansible.builtin.shell:
         cmd: hdfs dfs -put /home/almalinux/data/UP000000625_83333_ECOLI_v4 /analysis_data/UP000000625_83333_ECOLI_v4
-
-    - name: Copy CATHDB data to HDFS
-      ansible.builtin.shell:
-        cmd: hdfs dfs -put /home/almalinux/data/cath_foldclassdb /analysis_data/cath_foldclassdb
