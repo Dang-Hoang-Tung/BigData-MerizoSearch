@@ -61,11 +61,6 @@ def pipeline(filepath, id, outpath):
     # STEP 2
     run_parser(id, outpath)
 
-def run_script():
-    pdbfiles = read_dir(sys.argv[1])
-    p = multiprocessing.Pool(1)
-    p.starmap(pipeline, pdbfiles[:10])
-
 if __name__ == "__main__":
     pdbfiles = read_dir(sys.argv[1])
     p = multiprocessing.Pool(1)
