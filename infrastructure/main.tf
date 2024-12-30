@@ -50,12 +50,14 @@ module "mgmt_vm" {
 
   tags = {
     # Ingress configurations
-    "condenser_ingress_isEnabled"     = true
-    "condenser_ingress_isAllowed"     = true
-    "condenser_ingress_hdfs_hostname" = "hdfs-${var.username}"
-    "condenser_ingress_hdfs_port"     = 9870
-    "condenser_ingress_yarn_hostname" = "yarn-${var.username}"
-    "condenser_ingress_yarn_port"     = 8088
+    "condenser_ingress_isEnabled"      = true
+    "condenser_ingress_isAllowed"      = true
+    "condenser_ingress_hdfs_hostname"  = "hdfs-${var.username}"
+    "condenser_ingress_hdfs_port"      = 9870
+    "condenser_ingress_yarn_hostname"  = "yarn-${var.username}"
+    "condenser_ingress_yarn_port"      = 8088
+    "condenser_ingress_spark_hostname" = "spark-${var.username}"
+    "condenser_ingress_spark_port"     = 4040
   }
 }
 
