@@ -5,8 +5,8 @@
   tasks:
   - name: "Clone git repo"
     ansible.builtin.git:
-      repo: "https://github.com/CodingPengwing/pipeline.git"
-      dest: "/home/almalinux/application"
+      repo: "https://github.com/CodingPengwing/mz-application.git"
+      dest: "/home/almalinux"
   - name: "Set up software"
     ansible.builtin.pip:
-      name: "/home/almalinux/application"
+      name: "/home/almalinux/mz-application"
