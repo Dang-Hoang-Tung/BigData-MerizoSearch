@@ -43,7 +43,7 @@ def run_merizo_search(input_file, id):
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
     out, err = p.communicate()
     
-def read_dir(input_dir):
+def read_dir(input_dir, output_dir):
     """
     Function reads a fasta formatted file of protein sequences
     """
@@ -52,7 +52,7 @@ def read_dir(input_dir):
     analysis_files = []
     for file in file_ids:
         id = file.rsplit('/', 1)[-1]
-        analysis_files.append([file, id, sys.argv[2]])
+        analysis_files.append([file, id, output_dir])
     return(analysis_files)
 
 def pipeline(filepath, id, outpath):
@@ -70,6 +70,6 @@ def run_test(spark_context, data_dir):
     return filenames
 
 if __name__ == "__main__":
-    pdbfiles = read_dir(sys.argv[1])
+    pdbfiles = read_dir(sys.argv[1], sys.argv[2])
     p = multiprocessing.Pool(1)
     p.starmap(pipeline, pdbfiles[:10])
