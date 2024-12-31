@@ -34,11 +34,11 @@
         owner: almalinux
         group: almalinux
 
-    - name: Count files in the tar file
-      shell: tar -tf /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar | wc -l
+    - name: Count pdb files in the tar file
+      shell: tar -tf /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar | grep '\.pdb' | wc -l
       register: tar_file_count
     - name: Count files in the directory
-      shell: find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f | wc -l
+      shell: find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f -name '*.pdb' | wc -l
       register: dir_file_count
 
     - name: End play if file count is the same
@@ -96,10 +96,10 @@
         group: almalinux
 
     - name: Count files in the tar file
-      shell: tar -tf /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar | wc -l
+      shell: tar -tf /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar | grep '\.pdb' | wc -l
       register: tar_file_count
     - name: Count files in the directory
-      shell: find /home/almalinux/data/UP000000625_83333_ECOLI_v4 -type f | wc -l
+      shell: find /home/almalinux/data/UP000000625_83333_ECOLI_v4 -type f -name '*.pdb'| wc -l
       register: dir_file_count
 
     - name: End play if file count is the same
