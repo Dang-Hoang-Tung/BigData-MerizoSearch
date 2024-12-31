@@ -6,6 +6,7 @@
     - name: Delete existing application directory
       ansible.builtin.file:
         path: "/home/almalinux/application"
+        state: absent
     - name: "Distribute application repo"
       ansible.builtin.copy:
         # Copy local files to remote machines
