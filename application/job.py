@@ -5,7 +5,7 @@ from pyspark.sql import SparkSession
 spark = SparkSession.builder.appName("MerizoSearch").getOrCreate()
 sc = spark.sparkContext
 
-data_dir = "/analysis_data/test"
+data_dir = "/test"
 
 filenames = run_test(sc, data_dir)
 
