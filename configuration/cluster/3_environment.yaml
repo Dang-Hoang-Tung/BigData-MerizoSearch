@@ -2,8 +2,6 @@
   hosts: all
   become: true
   become_user: root
-  vars_files:
-    - variables.yaml
   tasks:
     - name: Install dev tools, python3, java
       ansible.builtin.dnf:
@@ -48,11 +46,3 @@
       ansible.builtin.hostname:
         name: "{{ inventory_hostname }}"
         use: systemd
-
-    # Create hdfs directory
-    - name: Add hdfs directory
-      ansible.builtin.file:
-        path: "{{ hdfs_dir }}"
-        owner: almalinux
-        group: almalinux
-        state: directory

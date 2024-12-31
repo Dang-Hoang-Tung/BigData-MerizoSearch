@@ -16,6 +16,14 @@
         extra_opts:
           - --transform
           - "s/^hadoop[a-zA-Z0-9._-]*/{{ hadoop_home_dir_name }}/"
+        # Create hdfs directory
+    - name: Add hdfs directory
+      ansible.builtin.file:
+        path: "{{ hdfs_dir }}"
+        owner: almalinux
+        group: almalinux
+        state: directory
+
     - name: Set Hadoop environment variables
       ansible.builtin.blockinfile:
         path: "{{ working_dir }}/.bashrc"
@@ -87,6 +95,22 @@
           <property>
               <name>yarn.log-aggregation-enable</name>
               <value>true</value>
+          </property>
+          <property>
+              <name>yarn.nodemanager.resource.cpu-vcores</name>
+              <value>4</value>
+          </property>
+          <property>
+              <name>yarn.scheduler.minimum-allocation-vcores</name>
+              <value>2</value>
+          </property>
+          <property>
+              <name>yarn.nodemanager.resource.memory-mb</name>
+              <value>29013</value>
+          </property>
+          <property>
+              <name>yarn.scheduler.maximum-allocation-mb</name>
+              <value>13824</value>
           </property>
         state: present
     - name: config mapred-site.xml
