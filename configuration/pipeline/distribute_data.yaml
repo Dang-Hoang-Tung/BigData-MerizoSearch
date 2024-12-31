@@ -1,12 +1,58 @@
-- name: Sync data to hdfs
+- name: Sync HUMANDB to hdfs
   hosts: storagegroup
   tasks:
+    - name: Check HUMANDB data in disk
+      ansible.builtin.shell:
+        cmd: ls /home/almalinux/data/UP000005640_9606_HUMAN_v4 -1 | wc -l
+      register: humandb_disk
+      ignore_errors: yes
+
+    - name: Check HUMANDB data in HDFS
+      ansible.builtin.shell:
+        cmd: hdfs dfs -count /UP000005640_9606_HUMAN_v4 | awk '{print $2}'
+      register: humandb_hdfs
+      ignore_errors: yes
+
+    - name: End play if file count is the same (already synced)
+      meta: end_play
+      when: humandb_disk.stdout == humandb_hdfs.stdout
+
+    - name: Delete HUMANDB data in HDFS
+      ansible.builtin.shell:
+        cmd: hdfs dfs -rm -r /UP000005640_9606_HUMAN_v4
+      ignore_errors: yes
+
     - name: Copy HUMANDB data to HDFS
       ansible.builtin.shell:
         chdir: /home/almalinux/data
         cmd: hdfs dfs -put UP000005640_9606_HUMAN_v4 /UP000005640_9606_HUMAN_v4
 
+- name: Sync ECOLIDB to hdfs
+  hosts: storagegroup
+  tasks:
+    - name: Check ECOLIDB data in disk
+      ansible.builtin.shell:
+        cmd: ls /home/almalinux/data/UP000000625_83333_ECOLI_v4 -1 | wc -l
+      register: ecolidb_disk
+      ignore_errors: yes
+
+    - name: Check ECOLIDB data in HDFS
+      ansible.builtin.shell:
+        cmd: hdfs dfs -count /UP000000625_83333_ECOLI_v4 | awk '{print $2}'
+      register: ecolidb_hdfs
+      ignore_errors: yes
+
+    - name: End play if file count is the same (already synced)
+      meta: end_play
+      when: ecolidb_disk.stdout == ecolidb_hdfs.stdout
+
+    - name: Delete ECOLIDB data in HDFS
+      ansible.builtin.shell:
+        cmd: hdfs dfs -rm -r /UP000000625_83333_ECOLI_v4
+      ignore_errors: yes
+
     - name: Copy ECOLIDB data to HDFS
       ansible.builtin.shell:
         chdir: /home/almalinux/data
         cmd: hdfs dfs -put UP000000625_83333_ECOLI_v4 /UP000000625_83333_ECOLI_v4
+      when: ecolidb_disk.stdout != ecolidb_hdfs.stdout
