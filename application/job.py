@@ -7,11 +7,11 @@ sc = spark.sparkContext
 
 data_dir = "/test"
 
-filenames = run_test(sc, data_dir)
+# filenames = run_test(sc, data_dir)
 
-print("Outside")
-print(filenames)
-print("Done")
+# print("Outside")
+# print(filenames)
+# print("Done")
 
 pipeline('hdfs://mgmtnode:9000/test/AF-Q46871-F1-model_v4.pdb', 'AF-Q46871-F1-model_v4.pdb', '')
 
