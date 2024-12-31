@@ -1,4 +1,4 @@
-- name: Download the HUMANDB and ECOLIDB data
+- name: Download the HUMANDB data
   hosts: storagegroup
   vars:
     tmp_dir: /home/almalinux/data/tmp
@@ -21,6 +21,56 @@
         tmp_dest: "{{ tmp_dir }}"
       when: not humandb.stat.exists
 
+    - name: Remove temp folder
+      ansible.builtin.file:
+        path: "{{ tmp_dir }}"
+        state: absent
+
+    - name: Create HUMANDB directory
+      ansible.builtin.file:
+        path: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+        state: directory
+        mode: 0755
+        owner: almalinux
+        group: almalinux
+
+    - name: Count files in the tar file
+      command: "tar -tf /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar | wc -l"
+      register: tar_file_count
+    - name: Count files in the directory
+      command: find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f | wc -l
+      register: dir_file_count
+
+    - name: End play if file count is the same
+      meta: end_play
+      when: tar_file_count.stdout == dir_file_count.stdout
+
+    - name: Extract the HUMANDB archive
+      ansible.builtin.unarchive:
+        remote_src: true
+        src: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
+        dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+        extra_opts:
+          - --wildcards
+          - "*.pdb.gz"
+
+    - name: Extract each .gz file
+      ansible.builtin.shell:
+        chdir: /home/almalinux/data/UP000005640_9606_HUMAN_v4
+        cmd: gunzip *.gz
+
+- name: Download the ECOLIDB data
+  hosts: storagegroup
+  vars:
+    tmp_dir: /home/almalinux/data/tmp
+    data_dir: /home/almalinux/data
+  tasks:
+    - name: Create temp folder for incomplete downloads
+      ansible.builtin.file:
+        path: "{{ tmp_dir }}"
+        state: directory
+        mode: 0755
+
     - name: Check existence of ECOLIDB archive
       ansible.builtin.stat:
         path: /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar
@@ -37,26 +87,6 @@
         path: "{{ tmp_dir }}"
         state: absent
 
-    - name: Create HUMANDB directory
-      ansible.builtin.file:
-        path: /home/almalinux/data/UP000005640_9606_HUMAN_v4
-        state: directory
-        mode: 0755
-        owner: almalinux
-        group: almalinux
-    - name: Extract the HUMANDB archive
-      ansible.builtin.unarchive:
-        remote_src: true
-        src: /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar
-        dest: /home/almalinux/data/UP000005640_9606_HUMAN_v4
-        extra_opts:
-          - --wildcards
-          - "*.pdb.gz"
-    - name: Extract each .gz file
-      ansible.builtin.shell:
-        chdir: /home/almalinux/data/UP000005640_9606_HUMAN_v4
-        cmd: gunzip *.gz
-
     - name: Create ECOLIDB directory
       ansible.builtin.file:
         path: /home/almalinux/data/UP000000625_83333_ECOLI_v4
@@ -64,6 +94,18 @@
         mode: 0755
         owner: almalinux
         group: almalinux
+
+    - name: Count files in the tar file
+      command: "tar -tf /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar | wc -l"
+      register: tar_file_count
+    - name: Count files in the directory
+      command: find /home/almalinux/data/UP000000625_83333_ECOLI_v4 -type f | wc -l
+      register: dir_file_count
+
+    - name: End play if file count is the same
+      meta: end_play
+      when: tar_file_count.stdout == dir_file_count.stdout
+
     - name: Extract the ECOLIDB archive
       ansible.builtin.unarchive:
         remote_src: true
@@ -72,6 +114,7 @@
         extra_opts:
           - --wildcards
           - "*.pdb.gz"
+
     - name: Extract each .gz file
       ansible.builtin.shell:
         chdir: /home/almalinux/data/UP000000625_83333_ECOLI_v4
