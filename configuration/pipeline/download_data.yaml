@@ -35,10 +35,10 @@
         group: almalinux
 
     - name: Count files in the tar file
-      command: "tar -tf /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar | wc -l"
+      shell: tar -tf /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar | wc -l
       register: tar_file_count
     - name: Count files in the directory
-      command: find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f | wc -l
+      shell: find /home/almalinux/data/UP000005640_9606_HUMAN_v4 -type f | wc -l
       register: dir_file_count
 
     - name: End play if file count is the same
@@ -96,10 +96,10 @@
         group: almalinux
 
     - name: Count files in the tar file
-      command: "tar -tf /home/almalinux/data/UP000000625_83333_ECOLI_v4.tar | wc -l"
+      shell: tar -tf /home/almalinux/data/UP000005640_9606_HUMAN_v4.tar | wc -l
       register: tar_file_count
     - name: Count files in the directory
-      command: find /home/almalinux/data/UP000000625_83333_ECOLI_v4 -type f | wc -l
+      shell: find /home/almalinux/data/UP000000625_83333_ECOLI_v4 -type f | wc -l
       register: dir_file_count
 
     - name: End play if file count is the same
