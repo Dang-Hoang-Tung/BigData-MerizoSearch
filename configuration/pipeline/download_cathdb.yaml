@@ -32,3 +32,8 @@
         remote_src: true
         src: /home/almalinux/cath_foldclassdb.tar.gz
         dest: /home/almalinux/cath_foldclassdb
+
+    - name: Remove the CATHDB archive
+      ansible.builtin.file:
+        path: /home/almalinux/cath_foldclassdb.tar.gz
+        state: absent

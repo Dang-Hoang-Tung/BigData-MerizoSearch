@@ -5,7 +5,7 @@
   tasks:
     - name: "Distribute application repo"
       ansible.builtin.copy:
-        # Copy local files to remote machines (uses relative path to the ./files directory)
+        # Copy local files to remote machines
         src: "{{ playbook_dir }}/../../application"
         dest: "/home/almalinux/mz-application"
     - name: "Download merizo-search repo"

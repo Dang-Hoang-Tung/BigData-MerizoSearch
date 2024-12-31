@@ -16,7 +16,10 @@
         extra_opts:
           - --transform
           - "s/^hadoop[a-zA-Z0-9._-]*/{{ hadoop_home_dir_name }}/"
-        # Create hdfs directory
+
+    # TODO: remove archive file
+
+    # Create hdfs directory
     - name: Add hdfs directory
       ansible.builtin.file:
         path: "{{ hdfs_dir }}"
