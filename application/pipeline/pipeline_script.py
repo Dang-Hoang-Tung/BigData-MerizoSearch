@@ -9,11 +9,11 @@ usage: python pipeline_script.py [INPUT DIR] [OUTPUT DIR]
 approx 5seconds per analysis
 """
 
-def run_parser(input_file, output_dir):
+def run_parser(fileId, output_dir):
     """
     Run the results_parser.py over the hhr file to produce the output summary
     """
-    search_file = input_file+"_search.tsv"
+    search_file = fileId+"_search.tsv"
     print(search_file, output_dir)
     cmd = ['python', './results_parser.py', output_dir, search_file]
     print(f'STEP 2: RUNNING PARSER: {" ".join(cmd)}')
@@ -29,7 +29,7 @@ def run_merizo_search(input_file, id):
            '/home/almalinux/merizo_search/merizo_search/merizo.py',
            'easy-search',
            input_file,
-           '/home/almalinux/merizo_search/examples/database/cath-4.3-foldclassdb',
+           '/home/almalinux/cath_foldclassdb/cath-4.3-foldclassdb',
            id,
            'tmp',
            '--iterate',
@@ -37,7 +37,7 @@ def run_merizo_search(input_file, id):
            '-d',
            'cpu',
            '--threads',
-           '2'
+           '1'
            ]
     print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
@@ -55,18 +55,18 @@ def read_dir(input_dir, output_dir):
         analysis_files.append([file, id, output_dir])
     return(analysis_files)
 
-def pipeline(filepath, id, outpath):
+def pipeline(filepath, fileId, output_dir):
     # STEP 1
-    run_merizo_search(filepath, id)
+    run_merizo_search(filepath, fileId)
     # STEP 2
-    run_parser(id, outpath)
+    run_parser(fileId, output_dir)
 
 def run_test(spark_context, data_dir):
     rdd = spark_context.wholeTextFiles(data_dir)
     filenames = rdd.keys().collect()
     print(filenames)
     rdd_coalesced = rdd.keys().coalesce(1)
-    rdd_coalesced.saveAsTextFile("/output.txt")
+    rdd_coalesced.saveAsTextFile("/output")
     return filenames
 
 if __name__ == "__main__":

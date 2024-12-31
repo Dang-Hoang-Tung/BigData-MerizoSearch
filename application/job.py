@@ -1,4 +1,4 @@
-from pipeline.pipeline_script import run_test
+from pipeline.pipeline_script import pipeline
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
 
@@ -12,6 +12,8 @@ filenames = run_test(sc, data_dir)
 print("Outside")
 print(filenames)
 print("Done")
+
+pipeline('hdfs://mgmtnode:9000/test/AF-Q46871-F1-model_v4.pdb', 'AF-Q46871-F1-model_v4.pdb', '')
 
 # results_human = analyse_spark("/analysis_data/UP000005640_9606_HUMAN_v4", sc, "arms")
 # results_ecoli = analyse_spark("/analysis_data/UP000000625_83333_ECOLI_v4.tar", sc, "arms")
