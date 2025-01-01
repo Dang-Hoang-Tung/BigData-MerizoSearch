@@ -43,8 +43,10 @@ def run_pipeline(input_dir, output_dir):
     # print(sys.argv[1], sys.argv[2])
     # pdbfiles = read_dir(input_dir, output_dir)
     # print(pdbfiles)
-    pdb_files = sc.binaryFiles(data_dir).map(lambda x: [x[0], BytesIO(x[1])])
+    pdb_files = sc.binaryFiles(data_dir).map(lambda x: pipeline(BytesIO(x[0]), x[1], "/home/almalinux/")).collect()
+
     print(pdb_files)
+    # pdb_files_bytes.map(lambda x: pipeline(x[0], x[1], x[2])).collect()
     # rdd = spark.sparkContext.parallelize(pdbfiles)
     # print(rdd)
     # print("STARTING")
