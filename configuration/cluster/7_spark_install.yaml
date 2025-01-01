@@ -18,7 +18,10 @@
           - --transform
           - "s/^spark[a-zA-Z0-9._-]*/{{ spark_home_dir_name }}/"
 
-    # TODO: remove archive file
+    - name: Remove archive file
+      ansible.builtin.file:
+        path: "{{ spark_archive_file_path }}"
+        state: absent
 
     - name: Write config file
       ansible.builtin.template:

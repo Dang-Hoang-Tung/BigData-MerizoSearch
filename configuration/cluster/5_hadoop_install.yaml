@@ -17,7 +17,10 @@
           - --transform
           - "s/^hadoop[a-zA-Z0-9._-]*/{{ hadoop_home_dir_name }}/"
 
-    # TODO: remove archive file
+    - name: Remove Hadoop archive file
+      ansible.builtin.file:
+        path: "{{ hadoop_archive_file_path }}"
+        state: absent
 
     # Create hdfs directory
     - name: Add hdfs directory
