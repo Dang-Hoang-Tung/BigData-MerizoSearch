@@ -7,15 +7,16 @@
       ansible.builtin.file:
         path: "/home/almalinux/application"
         state: absent
+    # Copy local files to remote machines
     - name: "Distribute application repo"
       ansible.builtin.copy:
-        # Copy local files to remote machines
         src: "{{ playbook_dir }}/../../application/"
         dest: "/home/almalinux/application/"
     - name: "Download merizo-search repo"
       ansible.builtin.git:
         repo: "https://github.com/psipred/merizo_search"
         dest: "/home/almalinux/merizo_search"
+        version: "4db7da72b2ef14061777806a99628faa3d6cf2c5"
     - name: "Install python dependencies"
       ansible.builtin.pip:
         requirements: "/home/almalinux/application/requirements.txt"
