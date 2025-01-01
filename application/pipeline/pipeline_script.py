@@ -51,7 +51,7 @@ def run_merizo_search(input_file, id):
     print(out.decode("utf-8"))
     print(err.decode("utf-8"))
     
-def read_dir(input_dir):
+def read_dir(input_dir, output_dir):
     """
     Function reads a fasta formatted file of protein sequences
     """
@@ -62,7 +62,7 @@ def read_dir(input_dir):
     analysis_files = []
     for file in file_paths:
         id = os.path.basename(file)
-        analysis_files.append([file, id, sys.argv[2]])
+        analysis_files.append([file, id, output_dir])
     return(analysis_files)
 
 def pipeline(filepath, id, outpath):
@@ -73,7 +73,7 @@ def pipeline(filepath, id, outpath):
 
 def run_pipeline(input_dir, output_dir):
     # print(sys.argv[1], sys.argv[2])
-    pdbfiles = read_dir(input_dir)
+    pdbfiles = read_dir(input_dir, output_dir)
     print(pdbfiles)
     rdd = spark.sparkContext.parallelize(pdbfiles)
     results = rdd.map(lambda x: pipeline(x[0], x[1], x[2])).collect()
