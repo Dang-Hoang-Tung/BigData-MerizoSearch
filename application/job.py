@@ -3,6 +3,7 @@ from pyspark import SparkContext
 from pyspark.sql import SparkSession
 import os
 from subprocess import Popen, PIPE
+from io import BytesIO
 
 spark = SparkSession.builder.appName("MerizoSearch").getOrCreate()
 sc = spark.sparkContext
@@ -24,7 +25,6 @@ data_dir = "/test"
 # out, err = p.communicate()
 # print(out.decode("utf-8"))
 # print("Done 2")
-
 def read_dir(input_dir, output_dir):
     """
     Function reads a fasta formatted file of protein sequences
@@ -41,14 +41,16 @@ def read_dir(input_dir, output_dir):
 
 def run_pipeline(input_dir, output_dir):
     # print(sys.argv[1], sys.argv[2])
-    pdbfiles = read_dir(input_dir, output_dir)
-    print(pdbfiles)
-    rdd = spark.sparkContext.parallelize(pdbfiles)
-    print(rdd)
-    print("STARTING")
-    results = rdd.map(lambda x: pipeline(x[0], x[1], x[2])).collect()
-    print(results)
-    print("DONE")
+    # pdbfiles = read_dir(input_dir, output_dir)
+    # print(pdbfiles)
+    pdb_files = sc.binaryFiles(data_dir).map(lambda x: [x[0], BytesIO(x[1])])
+    print(pdb_files)
+    # rdd = spark.sparkContext.parallelize(pdbfiles)
+    # print(rdd)
+    # print("STARTING")
+    # results = rdd.map(lambda x: pipeline(x[0], x[1], x[2])).collect()
+    # print(results)
+    # print("DONE")
 
 run_pipeline(data_dir, "/home/almalinux/")
 
