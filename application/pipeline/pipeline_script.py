@@ -49,6 +49,7 @@ def run_merizo_search(input_file, id):
     out, err = p.communicate()
     print(out.decode("utf-8"))
     print(err.decode("utf-8"))
+    return [out.decode("utf-8"), err.decode("utf-8")]
 
 def pipeline(filepath, id, outpath):
     # Get the current working directory
@@ -59,10 +60,10 @@ def pipeline(filepath, id, outpath):
     script_directory = os.path.dirname(os.path.abspath(__file__))
     print(f"Script Directory: {script_directory}")
     # STEP 1
-    run_merizo_search(filepath, id)
+    res = run_merizo_search(filepath, id)
     # STEP 2
     run_parser(id, outpath)
-    return [current_directory, script_directory]
+    return [current_directory, res]
 
 # if __name__ == "__main__":
 #     print(sys.argv[1], sys.argv[2])
