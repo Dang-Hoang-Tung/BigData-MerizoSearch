@@ -43,9 +43,7 @@ def run_merizo_search(input_file, id):
            '-d',
            'cpu',
            '--threads',
-           '1',
-           '--output',
-           'file:///home/almalinux/output/'
+           '1'
            ]
     print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
