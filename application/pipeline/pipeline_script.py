@@ -25,13 +25,14 @@ def run_parser(input_file, output_dir):
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
     out, err = p.communicate()
     print(out.decode("utf-8"))
+    print(err.decode("utf-8"))
 
 def run_merizo_search(input_file, id):
     """
     Runs the merizo domain predictor to produce domains
     """
     cmd = ['python3',
-           'file:///home/almalinux/merizo_search/merizo_search/merizo.py',
+           '/home/almalinux/merizo_search/merizo_search/merizo.py',
            'easy-search',
            input_file,
            'file:///home/almalinux/cath_foldclassdb/cath-4.3-foldclassdb',
@@ -49,6 +50,8 @@ def run_merizo_search(input_file, id):
     print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
     out, err = p.communicate()
+    print(out.decode("utf-8"))
+    print(err.decode("utf-8"))
     
 def read_dir(input_dir):
     """
