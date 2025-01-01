@@ -44,7 +44,7 @@ def run_merizo_search(input_file, id):
            '--threads',
            '1',
            '--output',
-           'file:///home/almalinux/'
+           'file:///home/almalinux/output/'
            ]
     print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
@@ -55,10 +55,12 @@ def read_dir(input_dir):
     Function reads a fasta formatted file of protein sequences
     """
     print("Getting file list")
-    file_ids = list(glob.glob(input_dir+"*.pdb"))
+    rdd = sc.wholeTextFiles(os.path.join(input_dir, "*.pdb"))
+    # file_ids = list(glob.glob(input_dir+"*.pdb"))
+    file_paths = rdd.keys().collect()
     analysis_files = []
-    for file in file_ids:
-        id = file.rsplit('/', 1)[-1]
+    for file in file_paths:
+        id = os.path.basename(file)
         analysis_files.append([file, id, sys.argv[2]])
     return(analysis_files)
 
