@@ -15,10 +15,10 @@ data_dir = "/test"
 # print(filenames)
 # print("Done")
 
-pipeline('/test/AF-Q46871-F1-model_v4.pdb', 'AF-Q46871-F1-model_v4.pdb', "~/output")
-print("Done 1")
+# pipeline('/test/AF-Q46871-F1-model_v4.pdb', 'AF-Q46871-F1-model_v4.pdb', "~/output")
+# print("Done 1")
 
-cmd = ['python', 'test/pipeline_script.py', '/test', '~/output']
+cmd = ['python', 'application/pipeline/pipeline_script.py', data_dir, 'file:///home/almalinux/output/']
 print(f'STEP 0: RUNNING PIPELINE: {" ".join(cmd)}')
 p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
 out, err = p.communicate()
