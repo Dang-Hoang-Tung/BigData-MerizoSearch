@@ -35,7 +35,7 @@ def run_merizo_search(input_file, id):
            '/home/almalinux/merizo_search/merizo_search/merizo.py',
            'easy-search',
            input_file,
-           'file:///home/almalinux/cath_foldclassdb/cath-4.3-foldclassdb',
+           '/home/almalinux/cath_foldclassdb/cath-4.3-foldclassdb',
            id,
            'tmp',
            '--iterate',
