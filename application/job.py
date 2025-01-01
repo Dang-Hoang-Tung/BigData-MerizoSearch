@@ -25,7 +25,7 @@ data_dir = "/test"
 # print(out.decode("utf-8"))
 # print("Done 2")
 
-run_pipeline(data_dir, "file:///home/almalinux/output/")
+run_pipeline(data_dir, "")
 
 # results_human = analyse_spark("/analysis_data/UP000005640_9606_HUMAN_v4", sc, "arms")
 # results_ecoli = analyse_spark("/analysis_data/UP000000625_83333_ECOLI_v4.tar", sc, "arms")
