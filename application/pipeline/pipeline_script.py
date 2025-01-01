@@ -76,6 +76,8 @@ def run_pipeline(input_dir, output_dir):
     pdbfiles = read_dir(input_dir, output_dir)
     print(pdbfiles)
     rdd = spark.sparkContext.parallelize(pdbfiles)
+    print(rdd)
+    print("STARTING")
     results = rdd.map(lambda x: pipeline(x[0], x[1], x[2])).collect()
     print(results)
     print("DONE")

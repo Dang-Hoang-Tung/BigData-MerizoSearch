@@ -1,4 +1,4 @@
-from application.pipeline.pipeline_script import run_pipeline
+from pipeline.pipeline_script import run_pipeline
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
 
