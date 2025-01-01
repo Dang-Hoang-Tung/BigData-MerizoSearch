@@ -62,6 +62,7 @@ def pipeline(filepath, id, outpath):
     run_merizo_search(filepath, id)
     # STEP 2
     run_parser(id, outpath)
+    return [current_directory, script_directory]
 
 # if __name__ == "__main__":
 #     print(sys.argv[1], sys.argv[2])
