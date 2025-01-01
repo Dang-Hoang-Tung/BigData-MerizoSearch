@@ -74,10 +74,12 @@ def pipeline(filepath, id, outpath):
     run_parser(id, outpath)
 
 def run_pipeline(input_dir, output_dir):
-    print(sys.argv[1], sys.argv[2])
+    # print(sys.argv[1], sys.argv[2])
     pdbfiles = read_dir(input_dir)
+    print(pdbfiles)
     rdd = spark.sparkContext.parallelize(pdbfiles)
-    rdd.map(lambda x: pipeline(x[0], x[1], x[2])).collect()
+    results = rdd.map(lambda x: pipeline(x[0], x[1], x[2])).collect()
+    print(results)
     print("DONE")
 
 if __name__ == "__main__":
