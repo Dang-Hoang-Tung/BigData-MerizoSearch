@@ -47,6 +47,13 @@ def run_merizo_search(input_file, id):
     print(err.decode("utf-8"))
 
 def pipeline(filepath, id, outpath):
+    # Get the current working directory
+    current_directory = os.getcwd()
+    print(f"Current Working Directory: {current_directory}")
+
+    # Get the directory of the currently running script
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    print(f"Script Directory: {script_directory}")
     # STEP 1
     run_merizo_search(filepath, id)
     # STEP 2

@@ -50,7 +50,7 @@ def run_pipeline(input_dir, output_dir):
     print(results)
     print("DONE")
 
-run_pipeline(data_dir, "")
+run_pipeline(data_dir, "/home/almalinux/")
 
 # results_human = analyse_spark("/analysis_data/UP000005640_9606_HUMAN_v4", sc, "arms")
 # results_ecoli = analyse_spark("/analysis_data/UP000000625_83333_ECOLI_v4.tar", sc, "arms")
