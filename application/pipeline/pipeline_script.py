@@ -3,11 +3,16 @@ from subprocess import Popen, PIPE
 import glob
 import os
 import multiprocessing
+from pyspark import SparkContext
+from pyspark.sql import SparkSession
 
 """
 usage: python pipeline_script.py [INPUT DIR] [OUTPUT DIR]
 approx 5seconds per analysis
 """
+
+spark = SparkSession.builder.appName("MerizoSearch").getOrCreate()
+sc = spark.sparkContext
 
 def run_parser(input_file, output_dir):
     """
@@ -26,10 +31,10 @@ def run_merizo_search(input_file, id):
     Runs the merizo domain predictor to produce domains
     """
     cmd = ['python3',
-           '/home/almalinux/merizo_search/merizo_search/merizo.py',
+           'file:///home/almalinux/merizo_search/merizo_search/merizo.py',
            'easy-search',
            input_file,
-           '/home/almalinux/cath_foldclassdb/cath-4.3-foldclassdb',
+           'file:///home/almalinux/cath_foldclassdb/cath-4.3-foldclassdb',
            id,
            'tmp',
            '--iterate',
@@ -37,7 +42,9 @@ def run_merizo_search(input_file, id):
            '-d',
            'cpu',
            '--threads',
-           '1'
+           '1',
+           '--output',
+           'file:///home/almalinux'
            ]
     print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)

@@ -3,8 +3,13 @@ import csv
 import json
 from collections import defaultdict
 import statistics
+from pyspark import SparkContext
+from pyspark.sql import SparkSession
 # fhOut = open(sys.argv[1]."summmary", "w")
 # fhOut.write('ID,domain_count\n')
+
+spark = SparkSession.builder.appName("MerizoSearch").getOrCreate()
+sc = spark.sparkContext
 
 cath_ids = defaultdict(int)
 plDDT_values = []
