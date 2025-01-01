@@ -73,7 +73,9 @@ def pipeline(filepath, id, outpath):
 if __name__ == "__main__":
     print(sys.argv[1], sys.argv[2])
     pdbfiles = read_dir(sys.argv[1])
-    p = multiprocessing.Pool(1)
-    p.starmap(pipeline, pdbfiles[:10])
+    rdd = spark.sparkContext.parallelize(pdbfiles)
+    rdd.map(lambda x: pipeline(x[0], x[1], x[2])).collect()
+    # p = multiprocessing.Pool(1)
+    # p.starmap(pipeline, pdbfiles[:10])
 
         
