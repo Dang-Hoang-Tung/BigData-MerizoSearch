@@ -2,6 +2,8 @@
   hosts: all
   become: true
   become_user: root
+  vars_files:
+    - variables.yaml
   tasks:
     - name: Install dev tools, python3, java
       ansible.builtin.dnf:
