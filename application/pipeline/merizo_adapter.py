@@ -14,6 +14,8 @@ def write_file_to_adapter_dir(file_name, file_content):
     with open(file_path, 'w') as f:
         f.write(file_content)
 
+    os.chmod(file_path, 755)
+
     return file_path
 
 def run_merizo(file_name, file_content):

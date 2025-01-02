@@ -42,9 +42,7 @@ def run_merizo_search(input_file, id):
            '-d',
            'cpu',
            '--threads',
-           '1',
-           '--merizo_output',
-           '/home/almalinux/merizo_files/'
+           '1'
            ]
     print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
     env = os.environ.copy()  # Copy the current environment
