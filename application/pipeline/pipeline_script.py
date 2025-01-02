@@ -17,7 +17,9 @@ def run_parser(input_file, output_dir):
     print(search_file, output_dir)
     cmd = ['python', './results_parser.py', output_dir, search_file]
     print(f'STEP 2: RUNNING PARSER: {" ".join(cmd)}')
-    p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
+    env = os.environ.copy()  # Copy the current environment
+    env['PWD'] = os.getcwd()  # Explicitly set PWD
+    p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=os.getcwd(), env=env)
     out, err = p.communicate()
     print(out.decode("utf-8"))
     print(err.decode("utf-8"))
@@ -43,7 +45,9 @@ def run_merizo_search(input_file, id):
            "/home/almalinux/merizo_files"
            ]
     print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
-    p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
+    env = os.environ.copy()  # Copy the current environment
+    env['PWD'] = os.getcwd()  # Explicitly set PWD
+    p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=os.getcwd(), env=env)
     out, err = p.communicate()
     print(out.decode("utf-8"))
     print(err.decode("utf-8"))
