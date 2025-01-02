@@ -60,6 +60,8 @@ def run_merizo_search(file_path: str, file_id: str):
 
 def pipeline(file_path: str):
     directory, file_id = os.path.split(file_path)
+    os.chdir(directory)
+
     # STEP 1
     run_merizo_search(file_path, file_id)
     # STEP 2
