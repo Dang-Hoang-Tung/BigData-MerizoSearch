@@ -27,11 +27,11 @@ def run_command(msg: str, cmd: list):
 #     script_directory = os.path.dirname(os.path.abspath(__file__))
 #     return os.path.join(script_directory, 'results_parser.py')
 
-def run_parser(file_id: str, output_dir: str):
+def run_parser(file_id: str, directory: str):
     """
     Run the results_parser.py over the hhr file to produce the output summary
     """
-    search_result_path = os.path.join(output_dir, f'{file_id}_search.tsv')
+    search_result_path = os.path.join(directory, f'{file_id}_search.tsv')
     # results_parser_path = get_results_parser_path()
     # cmd = ['python', results_parser_path, output_dir, search_result_file]
     # run_command("STEP 2: RUNNING PARSER", cmd)
@@ -54,12 +54,13 @@ def run_merizo_search(file_path: str, file_id: str):
            '-d',
            'cpu',
            '--threads',
-           '2'
+           '1'
            ]
     run_command('STEP 1: RUNNING MERIZO', cmd)
 
-def pipeline(file_path: str, file_id: str, output_dir: str):
+def pipeline(file_path: str):
+    directory, file_id = os.path.split(file_path)
     # STEP 1
     run_merizo_search(file_path, file_id)
     # STEP 2
-    run_parser(file_id, output_dir)
+    run_parser(file_id, directory)

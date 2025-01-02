@@ -11,9 +11,9 @@ dataset = "test"
 input_dir = f'/{dataset}'
 
 def file_entry_mapper(file_entry):
-    file_name = os.path.basename(file_entry[0])
+    file_id = os.path.basename(file_entry[0])
     file_content = file_entry[1]
-    return merizo_adapter(file_name, file_content, dataset)
+    return merizo_adapter(file_id, file_content, dataset)
 
 # Read all text files in the directory
 files_rdd = sc.wholeTextFiles(input_dir)
