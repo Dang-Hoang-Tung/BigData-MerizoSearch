@@ -41,6 +41,7 @@ def file_entry_mapper(file_entry):
 
 # Read all text files in the directory
 files_rdd = sc.wholeTextFiles(input_directory)
-result = files_rdd.map(file_entry_mapper).reduce(lambda x, y: x)
+repartitioned_rdd = files_rdd.repartition(9)
+result = repartitioned_rdd.map(file_entry_mapper).reduce(lambda x, y: x)
 
 print("ALL DONE")
