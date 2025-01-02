@@ -101,7 +101,7 @@
               <value>28672</value>
           </property>
           <property>
-              <name>yarn.scheduler.minimum-allocation-vcores</name>
+              <name>yarn.scheduler.maximum-allocation-vcores</name>
               <value>3</value>
           </property>
         state: present
