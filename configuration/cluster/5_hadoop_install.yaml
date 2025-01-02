@@ -48,7 +48,7 @@
     - name: config core-site.xml
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/core-site.xml"
-        insertafter: <configuration>
+        insertbefore: </configuration>
         marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
         block: |
           <property>
@@ -63,7 +63,7 @@
     - name: config hdfs-site.xml
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/hdfs-site.xml"
-        insertafter: <configuration>
+        insertbefore: </configuration>
         marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
         block: |
           <property>
@@ -84,7 +84,7 @@
     - name: config yarn-site.xml
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/yarn-site.xml"
-        insertafter: <configuration>
+        insertbefore: </configuration>
         marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
         block: |
           <property>
@@ -104,26 +104,34 @@
               <value>true</value>
           </property>
           <property>
+              <name>yarn.nodemanager.resource.memory-mb</name>
+              <value>30720</value>
+          </property>
+          <property>
               <name>yarn.nodemanager.resource.cpu-vcores</name>
               <value>4</value>
           </property>
           <property>
-              <name>yarn.scheduler.minimum-allocation-vcores</name>
-              <value>2</value>
-          </property>
-          <property>
-              <name>yarn.nodemanager.resource.memory-mb</name>
-              <value>29013</value>
-          </property>
-          <property>
               <name>yarn.scheduler.maximum-allocation-mb</name>
-              <value>13824</value>
+              <value>30720</value>
+          </property>
+          <property>
+              <name>yarn.scheduler.minimum-allocation-mb</name>
+              <value>24576</value>
+          </property>
+          <property>
+              <name>yarn.scheduler.maximum-allocation-vcores</name>
+              <value>3</value>
+          </property>
+          <property>
+              <name>yarn.scheduler.minimum-allocation-vcores</name>
+              <value>3</value>
           </property>
         state: present
     - name: config mapred-site.xml
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/mapred-site.xml"
-        insertafter: <configuration>
+        insertbefore: </configuration>
         marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
         block: |
           <property>
@@ -147,6 +155,18 @@
               <value>HADOOP_MAPRED_HOME=$HADOOP_HOME</value>
           </property>
         state: present
+    - name: config capacity-scheduler.xml
+      ansible.builtin.blockinfile:
+        path: "{{ hadoop_config_dir }}/capacity-scheduler.xml"
+        insertbefore: </configuration>
+        marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+        block: |
+          <property>
+              <name>yarn.scheduler.capacity.resource-calculator</name>
+              <value>org.apache.hadoop.yarn.util.resource.DominantResourceCalculator</value>
+          </property>
+        state: present
+        
     - name: fix JAVA_HOME in Hadoop Env script
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/hadoop-env.sh"
