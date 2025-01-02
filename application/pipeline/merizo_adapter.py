@@ -25,7 +25,7 @@ def write_file_to_adapter_dir(file_name: str, file_content: str, directory: str)
     # os.chmod(file_path, 755)
     return file_path
 
-def run_merizo(file_name, file_content, dataset: Literal["human", "ecoli"]):
+def merizo_adapter(file_name, file_content, dataset: Literal["human", "ecoli"]):
     directory = directory_map[dataset]
     # Ensure the directory exists
     os.makedirs(directory, exist_ok=True)

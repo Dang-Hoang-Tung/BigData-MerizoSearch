@@ -1,4 +1,4 @@
-from pipeline.merizo_adapter import run_merizo
+from pipeline.merizo_adapter import merizo_adapter
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
 import os
@@ -12,7 +12,7 @@ dataset = "test"
 def file_entry_mapper(file_entry):
     file_name = os.path.basename(file_entry[0])
     file_content = file_entry[1]
-    return run_merizo(file_name, file_content, dataset)
+    return merizo_adapter(file_name, file_content, dataset)
 
 # Read all text files in the directory
 files_rdd = sc.wholeTextFiles(f'/{dataset}')
