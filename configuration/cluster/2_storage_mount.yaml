@@ -5,11 +5,11 @@
   vars:
     data_disk_dir: /home/almalinux/data
   tasks:
-    - name: Check if data disk is present
+    - name: Check if data disk is mounted
       ansible.builtin.stat:
         path: "{{ data_disk_dir }}"
       register: data_disk
-    - name: Skip formatting if disk is already present
+    - name: End play if disk is already mounted
       meta: end_play
       when: data_disk.stat.exists
 
