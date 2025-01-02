@@ -90,7 +90,7 @@
           </property>
           <property>
               <name>yarn.nodemanager.resource.memory-mb</name>
-              <value>28672</value>
+              <value>29696</value>
           </property>
           <property>
               <name>yarn.nodemanager.resource.cpu-vcores</name>
@@ -98,11 +98,11 @@
           </property>
           <property>
               <name>yarn.scheduler.maximum-allocation-mb</name>
-              <value>28672</value>
+              <value>29696</value>
           </property>
           <property>
               <name>yarn.scheduler.maximum-allocation-vcores</name>
-              <value>3</value>
+              <value>4</value>
           </property>
         state: present
     - name: Configure mapred-site.xml
