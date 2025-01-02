@@ -73,4 +73,4 @@ def pipeline(filepath, id, outpath):
 if __name__ == "__main__":
     pdbfiles = read_dir(sys.argv[1])
     p = multiprocessing.Pool(3)
-    p.starmap(pipeline, pdbfiles[:10])
+    p.starmap(pipeline, pdbfiles)
