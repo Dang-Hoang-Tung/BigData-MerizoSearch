@@ -42,7 +42,7 @@ def run_merizo_search(input_file, id):
            '-d',
            'cpu',
            '--threads',
-           '1'
+           '2'
            ]
     print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
     env = os.environ.copy()  # Copy the current environment
@@ -72,5 +72,5 @@ def pipeline(filepath, id, outpath):
 
 if __name__ == "__main__":
     pdbfiles = read_dir(sys.argv[1])
-    p = multiprocessing.Pool(3)
+    p = multiprocessing.Pool(2)
     p.starmap(pipeline, pdbfiles)
