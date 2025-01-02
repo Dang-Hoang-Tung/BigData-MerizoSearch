@@ -14,21 +14,22 @@ directory_map = {
     "test": TEST_DIR
 }
 
-def write_file_to_adapter_dir(file_name, file_content, dataset: Literal["human", "ecoli", "test"]):
-    # Ensure the directory exists
-    os.makedirs(directory_map[dataset], exist_ok=True)
+def write_file_to_adapter_dir(file_name: str, file_content: str, directory: str):
     # Construct the full file path
-    file_path = os.path.join(directory_map[dataset], file_name)
+    file_path = os.path.join(directory, file_name)
     
     # Write the file contents
     with open(file_path, 'w') as f:
         f.write(file_content)
 
-    os.chmod(file_path, 755)
-
+    # os.chmod(file_path, 755)
     return file_path
 
 def run_merizo(file_name, file_content, dataset: Literal["human", "ecoli"]):
-    write_file_to_adapter_dir(file_name, file_content, dataset)
+    directory = directory_map[dataset]
+    # Ensure the directory exists
+    os.makedirs(directory, exist_ok=True)
 
-    time.sleep(2)
+    write_file_to_adapter_dir(file_name, file_content, directory)
+
+    time.sleep(5)
