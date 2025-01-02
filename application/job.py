@@ -32,7 +32,7 @@ sc = spark.sparkContext
 # run_pipeline(data_dir, "/home/almalinux/")
 
 # Directory containing text files
-input_directory = "/UP000000625_83333_ECOLI_v4"
+input_directory = "/UP000005640_9606_HUMAN_v4"
 
 def file_entry_mapper(file_entry):
     file_name = os.path.basename(file_entry[0])
