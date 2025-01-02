@@ -43,7 +43,7 @@ def run_merizo_search(input_file, id):
            'cpu',
            '--threads',
            '1',
-           '--output',
+           '--merizo_output',
            '/home/almalinux/merizo_files/'
            ]
     print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
