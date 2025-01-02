@@ -1,5 +1,6 @@
 import os
 import time
+from pipeline_script import pipeline
 
 ADAPTER_DIR = "/home/almalinux/merizo_files"
 
@@ -17,4 +18,5 @@ def write_file_to_adapter_dir(file_name, file_content):
 
 def run_merizo(file_name, file_content):
     write_file_to_adapter_dir(file_name, file_content)
+    
     time.sleep(2)

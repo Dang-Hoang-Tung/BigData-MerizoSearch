@@ -19,8 +19,8 @@ def run_parser(input_file, output_dir):
     print(f'STEP 2: RUNNING PARSER: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
     out, err = p.communicate()
-    # print(out.decode("utf-8"))
-    # print(err.decode("utf-8"))
+    print(out.decode("utf-8"))
+    print(err.decode("utf-8"))
 
 def run_merizo_search(input_file, id):
     """
@@ -39,37 +39,32 @@ def run_merizo_search(input_file, id):
            'cpu',
            '--threads',
            '1'
-        #    '--output=/home/almalinux/',
-        #    '--merizo_output=/home/almalinux/',
            ]
     print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
     p = Popen(cmd, stdin=PIPE,stdout=PIPE, stderr=PIPE)
     out, err = p.communicate()
     print(out.decode("utf-8"))
     print(err.decode("utf-8"))
-    return [out.decode("utf-8"), err.decode("utf-8")]
+    
+def read_dir(input_dir):
+    """
+    Function reads a fasta formatted file of protein sequences
+    """
+    print("Getting file list")
+    file_ids = list(glob.glob(input_dir+"*.pdb"))
+    analysis_files = []
+    for file in file_ids:
+        id = file.rsplit('/', 1)[-1]
+        analysis_files.append([file, id, sys.argv[2]])
+    return(analysis_files)
 
 def pipeline(filepath, id, outpath):
-    # Get the current working directory
-    current_directory = os.getcwd()
-    print(f"Current Working Directory: {current_directory}")
-
-    # Get the directory of the currently running script
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    print(f"Script Directory: {script_directory}")
     # STEP 1
-    res = run_merizo_search(filepath, id)
+    run_merizo_search(filepath, id)
     # STEP 2
     run_parser(id, outpath)
-    return [current_directory, res]
 
-# if __name__ == "__main__":
-#     print(sys.argv[1], sys.argv[2])
-#     pdbfiles = read_dir(sys.argv[1])
-#     print(pdbfiles)
-    # rdd = spark.sparkContext.parallelize(pdbfiles)
-    # rdd.map(lambda x: pipeline(x[0], x[1], x[2])).collect()
-    # p = multiprocessing.Pool(1)
-    # p.starmap(pipeline, pdbfiles[:10])
-
-        
+if __name__ == "__main__":
+    pdbfiles = read_dir(sys.argv[1])
+    p = multiprocessing.Pool(3)
+    p.starmap(pipeline, pdbfiles[:10])
