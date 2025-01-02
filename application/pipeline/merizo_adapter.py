@@ -1,7 +1,7 @@
 from typing import Literal
 import os
 import time
-from pipeline_script import pipeline
+from pipeline.pipeline_script import pipeline
 
 ADAPTER_DIR = "/home/almalinux/merizo_files"
 HUMAN_DIR = "/home/almalinux/UP000005640_9606_HUMAN_v4"
