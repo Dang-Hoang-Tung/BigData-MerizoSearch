@@ -17,7 +17,7 @@ def file_entry_mapper(file_entry):
 # Read all text files in the directory
 files_rdd = sc.wholeTextFiles(f'/{dataset}')
 print("NUM_PARTITIONS: ", files_rdd.getNumPartitions())
-repartitioned_rdd = files_rdd.repartition(11)
+repartitioned_rdd = files_rdd.repartition(22)
 result = repartitioned_rdd.map(file_entry_mapper).reduce(lambda x, y: x)
 
 print("ALL DONE")
