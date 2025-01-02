@@ -16,7 +16,7 @@ directory_map = {
 
 def write_file_to_adapter_dir(file_name: str, file_content: str, directory: str):
     # Construct the full file path
-    file_path = os.path.join(directory, file_name)
+    file_path = os.path.join(ADAPTER_DIR, file_name)
     
     # Write the file contents
     with open(file_path, 'w') as f:
