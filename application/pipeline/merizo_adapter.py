@@ -1,35 +1,23 @@
-from typing import Literal
 import os
 import time
 from pipeline.pipeline_script import pipeline
 
 ADAPTER_DIR = "/home/almalinux/merizo_files"
-HUMAN_DIR = "/home/almalinux/UP000005640_9606_HUMAN_v4"
-ECOLI_DIR = "/home/almalinux/UP000000625_83333_ECOLI_v4"
-TEST_DIR = "/home/almalinux/test"
-
-directory_map = {
-    "human": HUMAN_DIR,
-    "ecoli": ECOLI_DIR,
-    "test": TEST_DIR
-}
 
 def write_file_to_adapter_dir(file_name: str, file_content: str, directory: str):
-    # Construct the full file path
-    file_path = os.path.join(ADAPTER_DIR, file_name)
-    
-    # Write the file contents
+    file_path = os.path.join(directory, file_name)
     with open(file_path, 'w') as f:
         f.write(file_content)
-
-    # os.chmod(file_path, 755)
+    # os.chmod(file_path, 777)
     return file_path
 
-def merizo_adapter(file_name, file_content, dataset: Literal["human", "ecoli"]):
-    directory = directory_map[dataset]
-    # Ensure the directory exists
-    os.makedirs(directory, exist_ok=True)
+def run_merizo(file_path: str, file_id: str, dataset: str):
+    pipeline(file_path, file_id, dataset)
+
+def merizo_adapter(file_name: str, file_content: str, dataset: str):
+    directory = os.path.join(ADAPTER_DIR, dataset)
+    os.makedirs(directory, mode=0o777, exist_ok=True)
 
     write_file_to_adapter_dir(file_name, file_content, directory)
 
-    time.sleep(5)
+    # time.sleep(5)
