@@ -30,22 +30,7 @@
         group: almalinux
         state: directory
 
-    - name: Set Hadoop environment variables
-      ansible.builtin.blockinfile:
-        path: "{{ working_dir }}/.bashrc"
-        block: |
-          export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")
-          export HADOOP_HOME={{ hadoop_home_dir }}
-          export HADOOP_INSTALL=$HADOOP_HOME
-          export YARN_HOME=$HADOOP_HOME
-          export PATH=$PATH:$HADOOP_INSTALL/bin:$HOME/{{ spark_home_dir_name }}/bin
-          export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
-          export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
-          export HADOOP_CONF_DIR={{ hadoop_config_dir }}
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HADOOP_HOME/lib/native
-          export MPLCONFIGDIR=/home/almalinux/.config/matplotlib
-        state: present
-    - name: config core-site.xml
+    - name: Configure core-site.xml
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/core-site.xml"
         insertbefore: </configuration>
@@ -60,7 +45,7 @@
               <value>hdfs://mgmtnode:9000/</value>
           </property>
         state: present
-    - name: config hdfs-site.xml
+    - name: Configure hdfs-site.xml
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/hdfs-site.xml"
         insertbefore: </configuration>
@@ -81,7 +66,7 @@
               <value>2</value>
           </property>
         state: present
-    - name: config yarn-site.xml
+    - name: Configure yarn-site.xml
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/yarn-site.xml"
         insertbefore: </configuration>
@@ -128,7 +113,7 @@
               <value>3</value>
           </property>
         state: present
-    - name: config mapred-site.xml
+    - name: Configure mapred-site.xml
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/mapred-site.xml"
         insertbefore: </configuration>
@@ -155,7 +140,7 @@
               <value>HADOOP_MAPRED_HOME=$HADOOP_HOME</value>
           </property>
         state: present
-    - name: config capacity-scheduler.xml
+    - name: Configure capacity-scheduler.xml
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/capacity-scheduler.xml"
         insertbefore: </configuration>
@@ -167,7 +152,7 @@
           </property>
         state: present
         
-    - name: fix JAVA_HOME in Hadoop Env script
+    - name: Fix JAVA_HOME in Hadoop Env script
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/hadoop-env.sh"
         insertafter: "# export JAVA_HOME="
