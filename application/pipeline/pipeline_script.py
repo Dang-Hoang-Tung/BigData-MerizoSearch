@@ -1,24 +1,18 @@
-import sys
 from subprocess import Popen, PIPE
-import glob
 import os
-import multiprocessing
+from pipeline.results_parser import run_results_parser
 
 """
 usage: python pipeline_script.py [INPUT DIR] [OUTPUT DIR]
 approx 5seconds per analysis
 """
 
-def run_parser(file_id, output_dir):
+def run_command(msg: str, cmd: list):
     """
-    Run the results_parser.py over the hhr file to produce the output summary
+    Runs the subshell command and prints the output.
+    Ensuring we have the correct environment variables.
     """
-    search_file = file_id+"_search.tsv"
-    print(search_file, output_dir)
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    results_parser_path = os.path.join(script_directory, 'results_parser.py')
-    cmd = ['python', results_parser_path, output_dir, search_file]
-    print(f'STEP 2: RUNNING PARSER: {" ".join(cmd)}')
+    print(f'{msg} -> {" ".join(cmd)}')
     env = os.environ.copy()  # Copy the current environment
     env['PWD'] = os.getcwd()  # Explicitly set PWD
     p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=os.getcwd(), env=env)
@@ -26,7 +20,25 @@ def run_parser(file_id, output_dir):
     print(out.decode("utf-8"))
     print(err.decode("utf-8"))
 
-def run_merizo_search(file_path, file_id):
+# def get_results_parser_path():
+#     """
+#     Returns the path to the results_parser.py script, which should be adjacent to this script.
+#     """
+#     script_directory = os.path.dirname(os.path.abspath(__file__))
+#     return os.path.join(script_directory, 'results_parser.py')
+
+def run_parser(file_id: str, output_dir: str):
+    """
+    Run the results_parser.py over the hhr file to produce the output summary
+    """
+    search_result_path = os.path.join(output_dir, f'{file_id}_search.tsv')
+    # results_parser_path = get_results_parser_path()
+    # cmd = ['python', results_parser_path, output_dir, search_result_file]
+    # run_command("STEP 2: RUNNING PARSER", cmd)
+    print(f'STEP 2: RUNNING PARSER -> {file_id} - {search_result_path}')
+    run_results_parser(file_id, search_result_path)
+
+def run_merizo_search(file_path: str, file_id: str):
     """
     Runs the merizo domain predictor to produce domains
     """
@@ -44,33 +56,10 @@ def run_merizo_search(file_path, file_id):
            '--threads',
            '2'
            ]
-    print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
-    env = os.environ.copy()  # Copy the current environment
-    env['PWD'] = os.getcwd()  # Explicitly set PWD
-    p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=os.getcwd(), env=env)
-    out, err = p.communicate()
-    print(out.decode("utf-8"))
-    print(err.decode("utf-8"))
-    
-def read_dir(input_dir):
-    """
-    Function reads a fasta formatted file of protein sequences
-    """
-    print("Getting file list")
-    file_ids = list(glob.glob(input_dir+"*.pdb"))
-    analysis_files = []
-    for file in file_ids:
-        id = file.rsplit('/', 1)[-1]
-        analysis_files.append([file, id, sys.argv[2]])
-    return(analysis_files)
+    run_command('STEP 1: RUNNING MERIZO', cmd)
 
-def pipeline(filepath, id, outpath):
+def pipeline(file_path: str, file_id: str, output_dir: str):
     # STEP 1
-    run_merizo_search(filepath, id)
+    run_merizo_search(file_path, file_id)
     # STEP 2
-    run_parser(id, outpath)
-
-if __name__ == "__main__":
-    pdbfiles = read_dir(sys.argv[1])
-    p = multiprocessing.Pool(2)
-    p.starmap(pipeline, pdbfiles)
+    run_parser(file_id, output_dir)

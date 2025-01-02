@@ -7,7 +7,7 @@ spark = SparkSession.builder.appName("MerizoSearch").getOrCreate()
 sc = spark.sparkContext
 
 # Directory containing text files
-dataset = "UP000000625_83333_ECOLI_v4"
+dataset = "test"
 input_dir = f'/{dataset}'
 
 def file_entry_mapper(file_entry):
