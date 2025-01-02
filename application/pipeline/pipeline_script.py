@@ -9,11 +9,11 @@ usage: python pipeline_script.py [INPUT DIR] [OUTPUT DIR]
 approx 5seconds per analysis
 """
 
-def run_parser(input_file, output_dir):
+def run_parser(file_id, output_dir):
     """
     Run the results_parser.py over the hhr file to produce the output summary
     """
-    search_file = input_file+"_search.tsv"
+    search_file = file_id+"_search.tsv"
     print(search_file, output_dir)
     script_directory = os.path.dirname(os.path.abspath(__file__))
     results_parser_path = os.path.join(script_directory, 'results_parser.py')
@@ -26,16 +26,16 @@ def run_parser(input_file, output_dir):
     print(out.decode("utf-8"))
     print(err.decode("utf-8"))
 
-def run_merizo_search(input_file, id):
+def run_merizo_search(file_path, file_id):
     """
     Runs the merizo domain predictor to produce domains
     """
     cmd = ['python3',
            '/home/almalinux/merizo_search/merizo_search/merizo.py',
            'easy-search',
-           input_file,
+           file_path,
            '/home/almalinux/cath_foldclassdb/cath-4.3-foldclassdb',
-           id,
+           file_id,
            'tmp',
            '--iterate',
            '--output_headers',
