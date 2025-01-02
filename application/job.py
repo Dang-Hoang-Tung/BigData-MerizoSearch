@@ -7,7 +7,7 @@ spark = SparkSession.builder.appName("MerizoSearch").getOrCreate()
 sc = spark.sparkContext
 
 # Directory containing text files
-dataset = "test"
+dataset = "ecoli"
 
 def file_entry_mapper(file_entry):
     file_name = os.path.basename(file_entry[0])
@@ -15,7 +15,7 @@ def file_entry_mapper(file_entry):
     return merizo_adapter(file_name, file_content, dataset)
 
 # Read all text files in the directory
-files_rdd = sc.wholeTextFiles(f'/{dataset}')
+files_rdd = sc.wholeTextFiles(f'/UP000000625_83333_ECOLI_v4')
 print("NUM_PARTITIONS: ", files_rdd.getNumPartitions())
 repartitioned_rdd = files_rdd.repartition(22)
 result = repartitioned_rdd.map(file_entry_mapper).reduce(lambda x, y: x)
