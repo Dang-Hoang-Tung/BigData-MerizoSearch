@@ -15,7 +15,9 @@ def run_parser(input_file, output_dir):
     """
     search_file = input_file+"_search.tsv"
     print(search_file, output_dir)
-    cmd = ['python', './results_parser.py', output_dir, search_file]
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    results_parser_path = os.path.join(script_directory, 'results_parser.py')
+    cmd = ['python', results_parser_path, output_dir, search_file]
     print(f'STEP 2: RUNNING PARSER: {" ".join(cmd)}')
     env = os.environ.copy()  # Copy the current environment
     env['PWD'] = os.getcwd()  # Explicitly set PWD
@@ -41,8 +43,8 @@ def run_merizo_search(input_file, id):
            'cpu',
            '--threads',
            '1',
-           '--merizo_output',
-           "/home/almalinux/merizo_files/"
+           '--output',
+           "'/home/almalinux/merizo_files/'"
            ]
     print(f'STEP 1: RUNNING MERIZO: {" ".join(cmd)}')
     env = os.environ.copy()  # Copy the current environment
