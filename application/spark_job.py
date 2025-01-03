@@ -33,7 +33,7 @@ def combine_dict(acc_dict: dict, new_dict: dict):
         # Accumulate the mean plddt values
         if key == MEAN_PLDDT_KEY:
             if key in acc_dict:
-                acc_dict[key].append(new_dict[key])
+                acc_dict[key].extend(new_dict[key])
             else:
                 acc_dict[key] = new_dict[key]
         # Accumulate the counts for each cath_id
