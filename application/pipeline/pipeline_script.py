@@ -7,36 +7,17 @@ usage: python pipeline_script.py [INPUT DIR] [OUTPUT DIR]
 approx 5seconds per analysis
 """
 
-def run_command(msg: str, cmd: list):
+def run_command(cmd: list):
     """
     Runs the subshell command and prints the output.
     Ensuring we have the correct environment variables.
     """
-    print(f'{msg} -> {" ".join(cmd)}')
     env = os.environ.copy()  # Copy the current environment
     env['PWD'] = os.getcwd()  # Explicitly set PWD
     p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=os.getcwd(), env=env)
     out, err = p.communicate()
     print(out.decode("utf-8"))
     print(err.decode("utf-8"))
-
-# def get_results_parser_path():
-#     """
-#     Returns the path to the results_parser.py script, which should be adjacent to this script.
-#     """
-#     script_directory = os.path.dirname(os.path.abspath(__file__))
-#     return os.path.join(script_directory, 'results_parser.py')
-
-def run_parser(file_id: str, directory: str):
-    """
-    Run the results_parser.py over the hhr file to produce the output summary
-    """
-    search_result_path = os.path.join(directory, f'{file_id}_search.tsv')
-    # results_parser_path = get_results_parser_path()
-    # cmd = ['python', results_parser_path, output_dir, search_result_file]
-    # run_command("STEP 2: RUNNING PARSER", cmd)
-    print(f'STEP 2: RUNNING PARSER -> {file_id} - {search_result_path}')
-    run_results_parser(file_id, search_result_path)
 
 def run_merizo_search(file_path: str, file_id: str):
     """
@@ -56,13 +37,21 @@ def run_merizo_search(file_path: str, file_id: str):
            '--threads',
            '1'
            ]
-    run_command('STEP 1: RUNNING MERIZO', cmd)
+    run_command(cmd)
 
 def pipeline(file_path: str):
     directory, file_id = os.path.split(file_path)
     os.chdir(directory)
 
-    # STEP 1
+    # STEP 1 - Merizo search
+    print(f"STEP 1: RUNNING MERIZO -> {file_path} - {file_id}")
     run_merizo_search(file_path, file_id)
-    # STEP 2
-    run_parser(file_id, directory)
+
+    # STEP 2 - Results parser
+    search_file_id = f"{file_id}_search.tsv"
+    search_result_path = os.path.join(directory, search_file_id)
+    print(f'STEP 2: RUNNING PARSER -> {file_id} - {search_result_path}')
+    if (os.path.exists(search_result_path)):
+        run_results_parser(file_id, search_result_path)
+    else:
+        print(f"Search result file not found: {search_result_path}")
