@@ -85,23 +85,23 @@ def write_plddt_means_to_file(ecoli_means_data: list, human_means_data: list, fi
     return df
 
 # TESTING THE FUNCTIONALITY
-test_results = distribute_tasks(TEST_DATASET, TEST_DATASET_HDFS_DIR)
-test_summary_df = write_summary_to_file(test_results, TEST_SUMMARY_OUTPUT_PATH)
-test_summary_df.show()
-test_means_df = write_plddt_means_to_file(test_results[MEAN_PLDDT_KEY], test_results[MEAN_PLDDT_KEY], TEST_MEANS_OUTPUT_PATH)
-test_means_df.show()
+# test_results = distribute_tasks(TEST_DATASET, TEST_DATASET_HDFS_DIR)
+# test_summary_df = write_summary_to_file(test_results, TEST_SUMMARY_OUTPUT_PATH)
+# test_summary_df.show()
+# test_means_df = write_plddt_means_to_file(test_results[MEAN_PLDDT_KEY], test_results[MEAN_PLDDT_KEY], TEST_MEANS_OUTPUT_PATH)
+# test_means_df.show()
 
-# # Process the ECOLI dataset
-# ecoli_results = distribute_tasks(ECOLI_DATASET, ECOLI_DATASET_HDFS_DIR)
-# ecoli_summary_df = write_summary_to_file(ecoli_results, ECOLI_SUMMARY_OUTPUT_PATH)
-# ecoli_summary_df.show()
+# Process the ECOLI dataset
+ecoli_results = distribute_tasks(ECOLI_DATASET, ECOLI_DATASET_HDFS_DIR)
+ecoli_summary_df = write_summary_to_file(ecoli_results, ECOLI_SUMMARY_OUTPUT_PATH)
+ecoli_summary_df.show()
 
-# # Process the HUMAN dataset
-# human_results = distribute_tasks(HUMAN_DATASET, HUMAN_DATASET_HDFS_DIR)
-# human_summary_df = write_summary_to_file(human_results, HUMAN_SUMMARY_OUTPUT_PATH)
-# human_summary_df.show()
+# Process the HUMAN dataset
+human_results = distribute_tasks(HUMAN_DATASET, HUMAN_DATASET_HDFS_DIR)
+human_summary_df = write_summary_to_file(human_results, HUMAN_SUMMARY_OUTPUT_PATH)
+human_summary_df.show()
 
-# combined_means_df = write_plddt_means_to_file(ecoli_results[MEAN_PLDDT_KEY], human_results[MEAN_PLDDT_KEY], PLDDT_MEANS_OUTPUT_PATH)
-# combined_means_df.show()
+combined_means_df = write_plddt_means_to_file(ecoli_results[MEAN_PLDDT_KEY], human_results[MEAN_PLDDT_KEY], PLDDT_MEANS_OUTPUT_PATH)
+combined_means_df.show()
 
 print("ALL DONE")
