@@ -13,7 +13,7 @@ def read_parsed_file_to_dict(file_path: str, mean_plddt_key: str):
             if line.startswith('#'):
                 match = re.search(r'mean plddt:\s*([0-9.]+)', line)
                 if match:
-                    data_dict[mean_plddt_key] = [float(match.group(1))]
+                    data_dict[mean_plddt_key] = [[float(match.group(1))]]
             # Skip the header line
             elif line.startswith('cath_id,count'):
                 continue
@@ -33,12 +33,14 @@ def merizo_adapter(file_id: str, file_content: str, dataset: str, mean_plddt_key
     with open(file_path, 'w') as f:
         f.write(file_content)
 
+    # Ensure our entire pipeline runs in the correct directory
+    os.chdir(directory)
     # Run the pipeline to read from disk and process .pdb file
     parsed_file_id = run_merizo(file_id, directory)
 
     if parsed_file_id is None:
         return {}
-    else:
-        # Read the results from the parser
-        parsed_file_path = os.path.join(directory, parsed_file_id)
-        return read_parsed_file_to_dict(parsed_file_path, mean_plddt_key)
+
+    # Read and return the parsed results
+    parsed_file_path = os.path.join(directory, parsed_file_id)
+    return read_parsed_file_to_dict(parsed_file_path, mean_plddt_key)

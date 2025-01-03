@@ -70,7 +70,7 @@ def get_plddt_means(means_data: list):
     ).collect()[0]
     return [mean, stddev]
 
-def write_mean_plddt_to_file(ecoli_means_data: list, human_means_data: list, file_path: str):
+def write_plddt_means_to_file(ecoli_means_data: list, human_means_data: list, file_path: str):
     [ecoli_mean, ecoli_stddev] = get_plddt_means(ecoli_means_data)
     [human_mean, human_stddev] = get_plddt_means(human_means_data)
 
@@ -87,7 +87,7 @@ def write_mean_plddt_to_file(ecoli_means_data: list, human_means_data: list, fil
 test_results = distribute_tasks(TEST_DATASET, TEST_DATASET_HDFS_DIR)
 test_summary_df = write_summary_to_file(test_results, TEST_SUMMARY_OUTPUT_PATH)
 test_summary_df.show()
-test_means_df = write_mean_plddt_to_file(test_results[MEAN_PLDDT_KEY], test_results[MEAN_PLDDT_KEY], TEST_MEANS_OUTPUT_PATH)
+test_means_df = write_plddt_means_to_file(test_results[MEAN_PLDDT_KEY], test_results[MEAN_PLDDT_KEY], TEST_MEANS_OUTPUT_PATH)
 test_means_df.show()
 
 # # Process the ECOLI dataset
@@ -100,7 +100,7 @@ test_means_df.show()
 # human_summary_df = write_summary_to_file(human_results, HUMAN_SUMMARY_OUTPUT_PATH)
 # human_summary_df.show()
 
-# combined_means_df = write_mean_plddt_to_file(ecoli_results[MEAN_PLDDT_KEY], human_results[MEAN_PLDDT_KEY], PLDDT_MEANS_OUTPUT_PATH)
+# combined_means_df = write_plddt_means_to_file(ecoli_results[MEAN_PLDDT_KEY], human_results[MEAN_PLDDT_KEY], PLDDT_MEANS_OUTPUT_PATH)
 # combined_means_df.show()
 
 print("ALL DONE")

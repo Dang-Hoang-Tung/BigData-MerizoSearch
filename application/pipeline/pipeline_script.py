@@ -40,9 +40,6 @@ def run_merizo_search(file_path: str, file_id: str):
     run_command(cmd)
 
 def pipeline(file_id: str, directory: str):
-    # Ensure our entire pipeline runs in the correct directory
-    os.chdir(directory)
-    
     file_path = os.path.join(directory, file_id)
 
     # STEP 1 - Merizo search
