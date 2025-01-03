@@ -26,14 +26,13 @@ def process_file(file_entry, dataset: str):
     return merizo_adapter(file_id, file_content, dataset)
 
 def combine_dict(acc_dict: dict, new_dict: dict):
-    # Initialize the list
-    if "__MEAN_PLDDT__" not in acc_dict:
-        acc_dict["__MEAN_PLDDT__"] = []
-
     for key in new_dict:
         # Accumulate the mean plddt values
         if key == "__MEAN_PLDDT__":
-            acc_dict[key].append(new_dict[key])
+            if key in acc_dict:
+                acc_dict[key].append(new_dict[key])
+            else:
+                acc_dict[key] = new_dict[key]
         # Accumulate the counts for each cath_id
         else:
             if key in acc_dict:

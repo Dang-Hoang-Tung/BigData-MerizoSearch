@@ -13,7 +13,7 @@ def read_parsed_file_to_dict(file_path):
             if line.startswith('#'):
                 match = re.search(r'mean plddt:\s*([0-9.]+)', line)
                 if match:
-                    data_dict['__MEAN_PLDDT__'] = float(match.group(1))
+                    data_dict['__MEAN_PLDDT__'] = [float(match.group(1))]
             # Skip the header line
             elif line.startswith('cath_id,count'):
                 continue
