@@ -57,7 +57,8 @@ def write_summary_to_file(results: dict, file_path: str):
     for a in results.keys():
         if a != MEAN_PLDDT_KEY:
             data.append([a, results[a]])
-    df = spark.createDataFrame(data, column_headers).coalesce(1).sort("cath_code")
+    sorted_data = sorted(data, key=lambda x: x[1])
+    df = spark.createDataFrame(sorted_data, column_headers).coalesce(1)
     df.write.option("header","true").mode("overwrite").csv(file_path)
     return df
 
