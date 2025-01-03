@@ -85,11 +85,11 @@ def write_plddt_means_to_file(ecoli_means_data: list, human_means_data: list, fi
     return df
 
 # TESTING THE FUNCTIONALITY
-# test_results = distribute_tasks(TEST_DATASET, TEST_DATASET_HDFS_DIR)
-# test_summary_df = write_summary_to_file(test_results, TEST_SUMMARY_OUTPUT_PATH)
-# test_summary_df.show()
-# test_means_df = write_plddt_means_to_file(test_results[MEAN_PLDDT_KEY], test_results[MEAN_PLDDT_KEY], TEST_MEANS_OUTPUT_PATH)
-# test_means_df.show()
+test_results = distribute_tasks(TEST_DATASET, TEST_DATASET_HDFS_DIR)
+test_summary_df = write_summary_to_file(test_results, TEST_SUMMARY_OUTPUT_PATH)
+test_summary_df.show()
+test_means_df = write_plddt_means_to_file(test_results[MEAN_PLDDT_KEY], test_results[MEAN_PLDDT_KEY], TEST_MEANS_OUTPUT_PATH)
+test_means_df.show()
 
 # Process the ECOLI dataset
 ecoli_results = distribute_tasks(ECOLI_DATASET, ECOLI_DATASET_HDFS_DIR)
