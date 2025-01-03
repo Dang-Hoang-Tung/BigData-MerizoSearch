@@ -34,7 +34,9 @@ def process_file(file_entry, dataset: str):
 def combine_dict(acc_dict: dict, new_dict: dict):
     # Accumulate the mean plddt values
     if MEANS_DATA_KEY not in acc_dict:
-        acc_dict[MEANS_DATA_KEY] = [acc_dict[FILE_ID_KEY], acc_dict[MEAN_PLDDT_KEY]]
+        acc_dict[MEANS_DATA_KEY] = []
+        acc_dict[MEANS_DATA_KEY].append([acc_dict[FILE_ID_KEY], acc_dict[MEAN_PLDDT_KEY]])
+
     acc_dict[MEANS_DATA_KEY].append([new_dict[FILE_ID_KEY], new_dict[MEAN_PLDDT_KEY]])
 
     # Accumulate the counts for each cath_id

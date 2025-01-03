@@ -12,9 +12,8 @@ def read_parsed_file_to_dict(file_id: str, file_path: str, file_id_key: str, mea
             # Parse comment line for mean plddt
             if line.startswith('#'):
                 match = re.search(r'mean plddt:\s*([0-9.]+)', line)
-                if match:
-                    data_dict[file_id_key] = file_id
-                    data_dict[mean_plddt_key] = float(match.group(1))
+                data_dict[file_id_key] = file_id
+                data_dict[mean_plddt_key] = float(match.group(1))
             # Skip the header line
             elif line.startswith('cath_id,count'):
                 continue
