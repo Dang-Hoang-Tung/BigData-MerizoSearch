@@ -2,23 +2,79 @@ from pipeline.merizo_adapter import merizo_adapter
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
 import os
+from statistics import mean, stdev
 
 spark = SparkSession.builder.appName("MerizoSearch").getOrCreate()
 sc = spark.sparkContext
 
 # Directory containing text files
-dataset = "test"
-input_dir = f'/{dataset}'
+TEST_DATASET = "test"
+TEST_DATASET_HDFS_DIR = f'/{TEST_DATASET}'
+TEST_SUMMARY_OUTPUT_PATH = "/test_cath_summary.csv"
 
-def file_entry_mapper(file_entry):
+ECOLI_DATASET = "UP000000625_83333_ECOLI_v4"
+ECOLI_DATASET_HDFS_DIR = f"/{ECOLI_DATASET}"
+ECOLI_SUMMARY_OUTPUT_PATH = "/ecoli_cath_summary.csv"
+
+HUMAN_DATASET = "UP000005640_9606_HUMAN_v4"
+HUMAN_DATASET_HDFS_DIR = f"/{HUMAN_DATASET}"
+HUMAN_SUMMARY_OUTPUT_PATH = "/human_cath_summary.csv"
+
+def process_file(file_entry, dataset: str):
     file_id = os.path.basename(file_entry[0])
     file_content = file_entry[1]
     return merizo_adapter(file_id, file_content, dataset)
 
-# Read all text files in the directory
-files_rdd = sc.wholeTextFiles(input_dir)
-print("NUM_PARTITIONS: ", files_rdd.getNumPartitions())
-repartitioned_rdd = files_rdd.repartition(22)
-result = repartitioned_rdd.map(file_entry_mapper).reduce(lambda x, y: x)
+def combine_dict(acc_dict: dict, new_dict: dict):
+    # Initialize the list
+    if "__MEAN_PLDDT__" not in acc_dict:
+        acc_dict["__MEAN_PLDDT__"] = []
+
+    for key in new_dict:
+        # Accumulate the mean plddt values
+        if key == "__MEAN_PLDDT__":
+            acc_dict[key].append(new_dict[key])
+        # Accumulate the counts for each cath_id
+        else:
+            if key in acc_dict:
+                acc_dict[key] += new_dict[key]
+            else:
+                acc_dict[key] = new_dict[key]
+    return acc_dict
+
+def distribute_tasks(dataset: str, dataset_hdfs_dir: str):
+    rdd = sc.wholeTextFiles(dataset_hdfs_dir, minPartitions=22)
+    print(f"=== {dataset}_NUM_PARTITIONS: {rdd.getNumPartitions()} ===")
+    process = lambda x: process_file(x, dataset)
+    return rdd.map(process).reduce(combine_dict)
+
+def write_summary_to_file(results: dict, file_name: str):
+    data = []
+    columns = ["cath_code", "count"]
+    for a in results.keys():
+        if a != "__MEAN_PLDDT__":
+            data.append([a, results[a]])
+    df = spark.createDataFrame(data, columns).coalesce(1).sort("cath_code")
+    df.write.option("header","true").mode("overwrite").csv(f"/{file_name}")
+    return df
+
+def write_mean_plddt_to_file(ecoli_means: list, human_means: list, file_name: str):
+    columns = ["organism", "mean plddt", "plddt std"]
+    data = [['human', mean(human_means), stdev(human_means)], ['ecoli', mean(ecoli_means), stdev(ecoli_means)]]
+    df = spark.createDataFrame(data, columns).coalesce(1)
+    df.write.option("header","true").mode("overwrite").csv(f"/{file_name}")
+    return df
+
+test_results = distribute_tasks(TEST_DATASET, TEST_DATASET_HDFS_DIR)
+test_summary_df = write_summary_to_file(test_results, TEST_SUMMARY_OUTPUT_PATH)
+test_summary_df.show()
+test_means_df = write_mean_plddt_to_file(test_results["__MEAN_PLDDT__"], test_results["__MEAN_PLDDT__"], "test_mean_plddt.csv")
+test_means_df.show()
+
+# # Process the ECOLI dataset
+# ecoli_results = distribute_tasks(ECOLI_DATASET, ECOLI_DATASET_HDFS_DIR)
+
+# # Process the HUMAN dataset
+# human_results = distribute_tasks(HUMAN_DATASET, HUMAN_DATASET_HDFS_DIR)
 
 print("ALL DONE")

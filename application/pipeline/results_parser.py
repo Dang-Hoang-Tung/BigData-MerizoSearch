@@ -1,29 +1,29 @@
-import sys
 import csv
 import json
 from collections import defaultdict
 import statistics
 import os
-# fhOut = open(sys.argv[1]."summmary", "w")
-# fhOut.write('ID,domain_count\n')
 
-def write_parsed_file(file_id: str, search_result_file_name: str, plDDT_values: list, cath_ids: dict):
+def write_parsed_file(file_id: str, search_result_file_id: str, plDDT_values: list, cath_ids: dict):
+    parsed_file_id = f"{file_id}.parsed"
     with open(f"{file_id}.parsed", "w", encoding="utf-8") as fhOut:
         if len(plDDT_values) > 0:
-            fhOut.write(f"#{search_result_file_name} Results. mean plddt: {statistics.mean(plDDT_values)}\n")
+            fhOut.write(f"#{search_result_file_id} Results. mean plddt: {statistics.mean(plDDT_values)}\n")
         else:
-            fhOut.write(f"#{search_result_file_name} Results. mean plddt: 0\n")
+            fhOut.write(f"#{search_result_file_id} Results. mean plddt: 0\n")
 
         fhOut.write("cath_id,count\n")
 
         for cath, v in cath_ids.items():
             fhOut.write(f"{cath},{v}\n")
 
-def run_results_parser(file_id: str, search_result_path: str):
+    return parsed_file_id
+
+def run_results_parser(file_id: str, search_result_file_path: str):
     cath_ids = defaultdict(int)
     plDDT_values = []
 
-    with open(search_result_path, "r") as fhIn:
+    with open(search_result_file_path, "r") as fhIn:
         next(fhIn)
         msreader = csv.reader(fhIn, delimiter='\t',) 
         tot_entries = 0
@@ -34,5 +34,6 @@ def run_results_parser(file_id: str, search_result_path: str):
             data = json.loads(meta)
             cath_ids[data["cath"]] += 1
 
-        search_result_file_name = os.path.basename(search_result_path)
-        write_parsed_file(file_id, search_result_file_name, plDDT_values, cath_ids)
+        search_result_file_id = os.path.basename(search_result_file_path)
+        parsed_file_id = write_parsed_file(file_id, search_result_file_id, plDDT_values, cath_ids)
+        return parsed_file_id

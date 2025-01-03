@@ -39,9 +39,11 @@ def run_merizo_search(file_path: str, file_id: str):
            ]
     run_command(cmd)
 
-def pipeline(file_path: str):
-    directory, file_id = os.path.split(file_path)
+def pipeline(file_id: str, directory: str):
+    # Ensure our entire pipeline runs in the correct directory
     os.chdir(directory)
+    
+    file_path = os.path.join(directory, file_id)
 
     # STEP 1 - Merizo search
     print(f"STEP 1: RUNNING MERIZO -> {file_path} - {file_id}")
@@ -52,6 +54,8 @@ def pipeline(file_path: str):
     search_result_path = os.path.join(directory, search_file_id)
     print(f'STEP 2: RUNNING PARSER -> {file_id} - {search_result_path}')
     if (os.path.exists(search_result_path)):
-        run_results_parser(file_id, search_result_path)
+        parsed_file_id = run_results_parser(file_id, search_result_path)
+        return parsed_file_id
     else:
         print(f"Search result file not found: {search_result_path}")
+        return None

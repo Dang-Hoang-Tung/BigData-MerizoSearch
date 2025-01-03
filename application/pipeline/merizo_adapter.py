@@ -1,7 +1,27 @@
 import os
+import re
 from pipeline.pipeline_script import pipeline as run_merizo
 
 ADAPTER_DIR = "/home/almalinux/merizo_files"
+
+def read_parsed_file_to_dict(file_path):
+    data_dict = {}
+    with open(file_path, mode='r') as file:
+        lines = file.readlines()
+        for line in lines:
+            # Parse comment line for mean plddt
+            if line.startswith('#'):
+                match = re.search(r'mean plddt:\s*([0-9.]+)', line)
+                if match:
+                    data_dict['__MEAN_PLDDT__'] = float(match.group(1))
+            # Skip the header line
+            elif line.startswith('cath_id,count'):
+                continue
+            # Read the subsequent lines for cath_id and count
+            else:
+                [cath_id, count] = line.strip().split(',')
+                data_dict[cath_id] = int(count)
+    return data_dict
 
 def merizo_adapter(file_id: str, file_content: str, dataset: str):
     # Create the directory if it does not exist
@@ -14,4 +34,11 @@ def merizo_adapter(file_id: str, file_content: str, dataset: str):
         f.write(file_content)
 
     # Run the pipeline to read from disk and process .pdb file
-    run_merizo(file_path)
+    parsed_file_id = run_merizo(file_id, directory)
+
+    if parsed_file_id is None:
+        return {}
+    else:
+        # Read the results from the parser
+        parsed_file_path = os.path.join(directory, parsed_file_id)
+        return read_parsed_file_to_dict(parsed_file_path)
