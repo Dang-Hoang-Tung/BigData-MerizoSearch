@@ -4,7 +4,7 @@ from pipeline.pipeline_script import pipeline as run_merizo
 
 ADAPTER_DIR = "/home/almalinux/merizo_files"
 
-def read_parsed_file_to_dict(file_path: str, mean_plddt_key: str):
+def read_parsed_file_to_dict(file_id: str, file_path: str, file_id_key: str, mean_plddt_key: str):
     data_dict = {}
     with open(file_path, mode='r') as file:
         lines = file.readlines()
@@ -13,7 +13,8 @@ def read_parsed_file_to_dict(file_path: str, mean_plddt_key: str):
             if line.startswith('#'):
                 match = re.search(r'mean plddt:\s*([0-9.]+)', line)
                 if match:
-                    data_dict[mean_plddt_key] = [float(match.group(1))]
+                    data_dict[file_id_key] = file_id
+                    data_dict[mean_plddt_key] = float(match.group(1))
             # Skip the header line
             elif line.startswith('cath_id,count'):
                 continue
@@ -23,7 +24,7 @@ def read_parsed_file_to_dict(file_path: str, mean_plddt_key: str):
                 data_dict[cath_id] = int(count)
     return data_dict
 
-def merizo_adapter(file_id: str, file_content: str, dataset: str, mean_plddt_key: str):
+def merizo_adapter(file_id: str, file_content: str, dataset: str, file_id_key: str, mean_plddt_key: str):
     # Create the directory if it does not exist
     directory = os.path.join(ADAPTER_DIR, dataset)
     os.makedirs(directory, mode=0o777, exist_ok=True)
@@ -41,4 +42,4 @@ def merizo_adapter(file_id: str, file_content: str, dataset: str, mean_plddt_key
     else:
         # Read the results from the parser
         parsed_file_path = os.path.join(directory, parsed_file_id)
-        return read_parsed_file_to_dict(parsed_file_path, mean_plddt_key)
+        return read_parsed_file_to_dict(file_id, parsed_file_path, file_id_key, mean_plddt_key)
