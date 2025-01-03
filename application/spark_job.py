@@ -2,7 +2,7 @@ from pipeline.merizo_adapter import merizo_adapter
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
 import os
-from statistics import mean, stdev
+from statistics import mean, pstdev
 
 spark = SparkSession.builder.appName("MerizoSearch").getOrCreate()
 sc = spark.sparkContext
@@ -47,21 +47,21 @@ def distribute_tasks(dataset: str, dataset_hdfs_dir: str):
     process = lambda x: process_file(x, dataset)
     return rdd.map(process).reduce(combine_dict)
 
-def write_summary_to_file(results: dict, file_name: str):
+def write_summary_to_file(results: dict, file_path: str):
     data = []
     columns = ["cath_code", "count"]
     for a in results.keys():
         if a != "__MEAN_PLDDT__":
             data.append([a, results[a]])
     df = spark.createDataFrame(data, columns).coalesce(1).sort("cath_code")
-    df.write.option("header","true").mode("overwrite").csv(f"/{file_name}")
+    df.write.option("header","true").mode("overwrite").csv(file_path)
     return df
 
-def write_mean_plddt_to_file(ecoli_means: list, human_means: list, file_name: str):
+def write_mean_plddt_to_file(ecoli_means: list, human_means: list, file_path: str):
     columns = ["organism", "mean plddt", "plddt std"]
-    data = [['human', mean(human_means), stdev(human_means)], ['ecoli', mean(ecoli_means), stdev(ecoli_means)]]
+    data = [['human', mean(human_means), pstdev(human_means)], ['ecoli', mean(ecoli_means), pstdev(ecoli_means)]]
     df = spark.createDataFrame(data, columns).coalesce(1)
-    df.write.option("header","true").mode("overwrite").csv(f"/{file_name}")
+    df.write.option("header","true").mode("overwrite").csv(file_path)
     return df
 
 test_results = distribute_tasks(TEST_DATASET, TEST_DATASET_HDFS_DIR)
