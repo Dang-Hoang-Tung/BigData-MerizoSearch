@@ -77,8 +77,8 @@ def write_plddt_means_to_file(ecoli_means_data: list, human_means_data: list, fi
 
     column_headers = ["organism", "mean plddt", "plddt std"]
     data = [
-        ["ecoli", ecoli_mean, ecoli_stddev],
-        ["human", human_mean, human_stddev]
+        ["human", human_mean, human_stddev],
+        ["ecoli", ecoli_mean, ecoli_stddev]
     ]
     df = spark.createDataFrame(data, column_headers).coalesce(1)
     df.write.option("header","true").mode("overwrite").csv(file_path)
