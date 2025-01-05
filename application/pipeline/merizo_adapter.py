@@ -11,7 +11,7 @@ from pipeline.pipeline_script import pipeline as run_merizo
 
 def read_parsed_file_to_dict(parsed_file_path: str) -> AnalysisResults:
     """
-    Read the parsed file and return the results as a dictionary.
+    Read the parsed file and return an AnalysisResults dictionary.
     """
     results_dict = AnalysisResults()
     with open(parsed_file_path, mode='r') as file:

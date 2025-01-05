@@ -2,52 +2,70 @@
 Config variables for the Spark application
 """
 
+from dataclasses import dataclass
+
+@dataclass
 class JobInputs:
     """
     All the inputs required to run a full analysis job.
     """
-    def __init__(self, organism, dataset, hdfs_dir, summary_output_path, means_output_path):
-        self.organism = organism
-        self.dataset = dataset
-        self.hdfs_dir = hdfs_dir
-        self.summary_output_path = summary_output_path
-        self.means_output_path = means_output_path
+    organism: str
+    dataset: str
+    hdfs_dir: str
+    summary_output_path: str
+    means_output_path: str
 
+@dataclass
 class AnalysisResults:
     """
     Represents the results of a distributed task (invoking the Merizo Search pipeline).
     Dynamically add {cath_code: count} results.
     """
     MEAN_PLDDT_KEY = "mean_plddt_list" # IMPORTANT: KEEP IN SYNC
+    mean_plddt_list: list = None # IMPORTANT: KEEP IN SYNC
+    
+    def __post_init__(self):
+        # Initialize the list to an empty list if not provided
+        if self.mean_plddt_list is None:
+            self.mean_plddt_list = []
 
-    def __init__(self):
-        self.mean_plddt_list = [] # IMPORTANT: KEEP IN SYNC
-
+@dataclass
+class PlddtMeans:
+    """
+    Represents the mean and standard deviation of the plddt values for an organism.
+    """
+    organism: str
+    mean: float
+    stdev: float
 
 ## --- Driver variables (spark_job.py) --- ##
 
 APPLICATION_NAME = "Merizo Search Pipeline"
+MIN_PARTITIONS = 22
 
-TEST_DATASET = "test"
-TEST_DATASET_HDFS_DIR = f'/{TEST_DATASET}'
-TEST_SUMMARY_OUTPUT_PATH = "/test_cath_summary.csv"
-TEST_MEANS_OUTPUT_PATH = "/test_plDDT_means.csv"
-TEST_ORGANISM = "test"
-TEST_JOB_INPUTS = JobInputs(TEST_ORGANISM, TEST_DATASET, TEST_DATASET_HDFS_DIR, TEST_SUMMARY_OUTPUT_PATH, TEST_MEANS_OUTPUT_PATH)
+TEST_JOB_INPUTS = JobInputs(
+    organism="test",
+    dataset="test",
+    hdfs_dir="/test",
+    summary_output_path="/test_cath_summary.csv",
+    means_output_path="/test_plDDT_means.csv"
+)
 
-ECOLI_DATASET = "UP000000625_83333_ECOLI_v4"
-ECOLI_DATASET_HDFS_DIR = f"/{ECOLI_DATASET}"
-ECOLI_SUMMARY_OUTPUT_PATH = "/ecoli_cath_summary.csv"
-ECOLI_MEANS_OUTPUT_PATH = "/ecoli_plDDT_means.csv"
-ECOLI_ORGANISM = "ecoli"
-ECOLI_JOB_INPUTS = JobInputs(ECOLI_ORGANISM, ECOLI_DATASET, ECOLI_DATASET_HDFS_DIR, ECOLI_SUMMARY_OUTPUT_PATH, ECOLI_MEANS_OUTPUT_PATH)
+ECOLI_JOB_INPUTS = JobInputs(
+    organism="ecoli",
+    dataset="UP000000625_83333_ECOLI_v4",
+    hdfs_dir="/UP000000625_83333_ECOLI_v4",
+    summary_output_path="/ecoli_cath_summary.csv",
+    means_output_path="/ecoli_plDDT_means.csv"
+)
 
-HUMAN_DATASET = "UP000005640_9606_HUMAN_v4"
-HUMAN_DATASET_HDFS_DIR = f"/{HUMAN_DATASET}"
-HUMAN_SUMMARY_OUTPUT_PATH = "/human_cath_summary.csv"
-HUMAN_MEANS_OUTPUT_PATH = "/human_plDDT_means.csv"
-HUMAN_ORGANISM = "human"
-HUMAN_JOB_INPUTS = JobInputs(HUMAN_ORGANISM, HUMAN_DATASET, HUMAN_DATASET_HDFS_DIR, HUMAN_SUMMARY_OUTPUT_PATH, HUMAN_MEANS_OUTPUT_PATH)
+HUMAN_JOB_INPUTS = JobInputs(
+    organism="human",
+    dataset="UP000005640_9606_HUMAN_v4",
+    hdfs_dir="/UP000005640_9606_HUMAN_v4",
+    summary_output_path="/human_cath_summary.csv",
+    means_output_path="/human_plDDT_means"
+)
 
 COMBINED_MEANS_OUTPUT_PATH = "/plDDT_means.csv"
 

@@ -35,6 +35,12 @@ However, the code is flexible to changes in requirements.
 
 ---
 
+# System Requirements
+
+python >=3.7
+
+---
+
 # Execution Instructions
 
 - The commands should be run from the _project root directory_ (especially for Ansible, see below).
