@@ -3,6 +3,7 @@ Global variables and types for the Spark application
 """
 
 from dataclasses import dataclass
+from collections.abc import MutableMapping
 
 @dataclass
 class JobInputs:
@@ -16,7 +17,7 @@ class JobInputs:
     means_output_path: str
 
 @dataclass
-class AnalysisResults:
+class AnalysisResults(MutableMapping):
     """
     Represents the results of a distributed task (invoking the Merizo Search pipeline).
     Dynamically add {cath_code: count} results.
@@ -28,12 +29,6 @@ class AnalysisResults:
         # Initialize the list to an empty list if not provided
         if self.mean_plddt_list is None:
             self.mean_plddt_list = []
-    
-    def __setitem__(self, key, value):
-        setattr(self, key, value)
-
-    def __getitem__(self, key):
-        return getattr(self, key)
 
 @dataclass
 class PlddtMeans:
