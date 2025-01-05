@@ -4,10 +4,10 @@ Sets up the environment and runs the pipeline script to process the input file.
 Keeps the pipeline itself agnostic about the environment, file system, and all Spark inputs.
 """
 
-from globals import *
+from pipeline.globals import *
+from pipeline.pipeline_script import pipeline as run_merizo_pipeline
 import os
 import re
-from pipeline.pipeline_script import pipeline as run_merizo
 
 def read_parsed_file_to_dict(parsed_file_path: str) -> AnalysisResults:
     """
@@ -47,7 +47,7 @@ def merizo_adapter(input_file_id: str, input_file_content: str, dataset: str) ->
 
     # Ensure our entire pipeline runs in the correct directory
     # Run the pipeline to read from disk and process the input .pdb file
-    parsed_file_id = run_merizo(input_file_id, working_dir)
+    parsed_file_id = run_merizo_pipeline(input_file_id, working_dir)
 
     # Record the input and parsed file ids
     with open(RECORDS_FILE_NAME, 'a') as records_file:
