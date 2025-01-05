@@ -47,27 +47,27 @@ TEST_JOB_INPUTS = JobInputs(
     organism="test",
     dataset="test",
     hdfs_dir="/test",
-    summary_output_path="/test_cath_summary.csv",
-    means_output_path="/test_plDDT_means.csv"
+    summary_output_path="/test_cath_summary",
+    means_output_path="/test_plDDT_means"
 )
 
 ECOLI_JOB_INPUTS = JobInputs(
     organism="ecoli",
     dataset="UP000000625_83333_ECOLI_v4",
     hdfs_dir="/UP000000625_83333_ECOLI_v4",
-    summary_output_path="/ecoli_cath_summary.csv",
-    means_output_path="/ecoli_plDDT_means.csv"
+    summary_output_path="/ecoli_cath_summary",
+    means_output_path="/ecoli_plDDT_means"
 )
 
 HUMAN_JOB_INPUTS = JobInputs(
     organism="human",
     dataset="UP000005640_9606_HUMAN_v4",
     hdfs_dir="/UP000005640_9606_HUMAN_v4",
-    summary_output_path="/human_cath_summary.csv",
+    summary_output_path="/human_cath_summary",
     means_output_path="/human_plDDT_means"
 )
 
-COMBINED_MEANS_OUTPUT_PATH = "/plDDT_means.csv"
+COMBINED_MEANS_OUTPUT_PATH = "/plDDT_means"
 
 
 ## --- Worker variables (merizo_adapter.py) --- ##
