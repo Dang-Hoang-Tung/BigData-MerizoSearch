@@ -8,7 +8,7 @@ This repository contains the solution to the coursework for module COMP0235 Engi
 project
 │
 ├── infrastructure   # (Terraform) Provision infrastructure
-│   └── modules      # - Reusable infra modules
+│   └── modules      # - Reusable submodules
 │
 ├── configuration    # (Ansible) Configure machines
 │   ├── cluster      # - Cluster setup
