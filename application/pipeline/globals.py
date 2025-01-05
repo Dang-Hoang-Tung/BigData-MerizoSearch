@@ -15,19 +15,15 @@ class JobInputs:
     summary_output_path: str
     means_output_path: str
 
-@dataclass
 class AnalysisResults:
     """
     Represents the results of a distributed task (invoking the Merizo Search pipeline).
     Dynamically add {cath_code: count} results.
     """
     MEAN_PLDDT_KEY = "mean_plddt_list" # IMPORTANT: KEEP IN SYNC
-    mean_plddt_list: list = None # IMPORTANT: KEEP IN SYNC
     
-    def __post_init__(self):
-        # Initialize the list to an empty list if not provided
-        if self.mean_plddt_list is None:
-            self.mean_plddt_list = []
+    def __init__(self):
+        self.mean_plddt_list = []
 
 @dataclass
 class PlddtMeans:
