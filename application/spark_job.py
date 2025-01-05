@@ -1,38 +1,27 @@
+from global_vars import *
 from pipeline.merizo_adapter import merizo_adapter
 from pyspark import SparkContext
-from pyspark.sql import SparkSession, functions as F
+from pyspark.sql import SparkSession
 import os
+from statistics import mean, pstdev
 
-spark = SparkSession.builder.appName("MerizoSearch").getOrCreate()
+spark = SparkSession.builder.appName(APPLICATION_NAME).getOrCreate()
 sc = spark.sparkContext
 
-# Directory containing text files
-TEST_DATASET = "test"
-TEST_DATASET_HDFS_DIR = f'/{TEST_DATASET}'
-TEST_SUMMARY_OUTPUT_PATH = "/test_cath_summary.csv"
-TEST_MEANS_OUTPUT_PATH = "/test_plDDT_means.csv"
+def process_file(file_path: str, file_content: str, dataset: str):
+    """
+    Processes a PDB file in the dataset using the Merizo Search pipeline.
+    """
+    file_id = os.path.basename(file_path)
+    return merizo_adapter(file_id, file_content, dataset)
 
-ECOLI_DATASET = "UP000000625_83333_ECOLI_v4"
-ECOLI_DATASET_HDFS_DIR = f"/{ECOLI_DATASET}"
-ECOLI_SUMMARY_OUTPUT_PATH = "/ecoli_cath_summary.csv"
-
-HUMAN_DATASET = "UP000005640_9606_HUMAN_v4"
-HUMAN_DATASET_HDFS_DIR = f"/{HUMAN_DATASET}"
-HUMAN_SUMMARY_OUTPUT_PATH = "/human_cath_summary.csv"
-
-PLDDT_MEANS_OUTPUT_PATH = "/plDDT_means.csv"
-
-MEAN_PLDDT_KEY = "__MEAN_PLDDT__"
-
-def process_file(file_entry, dataset: str):
-    file_id = os.path.basename(file_entry[0])
-    file_content = file_entry[1]
-    return merizo_adapter(file_id, file_content, dataset, MEAN_PLDDT_KEY)
-
-def combine_dict(acc_dict: dict, new_dict: dict):
+def combine_results(acc_dict: AnalysisResults, new_dict: AnalysisResults):
+    """
+    Combines the results from two dictionaries returned by worker tasks into a single dictionary.
+    """
     for key in new_dict:
         # Accumulate the mean plddt values
-        if key == MEAN_PLDDT_KEY:
+        if key == AnalysisResults.MEAN_PLDDT_KEY:
             if key in acc_dict:
                 acc_dict[key].extend(new_dict[key])
             else:
@@ -45,63 +34,80 @@ def combine_dict(acc_dict: dict, new_dict: dict):
                 acc_dict[key] = new_dict[key]
     return acc_dict
 
-def distribute_tasks(dataset: str, dataset_hdfs_dir: str):
-    rdd = sc.wholeTextFiles(dataset_hdfs_dir, minPartitions=22)
+def distribute_tasks(dataset: str, hdfs_dir: str):
+    """
+    Distributes tasks to process files in the dataset. Each task is handled by a worker.
+    The result is reduced to a single dictionary containing the  {cath_code: count} results and the list of mean plddt values.
+    """
+    rdd = sc.wholeTextFiles(hdfs_dir, minPartitions=22)
     print(f"=== {dataset}_NUM_PARTITIONS: {rdd.getNumPartitions()} ===")
-    process = lambda x: process_file(x, dataset)
-    return rdd.map(process).reduce(combine_dict)
+    processor = lambda x: process_file(x[0], x[1], dataset)
+    return rdd.map(processor).reduce(combine_results)
 
 def write_summary_to_file(results: dict, file_path: str):
+    """
+    Writes the summary of the {cath_code: count} results to a CSV file.
+    """
     data = []
     column_headers = ["cath_code", "count"]
-    for a in results.keys():
-        if a != MEAN_PLDDT_KEY:
-            data.append([a, results[a]])
+    for key in results.keys():
+        if key != AnalysisResults.MEAN_PLDDT_KEY:
+            data.append([key, results[key]])
     sorted_data = sorted(data, key=lambda x: x[1])
     df = spark.createDataFrame(sorted_data, column_headers).coalesce(1)
-    df.write.option("header","true").mode("overwrite").csv(file_path)
-    return df
+    df.write.option("header", "true").mode("overwrite").csv(file_path)
+    df.show()
 
-def get_plddt_means(means_data: list):
-    column_headers = [MEAN_PLDDT_KEY]
-    df = spark.createDataFrame(means_data, column_headers)
-    [mean, stddev] = df.select(
-        F.mean(MEAN_PLDDT_KEY).alias('mean'),
-        F.stddev_pop(MEAN_PLDDT_KEY).alias('stddev')
-    ).collect()[0]
-    return [mean, stddev]
+def get_plddt_means_tuple(organism: str, means_list: list):
+    """
+    Calculates the mean and standard deviation of the plddt values for the organism.
 
-def write_plddt_means_to_file(ecoli_means_data: list, human_means_data: list, file_path: str):
-    [ecoli_mean, ecoli_stddev] = get_plddt_means(ecoli_means_data)
-    [human_mean, human_stddev] = get_plddt_means(human_means_data)
+    Args:
+        organism: the organism name
+        means_list: the list of plddt values
+    Returns:
+        a tuple in the format [<organism>, <mean>, <stdev>]
+    """
+    mean_value = mean(means_list)
+    stdev_value = pstdev(means_list)
+    return [organism, mean_value, stdev_value]
 
+def write_plddt_means_to_file(data: list, file_path: str):
+    """
+    Writes the mean and standard deviation of the plddt values to a CSV file.
+
+    Args:
+        data: list of lists, representing data rows in the format [<organism>, <mean>, <stdev>]
+        file_path: the path to the output file
+    """
     column_headers = ["organism", "mean plddt", "plddt std"]
-    data = [
-        ["human", human_mean, human_stddev],
-        ["ecoli", ecoli_mean, ecoli_stddev]
-    ]
     df = spark.createDataFrame(data, column_headers).coalesce(1)
-    df.write.option("header","true").mode("overwrite").csv(file_path)
-    return df
+    df.write.option("header", "true").mode("overwrite").csv(file_path)
+    df.show()
 
-# TESTING THE FUNCTIONALITY
-test_results = distribute_tasks(TEST_DATASET, TEST_DATASET_HDFS_DIR)
-test_summary_df = write_summary_to_file(test_results, TEST_SUMMARY_OUTPUT_PATH)
-test_summary_df.show()
-test_means_df = write_plddt_means_to_file(test_results[MEAN_PLDDT_KEY], test_results[MEAN_PLDDT_KEY], TEST_MEANS_OUTPUT_PATH)
-test_means_df.show()
+def run_analysis(job_inputs: JobInputs):
+    """
+    Runs the analysis job on the specified dataset and writes the results to the output files.
+    """
+    # Distribute tasks to workers and collect the results
+    results = distribute_tasks(job_inputs.dataset, job_inputs.hdfs_dir)
+    write_summary_to_file(results, job_inputs.summary_output_path)
+
+    # Calculate the mean and standard deviation of the plddt values
+    means_tuple = get_plddt_means_tuple(job_inputs.organism, results.mean_plddt_list)
+    write_plddt_means_to_file([means_tuple], job_inputs.means_output_path)
+    return means_tuple
+
+# Testing the functionality
+run_analysis(TEST_JOB_INPUTS)
 
 # Process the ECOLI dataset
-ecoli_results = distribute_tasks(ECOLI_DATASET, ECOLI_DATASET_HDFS_DIR)
-ecoli_summary_df = write_summary_to_file(ecoli_results, ECOLI_SUMMARY_OUTPUT_PATH)
-ecoli_summary_df.show()
+ecoli_means_tuple = run_analysis(ECOLI_JOB_INPUTS)
 
 # Process the HUMAN dataset
-human_results = distribute_tasks(HUMAN_DATASET, HUMAN_DATASET_HDFS_DIR)
-human_summary_df = write_summary_to_file(human_results, HUMAN_SUMMARY_OUTPUT_PATH)
-human_summary_df.show()
+human_means_tuple = run_analysis(HUMAN_JOB_INPUTS)
 
-combined_means_df = write_plddt_means_to_file(ecoli_results[MEAN_PLDDT_KEY], human_results[MEAN_PLDDT_KEY], PLDDT_MEANS_OUTPUT_PATH)
-combined_means_df.show()
+# Write the combined means data to a file
+combined_means_df = write_plddt_means_to_file([human_means_tuple, ecoli_means_tuple], COMBINED_MEANS_OUTPUT_PATH)
 
-print("ALL DONE")
+print("=== SPARK JOB COMPLETED SUCCESSFULLY! ===")
