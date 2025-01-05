@@ -9,12 +9,12 @@ from pipeline.pipeline_script import pipeline as run_merizo_pipeline
 import os
 import re
 
-def read_parsed_file_to_dict(parsed_file_path: str) -> AnalysisResults:
+def read_parsed_file_to_dict(parsed_file_id: str) -> AnalysisResults:
     """
     Read the parsed file and return an AnalysisResults dictionary.
     """
     results_dict = AnalysisResults()
-    with open(parsed_file_path, mode='r') as file:
+    with open(parsed_file_id, mode='r') as file:
         lines = file.readlines()
         for line in lines:
             # Parse comment line for mean plddt
@@ -47,7 +47,7 @@ def merizo_adapter(input_file_id: str, input_file_content: str, dataset: str) ->
 
     # Ensure our entire pipeline runs in the correct directory
     # Run the pipeline to read from disk and process the input .pdb file
-    parsed_file_id = run_merizo_pipeline(input_file_id, working_dir)
+    parsed_file_id = run_merizo_pipeline(input_file_id)
 
     # Record the input and parsed file ids
     with open(RECORDS_FILE_NAME, 'a') as records_file:
@@ -60,5 +60,4 @@ def merizo_adapter(input_file_id: str, input_file_content: str, dataset: str) ->
         return {}
 
     # Read and return the parsed results
-    parsed_file_path = os.path.join(working_dir, parsed_file_id)
-    return read_parsed_file_to_dict(parsed_file_path)
+    return read_parsed_file_to_dict(parsed_file_id)
