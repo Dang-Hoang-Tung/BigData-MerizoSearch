@@ -4,7 +4,7 @@ Sets up the environment and runs the pipeline script to process the input file.
 Keeps the pipeline itself agnostic about the environment, file system, and all Spark inputs.
 """
 
-from global_vars import *
+from globals import *
 import os
 import re
 from pipeline.pipeline_script import pipeline as run_merizo
