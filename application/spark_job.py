@@ -1,3 +1,8 @@
+"""
+Script to run the Merizo Search pipeline on a Spark cluster. Runs on the driver node.
+This will distribute the tasks to worker nodes to process PDB files and collect the results.
+"""
+
 from global_vars import *
 from pipeline.merizo_adapter import merizo_adapter
 from pyspark import SparkContext

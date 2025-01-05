@@ -2,11 +2,13 @@ import csv
 import json
 from collections import defaultdict
 import statistics
-import os
 
-def write_parsed_file(input_file_id: str, search_file_id: str, plDDT_values: list, cath_ids: dict):
+def write_parsed_file(input_file_id: str, search_file_id: str, plDDT_values: list, cath_ids: dict) -> str:
+    """
+    Write the final results of the pipeline into the .parsed file.
+    """
     parsed_file_id = f"{input_file_id}.parsed"
-    with open(f"{input_file_id}.parsed", "w", encoding="utf-8") as fhOut:
+    with open(parsed_file_id, "w", encoding="utf-8") as fhOut:
         if len(plDDT_values) > 0:
             fhOut.write(f"#{search_file_id} Results. mean plddt: {statistics.mean(plDDT_values)}\n")
         else:
@@ -19,11 +21,14 @@ def write_parsed_file(input_file_id: str, search_file_id: str, plDDT_values: lis
 
     return parsed_file_id
 
-def run_results_parser(input_file_id: str, search_file_path: str):
+def run_results_parser(input_file_id: str, search_file_id: str) -> str:
+    """
+    Parse the search results and write the parsed results to a .parsed file.
+    """
     cath_ids = defaultdict(int)
     plDDT_values = []
 
-    with open(search_file_path, "r") as fhIn:
+    with open(search_file_id, "r") as fhIn:
         next(fhIn)
         msreader = csv.reader(fhIn, delimiter='\t',) 
         tot_entries = 0
@@ -34,7 +39,6 @@ def run_results_parser(input_file_id: str, search_file_path: str):
             data = json.loads(meta)
             cath_ids[data["cath"]] += 1
 
-        search_file_id = os.path.basename(search_file_path)
         parsed_file_id = write_parsed_file(input_file_id, search_file_id, plDDT_values, cath_ids)
 
         return parsed_file_id
