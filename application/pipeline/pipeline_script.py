@@ -43,7 +43,7 @@ def pipeline(input_file_id: str) -> str:
     """
     # STEP 1 - Merizo search
     print(f"STEP 1: RUNNING MERIZO - {input_file_id}")
-    run_merizo_search(input_file_id, input_file_id)
+    run_merizo_search(input_file_id)
 
     search_file_id = f"{input_file_id}_search.tsv"
 
