@@ -30,6 +30,27 @@ class AnalysisResults(MutableMapping):
         if self.mean_plddt_list is None:
             self.mean_plddt_list = []
 
+    def __init__(self):
+        self._data = {}
+
+    def __getitem__(self, key):
+        return self._data[key]
+
+    def __setitem__(self, key, value):
+        self._data[key] = value
+
+    def __delitem__(self, key):
+        del self._data[key]
+
+    def __iter__(self):
+        return iter(self._data)
+
+    def __len__(self):
+        return len(self._data)
+
+    def __repr__(self):
+        return f"{self._data}"
+
 @dataclass
 class PlddtMeans:
     """
