@@ -50,7 +50,7 @@ class AnalysisResults:
 ## --- Driver variables (spark_job.py) --- ##
 
 APPLICATION_NAME = "Merizo Search Pipeline"
-MIN_PARTITIONS = 11
+MIN_PARTITIONS = 22
 
 TEST_JOB_INPUTS = JobInputs(
     organism="test",
