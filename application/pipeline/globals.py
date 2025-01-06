@@ -2,7 +2,7 @@
 Global variables and types for the Spark application
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass
 class JobInputs:
@@ -44,13 +44,8 @@ class AnalysisResults:
     Contains the combined results of a distributed task (invoking the Merizo Search pipeline).
     """
     organism: str = ""
-    plddt: Plddt
-    cath_code_tally: CathCodeTally
-
-    def __init__(self, organism: str = "", plddt: Plddt = Plddt(), cath_code_tally: CathCodeTally = CathCodeTally()):
-        self.organism = organism
-        self.plddt = plddt
-        self.cath_code_tally = cath_code_tally
+    plddt: Plddt = field(default_factory=Plddt)
+    cath_code_tally: CathCodeTally = field(default_factory=CathCodeTally)
 
 ## --- Driver variables (spark_job.py) --- ##
 
