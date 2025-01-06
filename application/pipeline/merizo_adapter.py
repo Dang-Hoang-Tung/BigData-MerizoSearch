@@ -13,7 +13,7 @@ def read_parsed_file_to_dict(parsed_file_id: str) -> AnalysisResults:
     """
     Read the parsed file and return an AnalysisResults dictionary.
     """
-    results_dict = AnalysisResults()
+    results = AnalysisResults()
     with open(parsed_file_id, mode='r') as file:
         lines = file.readlines()
         for line in lines:
@@ -21,15 +21,17 @@ def read_parsed_file_to_dict(parsed_file_id: str) -> AnalysisResults:
             if line.startswith('#'):
                 match = re.search(r'mean plddt:\s*([0-9.]+)', line)
                 if match:
-                    results_dict.mean_plddt_list = [float(match.group(1))]
+                    results.plddt.size = 1
+                    results.plddt.mean = float(match.group(1))
+                    results.plddt.variance = 0
             # Skip the header line
             elif line.startswith('cath_id,count'):
                 continue
             # Read the subsequent lines for cath_id and count
             else:
                 [cath_id, count] = line.strip().split(',')
-                results_dict[cath_id] = int(count)
-    return results_dict
+                results.tally[cath_id] = int(count)
+    return results
 
 def merizo_adapter(input_file_id: str, input_file_content: str, dataset: str) -> AnalysisResults:
     """

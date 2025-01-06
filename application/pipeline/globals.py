@@ -15,80 +15,42 @@ class JobInputs:
     summary_output_path: str
     means_output_path: str
 
-@dataclass
-class AnalysisResults(dict):
+class CathCodeTally(dict):
     """
-    Dict-like class for type safety (bunch of methods that just implement the dict functionality).
-    Represents the results of a distributed task (invoking the Merizo Search pipeline).
-    Dynamically add {cath_code: count} results.
+    Contains the {cath_code: count} results of a Merizo Search run on a single PDB file.
     """
-    MEAN_PLDDT_KEY = "mean_plddt_list" # IMPORTANT: KEEP IN SYNC
-    mean_plddt_list: list = None # IMPORTANT: KEEP IN SYNC
-    
-    def __post_init__(self):
-        # Initialize the list to an empty list if not provided
-        if self.mean_plddt_list is None:
-            self.mean_plddt_list = []
+    def __init__(self):
+        # Initialize the dictionary, should always start empty
+        super().__init__()
 
-    def __setitem__(self, key, item):
-        self.__dict__[key] = item
+    def __setitem__(self, key, value: int) -> None:
+        super().__setitem__(key, value)
 
-    def __getitem__(self, key):
-        return self.__dict__[key]
-
-    def __repr__(self):
-        return repr(self.__dict__)
-
-    def __len__(self):
-        return len(self.__dict__)
-
-    def __delitem__(self, key):
-        del self.__dict__[key]
-
-    def clear(self):
-        return self.__dict__.clear()
-
-    def copy(self):
-        return self.__dict__.copy()
-
-    def has_key(self, k):
-        return k in self.__dict__
-
-    def update(self, *args, **kwargs):
-        return self.__dict__.update(*args, **kwargs)
-
-    def keys(self):
-        return self.__dict__.keys()
-
-    def values(self):
-        return self.__dict__.values()
-
-    def items(self):
-        return self.__dict__.items()
-
-    def pop(self, *args):
-        return self.__dict__.pop(*args)
-
-    def __cmp__(self, dict_):
-        return self.__cmp__(self.__dict__, dict_)
-
-    def __contains__(self, item):
-        return item in self.__dict__
-
-    def __iter__(self):
-        return iter(self.__dict__)
-
-    def __unicode__(self):
-        return unicode(repr(self.__dict__))
+    def __getitem__(self, key) -> int:
+        return super().__getitem__(key)
 
 @dataclass
-class PlddtMeans:
+class Plddt:
     """
-    Represents the mean and standard deviation of the plddt values for an organism.
+    Contains the plddt values of a Merizo Search run on a single PDB file.
+    """
+    size: int # Size of the population of plddt values
+    mean: float # Mean of the plddt values
+    variance: float # Variance of the plddt values
+
+@dataclass
+class AnalysisResults:
+    """
+    Contains the combined results of a distributed task (invoking the Merizo Search pipeline).
     """
     organism: str
-    mean: float
-    stdev: float
+    plddt: Plddt
+    cath_code_tally: CathCodeTally
+
+    def __init__(self, organism=None, plddt=None, cath_code_tally=None):
+        self.organism = organism if organism else ""
+        self.plddt = plddt if plddt else Plddt(size=0, mean=0, variance=0)
+        self.cath_code_tally = cath_code_tally if cath_code_tally else CathCodeTally()
 
 ## --- Driver variables (spark_job.py) --- ##
 
