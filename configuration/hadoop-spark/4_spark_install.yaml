@@ -25,5 +25,5 @@
 
     - name: Write config file
       ansible.builtin.template:
-        src: files/spark_defaults.conf.j2
+        src: templates/spark_defaults.conf.j2
         dest: "{{ spark_config_dir }}/spark-defaults.conf"

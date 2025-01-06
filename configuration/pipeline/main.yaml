@@ -1,0 +1,5 @@
+---
+- import_playbook: 1_prepare_pipeline.yaml
+- import_playbook: 2_download_data.yaml
+- import_playbook: 3_download_cathdb.yaml
+- import_playbook: 4_distribute_data.yaml

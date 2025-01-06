@@ -1,0 +1,4 @@
+---
+- import_playbook: 1_system_update.yaml
+- import_playbook: 2_environment.yaml
+- import_playbook: 3_ssh_setup.yaml

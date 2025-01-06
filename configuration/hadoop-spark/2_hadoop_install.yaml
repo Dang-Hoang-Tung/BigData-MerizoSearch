@@ -45,6 +45,18 @@
               <value>hdfs://mgmtnode:9000/</value>
           </property>
         state: present
+          # <property>
+          #     <name>fs.s3a.endpoint</name>
+          #     <value>http://<minio-server>:<port></value>
+          # </property>
+          # <property>
+          #     <name>fs.s3a.access.key</name>
+          #     <value>your-access-key</value>
+          # </property>
+          # <property>
+          #     <name>fs.s3a.secret.key</name>
+          #     <value>your-secret-key</value>
+          # </property>
     - name: Configure hdfs-site.xml
       ansible.builtin.blockinfile:
         path: "{{ hadoop_config_dir }}/hdfs-site.xml"
@@ -173,7 +185,7 @@
   tasks:
     - name: Generate workers file
       ansible.builtin.template:
-        src: files/workers.j2
+        src: templates/workers.j2
         dest: "{{ hadoop_config_dir }}/workers"
     - name: Create namenode directory
       ansible.builtin.file:
