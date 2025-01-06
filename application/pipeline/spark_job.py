@@ -41,16 +41,13 @@ def combine_results(dict_1: Optional[AnalysisResults], dict_2: Optional[Analysis
     """
     if dict_1 and dict_2:
         new_dict = AnalysisResults(organism=dict_1.organism)
-
         # Combine the plddt values
         new_dict.plddt.size = dict_1.plddt.size + dict_2.plddt.size
         new_dict.plddt.mean = combine_means(dict_1.plddt.size, dict_1.plddt.mean, dict_2.plddt.size, dict_2.plddt.mean)
         new_dict.plddt.variance = combine_variance(dict_1.plddt.size, dict_1.plddt.mean, dict_1.plddt.variance, dict_2.plddt.size, dict_2.plddt.mean, dict_2.plddt.variance)
-
         # Combine the tallies for cath_code
         for key in list(dict_1.cath_code_tally.keys()) + list(dict_2.cath_code_tally.keys()):
             new_dict.cath_code_tally[key] = dict_1.cath_code_tally.get(key, 0) + dict_2.cath_code_tally.get(key, 0)
-
         return new_dict
     elif dict_1:
         return dict_1
