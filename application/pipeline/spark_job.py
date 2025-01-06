@@ -38,20 +38,35 @@ def combine_variance(n1, mean1, var1, n2, mean2, var2) -> float:
     sum_sq_diff_2 = n2 * var2 + n2 * (mean2 - new_mean) ** 2
     return (sum_sq_diff_1 + sum_sq_diff_2) / (n1 + n2)
 
+def combine_plddt(plddt1: Plddt, plddt2: Plddt) -> Plddt:
+    """
+    Combines two Plddt objects into a single object.
+    """
+    return Plddt(
+        size=plddt1.size + plddt2.size,
+        mean=combine_means(plddt1.size, plddt1.mean, plddt2.size, plddt2.mean),
+        variance=combine_variance(plddt1.size, plddt1.mean, plddt1.variance, plddt2.size, plddt2.mean, plddt2.variance)
+    )
+
+def combine_cath_code_tallies(tally1: CathCodeTally, tally2: CathCodeTally) -> CathCodeTally:
+    """
+    Combines two CathCodeTally objects into a single object.
+    """
+    new_tally = CathCodeTally()
+    for key in list(tally1.keys()) + list(tally2.keys()):
+        new_tally[key] = tally1.get(key, 0) + tally2.get(key, 0)
+    return new_tally
+
 def combine_results(dict_1: Optional[AnalysisResults], dict_2: Optional[AnalysisResults]) -> Optional[AnalysisResults]:
     """
     Combines the results from two dictionaries returned by worker tasks into a single dictionary.
     """
     if dict_1 and dict_2:
-        new_dict = AnalysisResults(organism=dict_1.organism)
-        # Combine the plddt values
-        new_dict.plddt.size = dict_1.plddt.size + dict_2.plddt.size
-        new_dict.plddt.mean = combine_means(dict_1.plddt.size, dict_1.plddt.mean, dict_2.plddt.size, dict_2.plddt.mean)
-        new_dict.plddt.variance = combine_variance(dict_1.plddt.size, dict_1.plddt.mean, dict_1.plddt.variance, dict_2.plddt.size, dict_2.plddt.mean, dict_2.plddt.variance)
-        # Combine the tallies for cath_code
-        for key in list(dict_1.cath_code_tally.keys()) + list(dict_2.cath_code_tally.keys()):
-            new_dict.cath_code_tally[key] = dict_1.cath_code_tally.get(key, 0) + dict_2.cath_code_tally.get(key, 0)
-        return new_dict
+        return AnalysisResults(
+            organism=dict_1.organism,
+            plddt=combine_plddt(dict_1.plddt, dict_2.plddt),
+            cath_code_tally=combine_cath_code_tallies(dict_1.cath_code_tally, dict_2.cath_code_tally)
+        )
     elif dict_1:
         return dict_1
     elif dict_2:
