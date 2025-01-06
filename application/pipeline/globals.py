@@ -34,23 +34,18 @@ class Plddt:
     """
     Contains the plddt values of a Merizo Search run on a single PDB file.
     """
-    size: int # Size of the population of plddt values
-    mean: float # Mean of the plddt values
-    variance: float # Variance of the plddt values
+    size: int = 0 # Size of the population of plddt values
+    mean: float = 0.0 # Mean of the plddt values
+    variance: float = 0.0 # Variance of the plddt values
 
 @dataclass
 class AnalysisResults:
     """
     Contains the combined results of a distributed task (invoking the Merizo Search pipeline).
     """
-    organism: str
-    plddt: Plddt
-    cath_code_tally: CathCodeTally
-
-    def __init__(self, organism=None, plddt=None, cath_code_tally=None):
-        self.organism = organism if organism else ""
-        self.plddt = plddt if plddt else Plddt(size=0, mean=0, variance=0)
-        self.cath_code_tally = cath_code_tally if cath_code_tally else CathCodeTally()
+    organism: str = ""
+    plddt: Plddt = Plddt(size=0, mean=0, variance=0)
+    cath_code_tally: CathCodeTally = CathCodeTally()
 
 ## --- Driver variables (spark_job.py) --- ##
 
