@@ -34,7 +34,7 @@ def read_parsed_file_to_dict(parsed_file_id: str, organism: str) -> AnalysisResu
                 results.cath_code_tally[cath_id] = int(count)
     return results
 
-def merizo_adapter(input_file_id: str, input_file_content: str, organism: str, dataset: str) -> Optional[AnalysisResults]:
+def merizo_adapter(spark_app_id: str, input_file_id: str, input_file_content: str, organism: str, dataset: str) -> Optional[AnalysisResults]:
     """
     The Merizo adapter encapsulates the Merizo pipeline. It sets up the environment,
     runs the pipeline script to process the input file, and returns the parsed results.
@@ -53,7 +53,7 @@ def merizo_adapter(input_file_id: str, input_file_content: str, organism: str, d
     parsed_file_id = run_merizo_pipeline(input_file_id)
 
     # Record the input and parsed file ids
-    with open(RECORDS_FILE_NAME, 'a') as records_file:
+    with open(f"{spark_app_id}-{RECORDS_FILE_NAME}", 'a') as records_file:
         records_file.write(f"{input_file_id} - {str(parsed_file_id)}\n")
 
     # Remove the input file on disk after processing and recording

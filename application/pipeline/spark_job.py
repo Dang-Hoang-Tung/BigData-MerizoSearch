@@ -13,12 +13,15 @@ from typing import List, Optional
 spark = SparkSession.builder.appName(APPLICATION_NAME).getOrCreate()
 sc = spark.sparkContext
 
+spark_app_id = spark.sparkContext.applicationId
+print(f"=== STARTING SPARK JOB - APP ID: {spark_app_id} ===")
+
 def process_file(input_file_path: str, file_content: str, organism: str, dataset: str) -> Optional[AnalysisResults]:
     """
     Processes a PDB file in the dataset using the Merizo Search pipeline.
     """
     file_id = os.path.basename(input_file_path)
-    return merizo_adapter(file_id, file_content, organism, dataset)
+    return merizo_adapter(spark_app_id, file_id, file_content, organism, dataset)
 
 def combine_means(n1, mean1, n2, mean2) -> float:
     """
@@ -115,4 +118,4 @@ human_results = run_analysis(HUMAN_JOB_INPUTS)
 # Write the combined means data to a file
 write_plddt_means_to_file([human_results, ecoli_results], COMBINED_MEANS_OUTPUT_PATH)
 
-print("=== SPARK JOB COMPLETED SUCCESSFULLY! ===")
+print("=== SPARK JOB COMPLETED SUCCESSFULLY - APP ID {app_id} ===")
