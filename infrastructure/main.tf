@@ -50,14 +50,14 @@ module "mgmt_vm" {
 
   tags = {
     # Ingress configurations
-    "condenser_ingress_isEnabled"      = true
-    "condenser_ingress_isAllowed"      = true
-    "condenser_ingress_hdfs_hostname"  = "hdfs-${var.username}"
-    "condenser_ingress_hdfs_port"      = 9870
-    "condenser_ingress_yarn_hostname"  = "yarn-${var.username}"
-    "condenser_ingress_yarn_port"      = 8088
-    "condenser_ingress_spark_hostname" = "spark-${var.username}"
-    "condenser_ingress_spark_port"     = 4040
+    condenser_ingress_isEnabled      = true
+    condenser_ingress_isAllowed      = true
+    condenser_ingress_hdfs_hostname  = "hdfs-${var.username}"
+    condenser_ingress_hdfs_port      = 9870
+    condenser_ingress_yarn_hostname  = "yarn-${var.username}"
+    condenser_ingress_yarn_port      = 8088
+    condenser_ingress_spark_hostname = "spark-${var.username}"
+    condenser_ingress_spark_port     = 4040
   }
 }
 
@@ -77,6 +77,20 @@ module "storage_vm" {
   root_disk_image        = data.harvester_image.img.id
   data_disk_size         = var.storage_vm_hdd2
   cloud_init_secret_name = harvester_cloudinit_secret.cloud_config.name
+
+  tags = {
+    # Ingress configurations
+    condenser_ingress_isEnabled                  = true
+    condenser_ingress_isAllowed                  = true
+    condenser_ingress_os_hostname                = "${var.username}-s3"
+    condenser_ingress_os_port                    = 9000
+    condenser_ingress_os_protocol                = "https"
+    condenser_ingress_os_nginx_proxy-body-size   = "100000m"
+    condenser_ingress_cons_hostname              = "${var.username}-cons"
+    condenser_ingress_cons_port                  = 9001
+    condenser_ingress_cons_protocol              = "https"
+    condenser_ingress_cons_nginx_proxy-body-size = "100000m"
+  }
 }
 
 # Worker VMs
