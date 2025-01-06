@@ -18,9 +18,7 @@ def process_file(input_file_path: str, file_content: str, organism: str, dataset
     Processes a PDB file in the dataset using the Merizo Search pipeline.
     """
     file_id = os.path.basename(input_file_path)
-    result = merizo_adapter(file_id, file_content, dataset)
-    result.organism = organism
-    return result
+    return merizo_adapter(file_id, file_content, organism, dataset)
 
 def combine_means(n1, mean1, n2, mean2) -> float:
     """
@@ -41,7 +39,7 @@ def combine_results(dict_1: AnalysisResults, dict_2: AnalysisResults) -> Analysi
     """
     Combines the results from two dictionaries returned by worker tasks into a single dictionary.
     """
-    new_dict = AnalysisResults()
+    new_dict = AnalysisResults(organism=dict_1.organism)
 
     # Combine the plddt values
     new_dict.plddt.size = dict_1.plddt.size + dict_2.plddt.size
@@ -61,16 +59,16 @@ def distribute_tasks(organism: str, dataset: str, hdfs_dir: str) -> AnalysisResu
     """
     rdd = sc.wholeTextFiles(hdfs_dir, minPartitions=MIN_PARTITIONS)
     print(f"=== {dataset}_NUM_PARTITIONS: {rdd.getNumPartitions()} ===")
-    processor = lambda x: process_file(x[0], x[1], organism, dataset)
-    return rdd.map(processor).reduce(combine_results)
+    mapper = lambda x: process_file(x[0], x[1], organism, dataset)
+    return rdd.map(mapper).reduce(combine_results)
 
-def write_summary_to_file(results: dict, output_file_path: str) -> None:
+def write_summary_to_file(results: AnalysisResults, output_file_path: str) -> None:
     """
     Writes the summary of the {cath_code: count} results to a CSV file.
     """
     data = []
     column_headers = ["cath_code", "count"]
-    for key in results.keys():
+    for key in results.cath_code_tally.keys():
         if key != AnalysisResults.MEAN_PLDDT_KEY:
             data.append([key, results[key]])
     sorted_data = sorted(data, key=lambda x: x[1])

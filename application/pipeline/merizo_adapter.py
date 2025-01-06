@@ -9,11 +9,11 @@ from pipeline.pipeline_script import pipeline as run_merizo_pipeline
 import os
 import re
 
-def read_parsed_file_to_dict(parsed_file_id: str) -> AnalysisResults:
+def read_parsed_file_to_dict(parsed_file_id: str, organism: str) -> AnalysisResults:
     """
     Read the parsed file and return an AnalysisResults dictionary.
     """
-    results = AnalysisResults()
+    results = AnalysisResults(organism=organism)
     with open(parsed_file_id, mode='r') as file:
         lines = file.readlines()
         for line in lines:
@@ -33,7 +33,7 @@ def read_parsed_file_to_dict(parsed_file_id: str) -> AnalysisResults:
                 results.cath_code_tally[cath_id] = int(count)
     return results
 
-def merizo_adapter(input_file_id: str, input_file_content: str, dataset: str) -> AnalysisResults:
+def merizo_adapter(input_file_id: str, input_file_content: str, organism: str, dataset: str) -> AnalysisResults:
     """
     The Merizo adapter encapsulates the Merizo pipeline. It sets up the environment,
     runs the pipeline script to process the input file, and returns the parsed results.
@@ -62,4 +62,4 @@ def merizo_adapter(input_file_id: str, input_file_content: str, dataset: str) ->
         return {}
 
     # Read and return the parsed results
-    return read_parsed_file_to_dict(parsed_file_id)
+    return read_parsed_file_to_dict(parsed_file_id, organism)
