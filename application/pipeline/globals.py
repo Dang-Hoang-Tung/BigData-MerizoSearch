@@ -44,8 +44,13 @@ class AnalysisResults:
     Contains the combined results of a distributed task (invoking the Merizo Search pipeline).
     """
     organism: str = ""
-    plddt: Plddt = Plddt(size=0, mean=0, variance=0)
-    cath_code_tally: CathCodeTally = CathCodeTally()
+    plddt: Plddt
+    cath_code_tally: CathCodeTally
+
+    def __init__(self, organism: str = "", plddt: Plddt = Plddt(), cath_code_tally: CathCodeTally = CathCodeTally()):
+        self.organism = organism
+        self.plddt = plddt
+        self.cath_code_tally = cath_code_tally
 
 ## --- Driver variables (spark_job.py) --- ##
 
