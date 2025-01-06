@@ -8,12 +8,12 @@ from pipeline.merizo_adapter import merizo_adapter
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
 import os
-from typing import List
+from typing import List, Optional
 
 spark = SparkSession.builder.appName(APPLICATION_NAME).getOrCreate()
 sc = spark.sparkContext
 
-def process_file(input_file_path: str, file_content: str, organism: str, dataset: str) -> AnalysisResults:
+def process_file(input_file_path: str, file_content: str, organism: str, dataset: str) -> Optional[AnalysisResults]:
     """
     Processes a PDB file in the dataset using the Merizo Search pipeline.
     """
@@ -35,24 +35,31 @@ def combine_variance(n1, mean1, var1, n2, mean2, var2) -> float:
     sum_sq_diff_2 = n2 * var2 + n2 * (mean2 - new_mean) ** 2
     return (sum_sq_diff_1 + sum_sq_diff_2) / (n1 + n2)
 
-def combine_results(dict_1: AnalysisResults, dict_2: AnalysisResults) -> AnalysisResults:
+def combine_results(dict_1: Optional[AnalysisResults], dict_2: Optional[AnalysisResults]) -> Optional[AnalysisResults]:
     """
     Combines the results from two dictionaries returned by worker tasks into a single dictionary.
     """
-    new_dict = AnalysisResults(organism=dict_1.organism)
+    if dict_1 and dict_2:
+        new_dict = AnalysisResults(organism=dict_1.organism)
 
-    # Combine the plddt values
-    new_dict.plddt.size = dict_1.plddt.size + dict_2.plddt.size
-    new_dict.plddt.mean = combine_means(dict_1.plddt.size, dict_1.plddt.mean, dict_2.plddt.size, dict_2.plddt.mean)
-    new_dict.plddt.variance = combine_variance(dict_1.plddt.size, dict_1.plddt.mean, dict_1.plddt.variance, dict_2.plddt.size, dict_2.plddt.mean, dict_2.plddt.variance)
+        # Combine the plddt values
+        new_dict.plddt.size = dict_1.plddt.size + dict_2.plddt.size
+        new_dict.plddt.mean = combine_means(dict_1.plddt.size, dict_1.plddt.mean, dict_2.plddt.size, dict_2.plddt.mean)
+        new_dict.plddt.variance = combine_variance(dict_1.plddt.size, dict_1.plddt.mean, dict_1.plddt.variance, dict_2.plddt.size, dict_2.plddt.mean, dict_2.plddt.variance)
 
-    # Combine the tallies for cath_code
-    for key in list(dict_1.cath_code_tally.keys()) + list(dict_2.cath_code_tally.keys()):
-        new_dict.cath_code_tally[key] = dict_1.cath_code_tally.get(key, 0) + dict_2.cath_code_tally.get(key, 0)
+        # Combine the tallies for cath_code
+        for key in list(dict_1.cath_code_tally.keys()) + list(dict_2.cath_code_tally.keys()):
+            new_dict.cath_code_tally[key] = dict_1.cath_code_tally.get(key, 0) + dict_2.cath_code_tally.get(key, 0)
 
-    return new_dict
+        return new_dict
+    elif dict_1:
+        return dict_1
+    elif dict_2:
+        return dict_2
+    else:
+        return None
 
-def distribute_tasks(organism: str, dataset: str, hdfs_dir: str) -> AnalysisResults:
+def distribute_tasks(organism: str, dataset: str, hdfs_dir: str) -> Optional[AnalysisResults]:
     """
     Distributes tasks to process files in the dataset. Each task is handled by a worker.
     The result is reduced to a single dictionary containing the  {cath_code: count} results and the list of mean plddt values.
@@ -66,30 +73,14 @@ def write_summary_to_file(results: AnalysisResults, output_file_path: str) -> No
     """
     Writes the summary of the {cath_code: count} results to a CSV file.
     """
-    data = []
     column_headers = ["cath_code", "count"]
-    for key in results.cath_code_tally.keys():
-        if key != AnalysisResults.MEAN_PLDDT_KEY:
-            data.append([key, results[key]])
-    sorted_data = sorted(data, key=lambda x: x[1])
+    data = [[key, value] for key, value in results.cath_code_tally.items()]
+    sorted_data = sorted(data, key=lambda x: x[0])
     df = spark.createDataFrame(sorted_data, column_headers).coalesce(1)
     df.write.option("header", "true").mode("overwrite").csv(output_file_path)
     df.show()
 
-# def get_plddt_means(organism: str, means_list: List[float]) -> PlddtMeans:
-#     """
-#     Calculates the mean and standard deviation of the plddt values for the organism.
-#     Args:
-#         organism: the organism name
-#         means_list: the list of plddt mean values
-#     Returns:
-#         a PlddtMeans tuple
-#     """
-#     mean_value = mean(means_list)
-#     stdev_value = pstdev(means_list)
-#     return PlddtMeans(organism=organism, mean=mean_value, stdev=stdev_value)
-
-def write_plddt_means_to_file(means_data: List[AnalysisResults], output_file_path: str) -> None:
+def write_plddt_means_to_file(data: List[AnalysisResults], output_file_path: str) -> None:
     """
     Writes the mean and standard deviation of the plddt values to a CSV file.
     Args:
@@ -97,7 +88,7 @@ def write_plddt_means_to_file(means_data: List[AnalysisResults], output_file_pat
         output_file_path: the path to the output file
     """
     column_headers = ["organism", "mean plddt", "plddt std"]
-    df_data = [[d.organism, d.plddt.mean, d.plddt.variance ** 0.5] for d in means_data]
+    df_data = [[d.organism, d.plddt.mean, d.plddt.variance ** 0.5] for d in data]
     df = spark.createDataFrame(df_data, column_headers).coalesce(1)
     df.write.option("header", "true").mode("overwrite").csv(output_file_path)
     df.show()
@@ -108,9 +99,12 @@ def run_analysis(job_inputs: JobInputs) -> AnalysisResults:
     """
     # Distribute tasks to workers and collect the results
     results = distribute_tasks(job_inputs.organism, job_inputs.dataset, job_inputs.hdfs_dir)
-    write_summary_to_file(results, job_inputs.summary_output_path)
-    write_plddt_means_to_file([results], job_inputs.means_output_path)
-    return results
+    if (results):
+        write_summary_to_file(results, job_inputs.summary_output_path)
+        write_plddt_means_to_file([results], job_inputs.means_output_path)
+        return results
+    else:
+        return AnalysisResults()
 
 # Testing the functionality
 run_analysis(TEST_JOB_INPUTS)

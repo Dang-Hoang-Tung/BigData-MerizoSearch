@@ -8,6 +8,7 @@ from pipeline.globals import *
 from pipeline.pipeline_script import pipeline as run_merizo_pipeline
 import os
 import re
+from typing import Optional
 
 def read_parsed_file_to_dict(parsed_file_id: str, organism: str) -> AnalysisResults:
     """
@@ -33,7 +34,7 @@ def read_parsed_file_to_dict(parsed_file_id: str, organism: str) -> AnalysisResu
                 results.cath_code_tally[cath_id] = int(count)
     return results
 
-def merizo_adapter(input_file_id: str, input_file_content: str, organism: str, dataset: str) -> AnalysisResults:
+def merizo_adapter(input_file_id: str, input_file_content: str, organism: str, dataset: str) -> Optional[AnalysisResults]:
     """
     The Merizo adapter encapsulates the Merizo pipeline. It sets up the environment,
     runs the pipeline script to process the input file, and returns the parsed results.
@@ -58,8 +59,8 @@ def merizo_adapter(input_file_id: str, input_file_content: str, organism: str, d
     # Remove the input file on disk after processing and recording
     os.remove(input_file_id)
 
-    if parsed_file_id is None:
-        return {}
-
-    # Read and return the parsed results
-    return read_parsed_file_to_dict(parsed_file_id, organism)
+    if parsed_file_id:
+        # Read and return the parsed results
+        return read_parsed_file_to_dict(parsed_file_id, organism)
+    else:
+        return None
