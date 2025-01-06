@@ -30,7 +30,7 @@ def read_parsed_file_to_dict(parsed_file_id: str) -> AnalysisResults:
             # Read the subsequent lines for cath_id and count
             else:
                 [cath_id, count] = line.strip().split(',')
-                results.tally[cath_id] = int(count)
+                results.cath_code_tally[cath_id] = int(count)
     return results
 
 def merizo_adapter(input_file_id: str, input_file_content: str, dataset: str) -> AnalysisResults:
