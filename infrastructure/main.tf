@@ -109,4 +109,16 @@ module "worker_vm" {
   root_disk_size         = var.worker_vm_hdd
   root_disk_image        = data.harvester_image.img.id
   cloud_init_secret_name = harvester_cloudinit_secret.cloud_config.name
+
+  tags = {
+    # Ingress configurations
+    condenser_ingress_isEnabled      = true
+    condenser_ingress_isAllowed      = true
+    condenser_ingress_hdfs_hostname  = "hdfs-${count.index + 1}-${var.username}"
+    condenser_ingress_hdfs_port      = 9864
+    condenser_ingress_yarn_hostname  = "yarn-${count.index + 1}-${var.username}"
+    condenser_ingress_yarn_port      = 8042
+    condenser_ingress_spark_hostname = "spark-${count.index + 1}-${var.username}"
+    condenser_ingress_spark_port     = 4040
+  }
 }

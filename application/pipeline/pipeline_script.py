@@ -1,6 +1,7 @@
 from subprocess import Popen, PIPE
 import os
 from pipeline.results_parser import run_results_parser
+from typing import Optional
 
 def run_command(cmd: list) -> None:
     """
@@ -34,7 +35,7 @@ def run_merizo_search(input_file_id: str) -> None:
            ]
     run_command(cmd)
 
-def pipeline(input_file_id: str) -> str:
+def pipeline(input_file_id: str) -> Optional[str]:
     """
     Executes the Merizo Search pipeline for the input file.
 
