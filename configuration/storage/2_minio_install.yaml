@@ -21,7 +21,7 @@
       src: "./files/generate_certs.sh"
       dest: "/root/generate_certs.sh"  
   - name: Create certificate
-    ansible.builtin.shell: "bash /root/generate_certs.sh {{inventory_hostname}}"
+    ansible.builtin.shell: "bash /root/generate_certs.sh {{ansible_host}}"
   - name: Create minio settings directory
     ansible.builtin.file:
       name: "/home/minio-user/.minio"
@@ -75,7 +75,7 @@
       group: almalinux
       mode: "0600"
       src: "/root/minio.crt"
-      dest: "/home/almalinux/.mc/certs/{{inventory_hostname}}.crt"
+      dest: "/home/almalinux/.mc/certs/{{ansible_host}}.crt"
   - name: Copy the certificate to the almalinux mc CA directory
     ansible.builtin.copy:
       remote_src: true
