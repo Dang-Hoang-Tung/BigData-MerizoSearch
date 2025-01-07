@@ -1,0 +1,3 @@
+---
+- import_playbook: 1_disk_mount.yaml
+- import_playbook: 2_minio_install.yaml

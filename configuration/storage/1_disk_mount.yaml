@@ -1,0 +1,51 @@
+- name: Set up second disk
+  hosts: storagegroup
+  become: true
+  become_user: root
+  vars:
+    data_disk_dir: /home/almalinux/data
+  tasks:
+    - name: Check if data disk is mounted
+      ansible.builtin.stat:
+        path: "{{ data_disk_dir }}"
+      register: data_disk
+    - name: End play if disk is already mounted
+      meta: end_play
+      when: data_disk.stat.exists
+
+    - name: Partition disk
+      community.general.parted:
+        name: "data"
+        device: "/dev/vdb"
+        label: "gpt"
+        number: 1
+        state: present
+        fs_type: xfs
+    - name: Format disk
+      community.general.filesystem:
+        dev: "/dev/vdb1"
+        fstype: "xfs"
+        state: present
+    - name: Make mount point
+      ansible.builtin.file:
+        path: /data
+        state: directory
+    - name: XFS mount
+      ansible.posix.mount:
+        boot: true
+        state: mounted
+        fstype: xfs
+        src: "/dev/vdb1"
+        path: /data
+        opts: defaults
+    - name: Make user directory
+      ansible.builtin.file:
+        path: /data/almalinux
+        state: directory
+        owner: almalinux
+    - name: Link in home directory
+      ansible.builtin.file:
+        dest: /home/almalinux/data
+        state: link
+        src: /data/almalinux
+        owner: almalinux
