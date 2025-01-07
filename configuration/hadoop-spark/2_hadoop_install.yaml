@@ -102,7 +102,7 @@
           </property>
           <property>
               <name>yarn.nodemanager.resource.memory-mb</name>
-              <value>29696</value>
+              <value>29013</value>
           </property>
           <property>
               <name>yarn.nodemanager.resource.cpu-vcores</name>
@@ -113,7 +113,7 @@
               <value>7424</value>
           </property>
           <property>
-              <name>yarn.scheduler.maximum-allocation-vcores</name>
+              <name>yarn.scheduler.minimum-allocation-vcores</name>
               <value>1</value>
           </property>
         state: present
@@ -131,18 +131,6 @@
               <name>mapred.framework.name</name>
               <value>yarn</value>
           </property>
-          <property>
-              <name>yarn.app.mapreduce.am.env</name>
-              <value>HADOOP_MAPRED_HOME=$HADOOP_HOME</value>
-          </property>
-          <property>
-              <name>mapreduce.map.env</name>
-              <value>HADOOP_MAPRED_HOME=$HADOOP_HOME</value>
-          </property>
-          <property>
-              <name>mapreduce.reduce.env</name>
-              <value>HADOOP_MAPRED_HOME=$HADOOP_HOME</value>
-          </property>
         state: present
     - name: Configure capacity-scheduler.xml
       ansible.builtin.blockinfile:
@@ -154,11 +142,11 @@
               <name>yarn.scheduler.capacity.resource-calculator</name>
               <value>org.apache.hadoop.yarn.util.resource.DominantResourceCalculator</value>
           </property>
-          <property>
-              <name>yarn.scheduler.capacity.root.default.capacity</name>
-              <value>100</value>
-          </property>
         state: present
+          # <property>
+          #     <name>yarn.scheduler.capacity.root.default.capacity</name>
+          #     <value>100</value>
+          # </property>
         
     - name: Fix JAVA_HOME in Hadoop Env script
       ansible.builtin.blockinfile:
