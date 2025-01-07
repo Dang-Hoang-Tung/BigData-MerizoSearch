@@ -1,7 +1,7 @@
 - name: Set up minio
+  hosts: storagegroup
   become: true
   become_user: root
-  hosts: all
   tasks: 
   - name: Create minio group
     ansible.builtin.group:
@@ -104,7 +104,7 @@
       mode: "0755"
   - name: Set up environment file
     ansible.builtin.template:
-      src: files/minio.j2
+      src: templates/minio.j2
       dest:  /etc/default/minio
       owner: root
       group: minio-user
@@ -123,7 +123,7 @@
       dest: "/home/almalinux/miniopass"
   - name: Setup mc for local access
     ansible.builtin.template:
-      src: files/mc_config.json.j2
+      src: templates/mc_config.json.j2
       dest:  /home/almalinux/.mc/config.json
       owner: almalinux
       group: almalinux
