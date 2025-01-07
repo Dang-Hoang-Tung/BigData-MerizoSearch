@@ -62,36 +62,37 @@ module "mgmt_vm" {
 }
 
 # Storage VM
-# module "storage_vm" {
-#   source = "./modules/virtual-machine"
+module "storage_vm" {
+  count = 0
+  source = "./modules/virtual-machine"
 
-#   name        = local.storage_vm_name
-#   description = "Cluster storage node"
-#   namespace   = var.namespace
+  name        = local.storage_vm_name
+  description = "Cluster storage node"
+  namespace   = var.namespace
 
-#   cores = var.storage_vm_cores
-#   ram   = var.storage_vm_ram
+  cores = var.storage_vm_cores
+  ram   = var.storage_vm_ram
 
-#   network_name           = var.network_name
-#   root_disk_size         = var.storage_vm_hdd
-#   root_disk_image        = data.harvester_image.img.id
-#   data_disk_size         = var.storage_vm_hdd2
-#   cloud_init_secret_name = harvester_cloudinit_secret.cloud_config.name
+  network_name           = var.network_name
+  root_disk_size         = var.storage_vm_hdd
+  root_disk_image        = data.harvester_image.img.id
+  data_disk_size         = var.storage_vm_hdd2
+  cloud_init_secret_name = harvester_cloudinit_secret.cloud_config.name
 
-#   tags = {
-#     # Ingress configurations
-#     condenser_ingress_isEnabled                  = true
-#     condenser_ingress_isAllowed                  = true
-#     condenser_ingress_os_hostname                = "${var.username}-s3"
-#     condenser_ingress_os_port                    = 9000
-#     condenser_ingress_os_protocol                = "https"
-#     condenser_ingress_os_nginx_proxy-body-size   = "100000m"
-#     condenser_ingress_cons_hostname              = "${var.username}-cons"
-#     condenser_ingress_cons_port                  = 9001
-#     condenser_ingress_cons_protocol              = "https"
-#     condenser_ingress_cons_nginx_proxy-body-size = "100000m"
-#   }
-# }
+  tags = {
+    # Ingress configurations
+    condenser_ingress_isEnabled                  = true
+    condenser_ingress_isAllowed                  = true
+    condenser_ingress_os_hostname                = "${var.username}-s3"
+    condenser_ingress_os_port                    = 9000
+    condenser_ingress_os_protocol                = "https"
+    condenser_ingress_os_nginx_proxy-body-size   = "100000m"
+    condenser_ingress_cons_hostname              = "${var.username}-cons"
+    condenser_ingress_cons_port                  = 9001
+    condenser_ingress_cons_protocol              = "https"
+    condenser_ingress_cons_nginx_proxy-body-size = "100000m"
+  }
+}
 
 # Worker VMs
 module "worker_vm" {
