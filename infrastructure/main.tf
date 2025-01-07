@@ -63,7 +63,6 @@ module "mgmt_vm" {
 
 # Storage VM
 module "storage_vm" {
-  count = 0
   source = "./modules/virtual-machine"
 
   name        = local.storage_vm_name
