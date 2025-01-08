@@ -79,7 +79,7 @@ def distribute_tasks(organism: str, dataset: str, hdfs_dir: str) -> Optional[Ana
     Distributes tasks to process files in the dataset. Each task is handled by a worker.
     The result is reduced to a single dictionary containing the  {cath_code: count} results and the list of mean plddt values.
     """
-    rdd = sc.wholeTextFiles(hdfs_dir, minPartitions=MIN_PARTITIONS)
+    rdd = sc.wholeTextFiles(hdfs_dir)
     print(f"=== {dataset}_NUM_PARTITIONS: {rdd.getNumPartitions()} ===")
     mapper = lambda x: process_file(x[0], x[1], organism, dataset)
     return rdd.map(mapper).reduce(combine_results)
