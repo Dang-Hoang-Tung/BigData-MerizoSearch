@@ -50,14 +50,20 @@ module "mgmt_vm" {
 
   tags = {
     # Ingress configurations
-    condenser_ingress_isEnabled      = true
-    condenser_ingress_isAllowed      = true
-    condenser_ingress_hdfs_hostname  = "hdfs-${var.username}"
-    condenser_ingress_hdfs_port      = 9870
-    condenser_ingress_yarn_hostname  = "yarn-${var.username}"
-    condenser_ingress_yarn_port      = 8088
-    condenser_ingress_spark_hostname = "spark-${var.username}"
-    condenser_ingress_spark_port     = 4040
+    condenser_ingress_isEnabled             = true
+    condenser_ingress_isAllowed             = true
+    condenser_ingress_hdfs_hostname         = "hdfs-${var.username}"
+    condenser_ingress_hdfs_port             = 9870
+    condenser_ingress_yarn_hostname         = "yarn-${var.username}"
+    condenser_ingress_yarn_port             = 8088
+    condenser_ingress_spark_hostname        = "spark-${var.username}"
+    condenser_ingress_spark_port            = 4040
+    condenser_ingress_prometheus_hostname   = "prometheus-${var.username}"
+    condenser_ingress_prometheus_port       = 9090
+    condenser_ingress_nodeexporter_hostname = "nodeexporter-${var.username}"
+    condenser_ingress_nodeexporter_port     = 9100
+    condenser_ingress_grafana_hostname      = "grafana-${var.username}"
+    condenser_ingress_grafana_port          = 3000
   }
 }
 
@@ -120,5 +126,11 @@ module "worker_vm" {
     condenser_ingress_yarn_port      = 8042
     condenser_ingress_spark_hostname = "spark-${count.index + 1}-${var.username}"
     condenser_ingress_spark_port     = 4040
+    condenser_ingress_prometheus_hostname   = "prometheus-${count.index + 1}-${var.username}"
+    condenser_ingress_prometheus_port       = 9090
+    condenser_ingress_nodeexporter_hostname = "nodeexporter-${count.index + 1}-${var.username}"
+    condenser_ingress_nodeexporter_port     = 9100
+    condenser_ingress_grafana_hostname      = "grafana-${count.index + 1}-${var.username}"
+    condenser_ingress_grafana_port          = 3000
   }
 }
