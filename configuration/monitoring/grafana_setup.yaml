@@ -1,0 +1,10 @@
+- name: Start the Node Exporter server
+  hosts: mgmtgroup
+  become: true
+  become_user: root
+  tasks:
+    - name: Start and enable Grafana service
+      systemd:
+        name: grafana-server
+        state: started
+        enabled: true
