@@ -21,6 +21,6 @@
 
     - name: Check if Node Exporter is accessible
       ansible.builtin.uri:
-        url: http://127.0.0.1:9090
+        url: http://127.0.0.1:9100
         method: GET
         status_code: 200
