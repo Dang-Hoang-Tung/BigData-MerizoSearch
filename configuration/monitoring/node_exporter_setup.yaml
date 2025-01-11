@@ -6,7 +6,9 @@
     - name : Install Node Exporter
       ansible.builtin.dnf:
         name:
-          - prometheus-node-exporter
+          # - prometheus-node-exporter
+          # - golang-github-prometheus
+          - golang-github-prometheus-node-exporter
         state: latest
     - name: Set up Node Exporter systemd service
       ansible.builtin.template:

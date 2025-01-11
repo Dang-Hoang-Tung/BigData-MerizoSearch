@@ -28,7 +28,7 @@
           - python3-pip
           - python3-virtualenv
           - java-11-openjdk
-          # - golang
+          - golang
           # - golang-github-prometheus
           # - golang-github-prometheus-node-exporter
           # - grafana

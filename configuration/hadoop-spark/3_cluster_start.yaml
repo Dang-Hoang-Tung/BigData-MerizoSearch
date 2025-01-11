@@ -27,6 +27,6 @@
       when: namenode_status.rc == 1 or resourcemanager_status.rc == 1
 
     - name: Start (or restart) Hadoop daemons
-      ansible.builtin.shell: 
+      ansible.builtin.shell:
         chdir: "{{ hadoop_sbin_dir }}"
         cmd: nohup ./start-dfs.sh && nohup ./start-yarn.sh
