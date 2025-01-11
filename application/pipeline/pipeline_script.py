@@ -10,6 +10,7 @@ def run_command(cmd: list) -> None:
     """
     env = os.environ.copy()  # Copy the current environment
     env['PWD'] = os.getcwd()  # Explicitly set PWD
+    env["MPLCONFIGDIR"] = "/tmp/matplotlib_config"
     p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, cwd=os.getcwd(), env=env)
     out, err = p.communicate()
     print(out.decode("utf-8"))

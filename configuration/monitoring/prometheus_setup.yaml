@@ -42,13 +42,13 @@
     - name: Reload systemd config files
       ansible.builtin.shell: systemctl daemon-reload
 
-    - name: Start and enable prometheus service
+    - name: Start and enable Prometheus service
       ansible.builtin.service:
         name: prometheus
         state: started
         enabled: yes
 
-    - name: Check if prometheus is accessible
+    - name: Check if Prometheus is accessible
       ansible.builtin.uri:
         url: http://localhost:9090
         method: GET

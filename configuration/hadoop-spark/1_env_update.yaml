@@ -18,5 +18,4 @@
           export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
           export HADOOP_CONF_DIR={{ hadoop_config_dir }}
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HADOOP_HOME/lib/native
-          export MPLCONFIGDIR=/home/almalinux/.config/matplotlib
         state: present
