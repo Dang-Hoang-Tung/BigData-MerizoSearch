@@ -122,15 +122,15 @@ def run_analysis(job_inputs: JobInputs) -> AnalysisResults:
         return AnalysisResults()
 
 # # Testing the functionality
-# run_analysis(TEST_JOB_INPUTS)
+run_analysis(TEST_JOB_INPUTS)
 
 # Process the ECOLI dataset
 ecoli_results = run_analysis(ECOLI_JOB_INPUTS)
 
 # Process the HUMAN dataset
-human_results = run_analysis(HUMAN_JOB_INPUTS)
+# human_results = run_analysis(HUMAN_JOB_INPUTS)
 
 # Write the combined means data to a file
-write_plddt_means_to_file([human_results, ecoli_results], COMBINED_MEANS_OUTPUT_PATH)
+# write_plddt_means_to_file([human_results, ecoli_results], COMBINED_MEANS_OUTPUT_PATH)
 
 print("=== SPARK JOB COMPLETED SUCCESSFULLY - APP ID {app_id} ===")
