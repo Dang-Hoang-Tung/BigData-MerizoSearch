@@ -1,3 +1,4 @@
 ---
-- import_playbook: node_exporter_setup.yaml
-- import_playbook: prometheus_setup.yaml
+- import_playbook: node_exporter.yaml
+- import_playbook: prometheus.yaml
+- import_playbook: grafana.yaml
