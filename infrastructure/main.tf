@@ -134,7 +134,7 @@ module "worker_vm" {
     condenser_ingress_hdfs_port             = 9864
     condenser_ingress_yarn_hostname         = "${local.hostnames.yarn}-${count.index + 1}"
     condenser_ingress_yarn_port             = 8042
-    condenser_ingress_nodeexporter_hostname = "${local.hostnames.nodeexporter}-${count.index + 1}"
+    condenser_ingress_nodeexporter_hostname = "${local.hostnames.node_exporter}-${count.index + 1}"
     condenser_ingress_nodeexporter_port     = 9100
   }
 }
