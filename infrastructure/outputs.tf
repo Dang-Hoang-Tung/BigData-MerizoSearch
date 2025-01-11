@@ -21,3 +21,7 @@ output "worker_vm_ips" {
 output "worker_vm_ids" {
   value = module.worker_vm[*].id
 }
+
+output "hostnames" {
+  value = local.hostnames
+}

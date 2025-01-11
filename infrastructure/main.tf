@@ -1,11 +1,25 @@
 /* Core modules of the data analysis cluster. */
 
-# Reusable names
+# Reusable variables
 locals {
-  cloud_config_name     = "${var.cluster_name}-cloud-config-${random_id.secret.hex}"
-  mgmt_vm_name          = "${var.cluster_name}-mgmt-${random_id.secret.hex}"
-  storage_vm_name       = "${var.cluster_name}-storage-${random_id.secret.hex}"
-  worker_vm_name_prefix = "${var.cluster_name}-worker"
+  # Cluster ID
+  cluster_id = random_id.secret.hex
+  # Cloud config name
+  cloud_config_name = "${var.cluster_name}-cloud-config-${local.cluster_id}"
+  # VM names
+  mgmt_vm_name    = "${var.cluster_name}-mgmt-${local.cluster_id}"
+  storage_vm_name = "${var.cluster_name}-storage-${local.cluster_id}"
+  worker_vm_name  = "${var.cluster_name}-worker-${local.cluster_id}"
+  # Hostnames
+  hostnames = {
+    hdfs          = "hdfs-${var.username}-${local.cluster_id}"
+    yarn          = "yarn-${var.username}-${local.cluster_id}"
+    prometheus    = "prometheus-${var.username}-${local.cluster_id}"
+    node_exporter = "nodeexporter-${var.username}-${local.cluster_id}"
+    grafana       = "grafana-${var.username}-${local.cluster_id}"
+    minio_s3      = "s3-${var.username}-${local.cluster_id}"
+    minio_console = "cons-${var.username}-${local.cluster_id}"
+  }
 }
 
 data "harvester_ssh_key" "mysshkey" {
@@ -50,20 +64,16 @@ module "mgmt_vm" {
 
   tags = {
     # Ingress configurations
-    condenser_ingress_isEnabled             = true
-    condenser_ingress_isAllowed             = true
-    condenser_ingress_hdfs_hostname         = "hdfs-${var.username}"
-    condenser_ingress_hdfs_port             = 9870
-    condenser_ingress_yarn_hostname         = "yarn-${var.username}"
-    condenser_ingress_yarn_port             = 8088
-    condenser_ingress_spark_hostname        = "spark-${var.username}"
-    condenser_ingress_spark_port            = 4040
-    condenser_ingress_prometheus_hostname   = "prometheus-${var.username}"
-    condenser_ingress_prometheus_port       = 9090
-    condenser_ingress_nodeexporter_hostname = "nodeexporter-${var.username}"
-    condenser_ingress_nodeexporter_port     = 9100
-    condenser_ingress_grafana_hostname      = "grafana-${var.username}"
-    condenser_ingress_grafana_port          = 3000
+    condenser_ingress_isEnabled           = true
+    condenser_ingress_isAllowed           = true
+    condenser_ingress_hdfs_hostname       = local.hostnames.hdfs
+    condenser_ingress_hdfs_port           = 9870
+    condenser_ingress_yarn_hostname       = local.hostnames.yarn
+    condenser_ingress_yarn_port           = 8088
+    condenser_ingress_prometheus_hostname = local.hostnames.prometheus
+    condenser_ingress_prometheus_port     = 9090
+    condenser_ingress_grafana_hostname    = local.hostnames.grafana
+    condenser_ingress_grafana_port        = 3000
   }
 }
 
@@ -88,11 +98,11 @@ module "storage_vm" {
     # Ingress configurations
     condenser_ingress_isEnabled                  = true
     condenser_ingress_isAllowed                  = true
-    condenser_ingress_os_hostname                = "s3-${var.username}"
+    condenser_ingress_os_hostname                = local.hostnames.minio_s3
     condenser_ingress_os_port                    = 9000
     condenser_ingress_os_protocol                = "https"
     condenser_ingress_os_nginx_proxy-body-size   = "100000m"
-    condenser_ingress_cons_hostname              = "cons-${var.username}"
+    condenser_ingress_cons_hostname              = local.hostnames.minio_console
     condenser_ingress_cons_port                  = 9001
     condenser_ingress_cons_protocol              = "https"
     condenser_ingress_cons_nginx_proxy-body-size = "100000m"
@@ -104,8 +114,8 @@ module "worker_vm" {
   source = "./modules/virtual-machine"
   count  = var.worker_vm_count
 
-  name        = "${local.worker_vm_name_prefix}-${count.index + 1}-${random_id.secret.hex}"
-  description = "Cluster compute node"
+  name        = "${local.worker_vm_name}-${count.index + 1}"
+  description = "Cluster compute node ${count.index + 1}"
   namespace   = var.namespace
 
   cores = var.worker_vm_cores
@@ -120,17 +130,11 @@ module "worker_vm" {
     # Ingress configurations
     condenser_ingress_isEnabled             = true
     condenser_ingress_isAllowed             = true
-    condenser_ingress_hdfs_hostname         = "hdfs-${count.index + 1}-${var.username}"
+    condenser_ingress_hdfs_hostname         = "${local.hostnames.hdfs}-${count.index + 1}"
     condenser_ingress_hdfs_port             = 9864
-    condenser_ingress_yarn_hostname         = "yarn-${count.index + 1}-${var.username}"
+    condenser_ingress_yarn_hostname         = "${local.hostnames.yarn}-${count.index + 1}"
     condenser_ingress_yarn_port             = 8042
-    condenser_ingress_spark_hostname        = "spark-${count.index + 1}-${var.username}"
-    condenser_ingress_spark_port            = 4040
-    condenser_ingress_prometheus_hostname   = "prometheus-${count.index + 1}-${var.username}"
-    condenser_ingress_prometheus_port       = 9090
-    condenser_ingress_nodeexporter_hostname = "nodeexporter-${count.index + 1}-${var.username}"
+    condenser_ingress_nodeexporter_hostname = "${local.hostnames.nodeexporter}-${count.index + 1}"
     condenser_ingress_nodeexporter_port     = 9100
-    condenser_ingress_grafana_hostname      = "grafana-${count.index + 1}-${var.username}"
-    condenser_ingress_grafana_port          = 3000
   }
 }
