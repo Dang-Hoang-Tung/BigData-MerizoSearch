@@ -3,6 +3,11 @@
   become: true
   become_user: root
   tasks:
+    - name : Install Node Exporter
+      ansible.builtin.dnf:
+        name:
+          - prometheus-node-exporter
+        state: latest
     - name: Set up Node Exporter systemd service
       ansible.builtin.template:
         src: templates/node_exporter.service.j2

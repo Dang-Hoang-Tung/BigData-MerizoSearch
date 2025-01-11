@@ -3,6 +3,11 @@
   become: true
   become_user: root
   tasks:
+    - name: Install Prometheus
+      ansible.builtin.dnf:
+        name:
+          - prometheus
+        state: latest
     - name: Create Prometheus directories
       ansible.builtin.file:
         path: "{{ item }}"
