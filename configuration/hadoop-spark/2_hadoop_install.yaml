@@ -143,10 +143,6 @@
               <value>org.apache.hadoop.yarn.util.resource.DominantResourceCalculator</value>
           </property>
         state: present
-          # <property>
-          #     <name>yarn.scheduler.capacity.root.default.capacity</name>
-          #     <value>100</value>
-          # </property>
         
     - name: Fix JAVA_HOME in Hadoop Env script
       ansible.builtin.blockinfile:
