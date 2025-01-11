@@ -6,7 +6,7 @@
     - name: Install Prometheus
       ansible.builtin.dnf:
         name:
-          - prometheus
+          - golang-github-prometheus
         state: latest
     - name: Create Prometheus directories
       ansible.builtin.file:
