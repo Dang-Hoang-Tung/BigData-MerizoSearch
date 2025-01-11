@@ -14,6 +14,7 @@ class JobInputs:
     hdfs_dir: str
     summary_output_path: str
     means_output_path: str
+    min_partitions: int
 
 class CathCodeTally(dict):
     """
@@ -50,14 +51,14 @@ class AnalysisResults:
 ## --- Driver variables (spark_job.py) --- ##
 
 APPLICATION_NAME = "Merizo Search Pipeline"
-MIN_PARTITIONS = 36
 
 TEST_JOB_INPUTS = JobInputs(
     organism="test",
     dataset="test",
     hdfs_dir="/test",
     summary_output_path="/test_cath_summary",
-    means_output_path="/test_plDDT_means"
+    means_output_path="/test_plDDT_means",
+    min_partitions=9
 )
 
 ECOLI_JOB_INPUTS = JobInputs(
@@ -65,7 +66,8 @@ ECOLI_JOB_INPUTS = JobInputs(
     dataset="UP000000625_83333_ECOLI_v4",
     hdfs_dir="/UP000000625_83333_ECOLI_v4",
     summary_output_path="/ecoli_cath_summary",
-    means_output_path="/ecoli_plDDT_means"
+    means_output_path="/ecoli_plDDT_means",
+    min_partitions=18
 )
 
 HUMAN_JOB_INPUTS = JobInputs(
@@ -73,7 +75,8 @@ HUMAN_JOB_INPUTS = JobInputs(
     dataset="UP000005640_9606_HUMAN_v4",
     hdfs_dir="/UP000005640_9606_HUMAN_v4",
     summary_output_path="/human_cath_summary",
-    means_output_path="/human_plDDT_means"
+    means_output_path="/human_plDDT_means",
+    min_partitions=36
 )
 
 COMBINED_MEANS_OUTPUT_PATH = "/plDDT_means"

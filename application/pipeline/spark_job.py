@@ -74,12 +74,12 @@ def combine_results(dict_1: Optional[AnalysisResults], dict_2: Optional[Analysis
     else:
         return None
 
-def distribute_tasks(organism: str, dataset: str, hdfs_dir: str) -> Optional[AnalysisResults]:
+def distribute_tasks(organism: str, dataset: str, hdfs_dir: str, min_partitions: int) -> Optional[AnalysisResults]:
     """
     Distributes tasks to process files in the dataset. Each task is handled by a worker.
     The result is reduced to a single dictionary containing the  {cath_code: count} results and the list of mean plddt values.
     """
-    rdd = sc.wholeTextFiles(hdfs_dir, minPartitions=MIN_PARTITIONS)
+    rdd = sc.wholeTextFiles(hdfs_dir, minPartitions=min_partitions)
     print(f"=== {dataset}_NUM_PARTITIONS: {rdd.getNumPartitions()} ===")
     mapper = lambda x: process_file(x[0], x[1], organism, dataset)
     return rdd.map(mapper).reduce(combine_results)
@@ -113,7 +113,7 @@ def run_analysis(job_inputs: JobInputs) -> AnalysisResults:
     Runs the analysis job on the specified dataset and writes the results to the output files.
     """
     # Distribute tasks to workers and collect the results
-    results = distribute_tasks(job_inputs.organism, job_inputs.dataset, job_inputs.hdfs_dir)
+    results = distribute_tasks(job_inputs.organism, job_inputs.dataset, job_inputs.hdfs_dir, job_inputs.min_partitions)
     if (results):
         write_summary_to_file(results, job_inputs.summary_output_path)
         write_plddt_means_to_file([results], job_inputs.means_output_path)
