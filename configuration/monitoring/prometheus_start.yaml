@@ -2,12 +2,21 @@
   hosts: mgmtgroup
   become: true
   become_user: root
-  # vars:
-  #   prometheus_service_name: prometheus
-  #   prometheus_service_state: started
-  #   prometheus_service_enabled: true
   tasks:
+    - name: Set up Prometheus config
+      ansible.builtin.template:
+        src: templates/prometheus.yml.j2
+        dest: /etc/prometheus/prometheus.yml
+        owner: root
+        group: root
+        mode: 0644
     - name: Start the Prometheus daemon
       ansible.builtin.shell: nohup prometheus --config.file=/etc/prometheus/prometheus.yml
+
+- name: Start the NodeExporter server
+  hosts: workergroup
+  become: true
+  become_user: root
+  tasks:
     - name: Start the NodeExporter daemon
       ansible.builtin.shell: nohup node_exporter
