@@ -25,8 +25,10 @@ ANSIBLE_WORKER_NODE_PREFIX = "workernode"
 
 def get_terraform_output(ips_key):
     working_dir = os.getcwd()
+    current_script_dir = os.path.dirname(os.path.abspath(__file__))
+
     try:
-        os.chdir(TERRAFORM_DIRECTORY)
+        os.chdir(f"{current_script_dir}/../{TERRAFORM_DIRECTORY}")
         result = subprocess.run(['terraform', 'output', '--json', ips_key], capture_output=True, encoding='UTF-8')
         terraform_output = json.loads(result.stdout)
         return terraform_output
