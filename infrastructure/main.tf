@@ -33,7 +33,7 @@ data "harvester_image" "img" {
 }
 
 resource "random_id" "secret" {
-  byte_length = 8
+  byte_length = 5
 }
 
 # Cloud config with secret
