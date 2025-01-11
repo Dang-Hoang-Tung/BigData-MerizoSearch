@@ -1,0 +1,26 @@
+- name: Start the Node Exporter server
+  hosts: workergroup
+  become: true
+  become_user: root
+  tasks:
+    - name: Set up Node Exporter systemd service
+      ansible.builtin.template:
+        src: templates/node_exporter.service.j2
+        dest: /etc/systemd/system/node_exporter.service
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Reload systemd config files
+      ansible.builtin.shell: systemctl daemon-reload
+
+    - name: Start and enable Node Exporter service
+      ansible.builtin.service:
+        name: node_exporter
+        state: started
+        enabled: yes
+
+    - name: Check if Node Exporter is accessible
+      ansible.builtin.uri:
+        url: http://127.0.0.1:9090
+        method: GET
+        status_code: 200

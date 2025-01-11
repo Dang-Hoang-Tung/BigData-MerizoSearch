@@ -1,0 +1,19 @@
+[Unit]
+Description=node_exporter
+Documentation=https://prometheus.io/docs/introduction/overview/
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/bin/node_exporter
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=2
+StartLimitInterval=0
+SyslogIdentifier=node_exporter
+
+[Install]
+WantedBy=multi-user.target

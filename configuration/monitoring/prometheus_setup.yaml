@@ -1,22 +1,55 @@
-- name: Start the NodeExporter server
-  hosts: workergroup
-  become: true
-  become_user: root
-  tasks:
-    - name: Start the NodeExporter daemon
-      ansible.builtin.shell: nohup node_exporter
-
 - name: Start the Prometheus server
   hosts: mgmtgroup
   become: true
   become_user: root
   tasks:
-    - name: Set up Prometheus config
+    - name: Create Prometheus directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+      loop:
+        - /etc/prometheus
+        - /var/lib/prometheus
+        - /var/lib/prometheus/rules
+        - /var/lib/prometheus/rules.s
+        - /var/lib/prometheus/file_sd
+        - /data/prometheus
+    - name: Set up Prometheus config file
       ansible.builtin.template:
         src: templates/prometheus.yml.j2
         dest: /etc/prometheus/prometheus.yml
         owner: root
         group: root
-        mode: 0644
-    - name: Start the Prometheus daemon
-      ansible.builtin.shell: nohup prometheus --config.file=/etc/prometheus/prometheus.yml
+        mode: '0644'
+    - name: Set up alert config file
+      ansible.builtin.template:
+        src: templates/alert_rules.yml.j2
+        dest: /etc/prometheus/alert.rules.yml
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Set up Prometheus systemd service
+      ansible.builtin.template:
+        src: templates/prometheus.service.j2
+        dest: /etc/systemd/system/prometheus.service
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Reload systemd config files
+      ansible.builtin.shell: systemctl daemon-reload
+
+    - name: Start and enable prometheus service
+      ansible.builtin.service:
+        name: prometheus
+        state: started
+        enabled: yes
+
+    - name: Check if prometheus is accessible
+      ansible.builtin.uri:
+        url: http://localhost:9090
+        method: GET
+        status_code: 200

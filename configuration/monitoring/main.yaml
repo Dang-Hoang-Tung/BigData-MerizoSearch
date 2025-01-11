@@ -1,0 +1,3 @@
+---
+- import_playbook: node_exporter_setup.yaml
+- import_playbook: prometheus_setup.yaml

@@ -1,0 +1,19 @@
+[Unit]
+Description=prometheus
+Documentation=https://prometheus.io/docs/introduction/overview/
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/bin/prometheus --config.file=/etc/prometheus/prometheus.yml
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=2
+StartLimitInterval=0
+SyslogIdentifier=prometheus
+
+[Install]
+WantedBy=multi-user.target
