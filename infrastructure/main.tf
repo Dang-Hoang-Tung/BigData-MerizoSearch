@@ -130,10 +130,10 @@ module "worker_vm" {
     # Ingress configurations
     condenser_ingress_isEnabled             = true
     condenser_ingress_isAllowed             = true
-    condenser_ingress_hdfs_hostname         = "${local.hostnames.hdfs}-${count.index + 1}"
-    condenser_ingress_hdfs_port             = 9864
-    condenser_ingress_yarn_hostname         = "${local.hostnames.yarn}-${count.index + 1}"
-    condenser_ingress_yarn_port             = 8042
+    # condenser_ingress_hdfs_hostname         = "${local.hostnames.hdfs}-${count.index + 1}"
+    # condenser_ingress_hdfs_port             = 9864
+    # condenser_ingress_yarn_hostname         = "${local.hostnames.yarn}-${count.index + 1}"
+    # condenser_ingress_yarn_port             = 8042
     condenser_ingress_nodeexporter_hostname = "${local.hostnames.node_exporter}-${count.index + 1}"
     condenser_ingress_nodeexporter_port     = 9100
   }
