@@ -3,11 +3,19 @@
   become: true
   become_user: root
   tasks:
+    - name: Install Prometheus RPM
+      ansible.builtin.dnf:
+        name:
+          - https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+        state: latest
+    - name: Import RPM GPG keys
+      ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
     - name: Install Prometheus
       ansible.builtin.dnf:
         name:
           - golang-github-prometheus
         state: latest
+        disable_gpg_check: true
 
     - name: Create Prometheus directories
       ansible.builtin.file:
