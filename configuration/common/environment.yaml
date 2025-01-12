@@ -30,9 +30,6 @@
           - python3-virtualenv
           - java-11-openjdk
           - golang
-          # - golang-github-prometheus
-          # - golang-github-prometheus-node-exporter
-          # - grafana
           # - https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
         state: latest
 

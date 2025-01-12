@@ -3,13 +3,20 @@
   become: true
   become_user: root
   tasks:
-    - name : Install Node Exporter
+    - name: Install Prometheus Node Exporter
       ansible.builtin.dnf:
         name:
-          # - prometheus-node-exporter
-          # - golang-github-prometheus
+          - https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+        state: latest
+    - name: Import RPM GPG keys
+      ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
+    - name: Install Prometheus Node Exporter
+      ansible.builtin.dnf:
+        name:
           - golang-github-prometheus-node-exporter
         state: latest
+        disable_gpg_check: true
+
     - name: Set up Node Exporter systemd service
       ansible.builtin.template:
         src: templates/node_exporter.service.j2
