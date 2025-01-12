@@ -17,6 +17,7 @@
           - htop
           - git
           - patch
+          - zip
           - bzip2
           - make
           - nfs-utils

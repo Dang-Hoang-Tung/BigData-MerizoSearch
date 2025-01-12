@@ -1,0 +1,52 @@
+---
+- name: Create output directories
+  hosts: mgmtgroup
+  vars_files:
+    - variables.yaml
+  tasks:
+    - name: Create ecoli output directory
+      ansible.builtin.shell: "hdfs dfs -mkdir -p {{ hdfs_ecoli_outputs }}"
+    - name: Create human output directory
+      ansible.builtin.shell: "hdfs dfs -mkdir -p {{ hdfs_human_outputs }}"
+
+- name: Sync outputs to HDFS
+  hosts: workergroup
+  vars_files:
+    - variables.yaml
+  tasks:
+    - name: Copy ecoli data to HDFS
+      ansible.builtin.shell:
+        chdir: "{{ local_ecoli_dir }}"
+        cmd: |
+          hdfs dfs -put -f *.tsv {{ hdfs_ecoli_outputs }}
+          hdfs dfs -put -f *.parsed {{ hdfs_ecoli_outputs }}
+
+    - name: Copy human data to HDFS
+      ansible.builtin.shell:
+        chdir: "{{ local_human_dir }}"
+        cmd: |
+          hdfs dfs -put -f *.tsv {{ hdfs_human_outputs }}
+          hdfs dfs -put -f *.parsed {{ hdfs_human_outputs }}
+
+- name: Collect outputs into storage node
+  hosts: storagegroup
+  vars_files:
+    - variables.yaml
+  tasks:
+    - name: Pull ecoli data from HDFS
+      ansible.builtin.shell:
+        chdir: "{{ storage_data_dir }}"
+        cmd: |
+          hdfs dfs -get -f {{ hdfs_ecoli_outputs }} {{ storage_ecoli_tmp_dir }}
+          hdfs dfs -get -f {{ hdfs_ecoli_cath_summary }}
+    - name: Pull human data from HDFS
+      ansible.builtin.shell:
+        chdir: "{{ storage_data_dir }}"
+        cmd: |
+          hdfs dfs -get -f {{ hdfs_human_outputs }} {{ storage_human_tmp_dir }}
+          hdfs dfs -get -f {{ hdfs_human_cath_summary }}
+    - name: Pull plDDT_means from HDFS
+      ansible.builtin.shell:
+        chdir: "{{ storage_data_dir }}"
+        cmd: |
+          hdfs dfs -get -f {{ hdfs_plDDT_means }}

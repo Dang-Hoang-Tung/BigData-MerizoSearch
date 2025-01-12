@@ -1,0 +1,30 @@
+---
+minio_outputs_bucket: local/merizo_outputs
+storage_data_dir: /home/almalinux/data
+# Local directory containing processed data in each worker
+local_ecoli_dir: /home/almalinux/merizo_files/UP000000625_83333_ECOLI_v4
+local_human_dir: /home/almalinux/merizo_files/UP000005640_9606_HUMAN_v4
+# HDFS directory to upload processed data
+hdfs_ecoli_outputs: /ecoli_outputs
+hdfs_human_outputs: /human_outputs
+# Temporary directories to pull processed data
+storage_ecoli_tmp_dir: ecoli_outputs
+storage_human_tmp_dir: human_outputs
+# Directories created by Spark job
+hdfs_ecoli_cath_summary: /ecoli_cath_summary
+hdfs_human_cath_summary: /human_cath_summary
+hdfs_plDDT_means: /plDDT_means
+# Local directories to Spark data
+storage_ecoli_cath_summary: ecoli_cath_summary
+storage_human_cath_summary: human_cath_summary
+storage_plDDT_means: plDDT_means
+# CSV files to extract
+ecoli_cath_summary_csv: ecoli_cath_summary.csv
+human_cath_summary_csv: human_cath_summary.csv
+plDDT_means_csv: plDDT_means.csv
+# Zip files to be served
+ecoli_outputs_zip: ecoli_outputs.zip
+human_outputs_zip: human_outputs.zip
+ecoli_cath_summary_zip: ecoli_cath_summary.zip
+human_cath_summary_zip: human_cath_summary.zip
+plDDT_means_zip: plDDT_means.zip

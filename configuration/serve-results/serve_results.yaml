@@ -1,0 +1,46 @@
+---
+- name: Prepare minio bucket
+  hosts: storagegroup
+  vars_files:
+    - variables.yaml
+  tasks:
+    - name: Create bucket
+      ansible.builtin.shell: "mc mb {{ minio_outputs_bucket }}"
+    - name: Make bucket public
+      ansible.builtin.shell: "mc anonymous set download {{ minio_outputs_bucket }}"
+
+- name: Serve outputs
+  hosts: storagegroup
+  vars_files:
+    - variables.yaml
+  tasks:
+    - name: Zip output data
+      ansible.builtin.shell:
+        chdir: "{{ storage_data_dir }}"
+        cmd: |
+          zip -r {{ ecoli_zip_file }} {{ storage_ecoli_tmp_dir }}
+          zip -r {{ human_zip_file }} {{ storage_human_tmp_dir }}
+
+    - name: Extract summary data
+      ansible.builtin.shell:
+        chdir: "{{ storage_data_dir }}"
+        cmd: |
+          find {{ storage_ecoli_cath_summary }} -type f -name "*.csv" -exec mv {} {{ ecoli_cath_summary_csv }} \;
+          find {{ storage_human_cath_summary }} -type f -name "*.csv" -exec mv {} {{ human_cath_summary_csv }} \;
+          find {{ storage_plDDT_means }} -type f -name "*.csv" -exec mv {} {{ plDDT_means_csv }} \;
+
+    - name: Zip summary data
+      ansible.builtin.shell:
+        chdir: "{{ storage_data_dir }}"
+        cmd: |
+          zip -r {{ ecoli_cath_summary_zip }} {{ ecoli_cath_summary_csv }}
+          zip -r {{ human_cath_summary_zip }} {{ human_cath_summary_csv }}
+          zip -r {{ plDDT_means_zip }} {{ plDDT_means_csv }}
+
+    - name: Upload data
+      ansible.builtin.shell: |
+        mc cp {{ ecoli_zip_file }} {{ minio_outputs_bucket }}
+        mc cp {{ human_zip_file }} {{ minio_outputs_bucket }}
+        mc cp {{ ecoli_cath_summary_zip }} {{ minio_outputs_bucket }}
+        mc cp {{ human_cath_summary_zip }} {{ minio_outputs_bucket }}
+        mc cp {{ plDDT_means_zip }} {{ minio_outputs_bucket }}
