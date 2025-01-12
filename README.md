@@ -133,7 +133,7 @@ About the configuration pipeline:
   spark-submit --deploy-mode cluster --master yarn application/pipeline/spark_job.py
   ```
 - Spark will deploy the pipeline to worker nodes, which will run the Merizo Search application.
-- The output .tsv and .parsed files are produced on the worker nodes, they are uploaded and served separately to the Spark application. (Ansible script is serve-results/main.yaml)
+- The output ".tsv" and ".parsed" files are produced on the worker nodes, they are uploaded and served separately to the Spark application. (Ansible script is `serve-results/main.yaml`)
 - The summary outputs are returned to the Spark driver and uploaded to HDFS, these can be inspected immediately when the job finishes on the Web UI using the HDFS hostname (see above).
 
 ## Testing a fresh cluster
