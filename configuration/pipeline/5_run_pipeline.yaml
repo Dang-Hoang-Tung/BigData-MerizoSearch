@@ -1,0 +1,7 @@
+- name: Execute pipeline
+  hosts: mgmtgroup
+  tasks:
+    - name: Run distributed Merizo Search pipeline
+      ansible.builtin.shell:
+        chdir: /home/almalinux/
+        cmd: spark-submit --deploy-mode cluster --master yarn application/pipeline/spark_job.py
