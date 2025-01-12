@@ -38,9 +38,11 @@
           zip -r {{ plDDT_means_zip }} {{ plDDT_means_csv }}
 
     - name: Upload data
-      ansible.builtin.shell: |
-        mc put {{ ecoli_outputs_zip }} {{ minio_outputs_bucket }}
-        mc put {{ human_outputs_zip }} {{ minio_outputs_bucket }}
-        mc put {{ ecoli_cath_summary_zip }} {{ minio_outputs_bucket }}
-        mc put {{ human_cath_summary_zip }} {{ minio_outputs_bucket }}
-        mc put {{ plDDT_means_zip }} {{ minio_outputs_bucket }}
+      ansible.builtin.shell:
+        chdir: "{{ storage_data_dir }}"
+        cmd: |
+          mc put {{ ecoli_outputs_zip }} {{ minio_outputs_bucket }}
+          mc put {{ human_outputs_zip }} {{ minio_outputs_bucket }}
+          mc put {{ ecoli_cath_summary_zip }} {{ minio_outputs_bucket }}
+          mc put {{ human_cath_summary_zip }} {{ minio_outputs_bucket }}
+          mc put {{ plDDT_means_zip }} {{ minio_outputs_bucket }}
