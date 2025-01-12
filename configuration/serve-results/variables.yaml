@@ -1,5 +1,5 @@
 ---
-minio_outputs_bucket: local/merizo_outputs
+minio_outputs_bucket: local/merizo-outputs
 storage_data_dir: /home/almalinux/data
 # Local directory containing processed data in each worker
 local_ecoli_dir: /home/almalinux/merizo_files/UP000000625_83333_ECOLI_v4

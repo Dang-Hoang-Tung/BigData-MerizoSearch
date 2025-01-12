@@ -3,7 +3,7 @@
   become: true
   become_user: root
   tasks:
-    - name: Install Prometheus
+    - name: Install Prometheus RPM
       ansible.builtin.dnf:
         name:
           - https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
