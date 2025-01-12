@@ -7,9 +7,9 @@ locals {
   # Cloud config name
   cloud_config_name = "${var.cluster_name}-cloud-config-${local.cluster_id}"
   # VM names
-  mgmt_vm_name    = "${var.cluster_name}-${local.cluster_id}-mgmt"
-  storage_vm_name = "${var.cluster_name}-${local.cluster_id}-storage"
-  worker_vm_name  = "${var.cluster_name}-${local.cluster_id}-worker"
+  mgmt_vm_name    = "${var.cluster_name}-mgmt-${local.cluster_id}"
+  storage_vm_name = "${var.cluster_name}-storage-${local.cluster_id}"
+  worker_vm_name  = "${var.cluster_name}-worker"
   # Hostnames
   hostnames = {
     hdfs          = "hdfs-${var.username}-${local.cluster_id}"
@@ -114,7 +114,7 @@ module "worker_vm" {
   source = "./modules/virtual-machine"
   count  = var.worker_vm_count
 
-  name        = "${local.worker_vm_name}-${count.index + 1}"
+  name        = "${local.worker_vm_name}-${count.index + 1}-${local.cluster_id}"
   description = "Cluster compute node ${count.index + 1}"
   namespace   = var.namespace
 
