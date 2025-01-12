@@ -2,9 +2,13 @@
 
 This repository contains the solution to the coursework for module COMP0235 Engineering for Data Analysis 1 (2024/2025).
 
-## Configured Machines
+## Current State
 
-This repository contains the tfstate file 
+This repository contains the tfstate file of the current setup. In order to run the pipeline on the configured cluster,
+simply clone this repository.
+
+To deploy a new cluster, clone this repository and delete the `terraform.tfstate` and `terraform.tfstate.backup` files
+in the 
 
 ## Directory Structure
 
