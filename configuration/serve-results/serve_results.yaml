@@ -39,8 +39,8 @@
 
     - name: Upload data
       ansible.builtin.shell: |
-        mc cp {{ ecoli_outputs_zip }} {{ minio_outputs_bucket }}
-        mc cp {{ human_outputs_zip }} {{ minio_outputs_bucket }}
-        mc cp {{ ecoli_cath_summary_zip }} {{ minio_outputs_bucket }}
-        mc cp {{ human_cath_summary_zip }} {{ minio_outputs_bucket }}
-        mc cp {{ plDDT_means_zip }} {{ minio_outputs_bucket }}
+        mc put {{ ecoli_outputs_zip }} {{ minio_outputs_bucket }}
+        mc put {{ human_outputs_zip }} {{ minio_outputs_bucket }}
+        mc put {{ ecoli_cath_summary_zip }} {{ minio_outputs_bucket }}
+        mc put {{ human_cath_summary_zip }} {{ minio_outputs_bucket }}
+        mc put {{ plDDT_means_zip }} {{ minio_outputs_bucket }}
