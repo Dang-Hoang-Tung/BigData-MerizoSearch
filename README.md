@@ -147,3 +147,12 @@ About the configuration pipeline:
   ```
   (cd configuration && ansible-playbook -i inventory.py index.yaml)
   ```
+
+# Monitoring
+
+Monitoring is mostly automated, however, the creation of Grafana dashboards are not yet automated. Therefore, to use dashboards, simply access the Grafana endpoint and log in with these credentials:
+
+- username: admin
+- password: admin
+
+Then create a data source using the Prometheus endpoint (ignore TLS verification), and create a dashboard. I like to use code "1860" for the Node Exporter Full template, but any will do.
