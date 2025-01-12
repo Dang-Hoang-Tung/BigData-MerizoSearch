@@ -1,3 +1,4 @@
 # Ignore terraform installation modules
 **.terraform
 **.DS_STORE
+**/.generated
