@@ -30,3 +30,4 @@
         url: http://127.0.0.1:9100
         method: GET
         status_code: 200
+      ignore_errors: true

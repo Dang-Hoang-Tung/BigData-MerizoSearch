@@ -5,13 +5,13 @@
       ansible.builtin.shell:
         cmd: ls /home/almalinux/data/UP000000625_83333_ECOLI_v4 -1 | wc -l
       register: ecolidb_disk
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Check ECOLIDB data in HDFS
       ansible.builtin.shell:
         cmd: hdfs dfs -count /UP000000625_83333_ECOLI_v4 | awk '{print $2}'
       register: ecolidb_hdfs
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: End play if file count is the same (already synced)
       meta: end_play
@@ -20,7 +20,7 @@
     - name: Delete ECOLIDB data in HDFS
       ansible.builtin.shell:
         cmd: hdfs dfs -rm -r /UP000000625_83333_ECOLI_v4
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Copy ECOLIDB data to HDFS
       ansible.builtin.shell:
@@ -35,13 +35,13 @@
       ansible.builtin.shell:
         cmd: ls /home/almalinux/data/UP000005640_9606_HUMAN_v4 -1 | wc -l
       register: humandb_disk
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Check HUMANDB data in HDFS
       ansible.builtin.shell:
         cmd: hdfs dfs -count /UP000005640_9606_HUMAN_v4 | awk '{print $2}'
       register: humandb_hdfs
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: End play if file count is the same (already synced)
       meta: end_play
@@ -50,7 +50,7 @@
     - name: Delete HUMANDB data in HDFS
       ansible.builtin.shell:
         cmd: hdfs dfs -rm -r /UP000005640_9606_HUMAN_v4
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Copy HUMANDB data to HDFS
       ansible.builtin.shell:
