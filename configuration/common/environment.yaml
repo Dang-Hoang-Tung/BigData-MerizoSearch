@@ -30,20 +30,7 @@
           - python3-virtualenv
           - java-11-openjdk
           - golang
-          # - https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
         state: latest
-
-    # - name: Import RPM GPG keys
-    #   ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
-    #   # ansible.builtin.shell: rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-9
-
-    # - name: Install Prometheus and Grafana
-    #   ansible.builtin.dnf:
-    #     name:
-    #       - golang-github-prometheus
-    #       - golang-github-prometheus-node-exporter
-    #     disable_gpg_check: true
-    #     state: latest
 
     # Customize locale and time-zone
     - name: Set en-GB localization

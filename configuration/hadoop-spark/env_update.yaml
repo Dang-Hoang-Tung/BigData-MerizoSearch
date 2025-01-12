@@ -1,4 +1,4 @@
-- name: Install tools and customize environment
+- name: Customize environment for Hadoop
   hosts: all
   become: true
   become_user: root
@@ -19,3 +19,10 @@
           export HADOOP_CONF_DIR={{ hadoop_config_dir }}
           export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HADOOP_HOME/lib/native
         state: present
+    # Create hdfs directory
+    - name: Add hdfs directory
+      ansible.builtin.file:
+        path: "{{ hdfs_dir }}"
+        owner: almalinux
+        group: almalinux
+        state: directory
