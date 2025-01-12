@@ -5,11 +5,11 @@ locals {
   # Cluster ID
   cluster_id = random_id.secret.hex
   # Cloud config name
-  cloud_config_name = "${var.cluster_name}-${local.cluster_id}-cloud-config"
+  cloud_config_name = "${var.cluster_name}-cloud-config-${local.cluster_id}"
   # VM names
-  mgmt_vm_name    = "${var.cluster_name}-mgmt-${local.cluster_id}"
-  storage_vm_name = "${var.cluster_name}-storage-${local.cluster_id}"
-  worker_vm_name  = "${var.cluster_name}-worker"
+  mgmt_vm_name    = "${var.cluster_name}-${local.cluster_id}-mgmt"
+  storage_vm_name = "${var.cluster_name}-${local.cluster_id}-storage"
+  worker_vm_name  = "${var.cluster_name}-${local.cluster_id}-worker"
   # Hostnames
   hostnames = {
     hdfs          = "hdfs-${var.username}-${local.cluster_id}"
