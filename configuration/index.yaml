@@ -1,0 +1,7 @@
+---
+- import_playbook: common/main.yaml
+- import_playbook: storage/main.yaml
+- import_playbook: monitoring/main.yaml
+- import_playbook: hadoop-spark/main.yaml
+- import_playbook: pipeline/main.yaml
+- import_playbook: serve-results/main.yaml
