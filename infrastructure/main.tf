@@ -7,9 +7,9 @@ locals {
   # Cloud config name
   cloud_config_name = "${var.cluster_name}-${local.cluster_id}-cloud-config"
   # VM names
-  mgmt_vm_name    = "${var.cluster_name}-${local.cluster_id}-mgmt"
-  storage_vm_name = "${var.cluster_name}-${local.cluster_id}-storage"
-  worker_vm_name  = "${var.cluster_name}-${local.cluster_id}-worker"
+  mgmt_vm_name    = "${var.cluster_name}-mgmt-${local.cluster_id}"
+  storage_vm_name = "${var.cluster_name}-storage-${local.cluster_id}"
+  worker_vm_name  = "${var.cluster_name}-worker"
   # Hostnames
   hostnames = {
     hdfs          = "hdfs-${var.username}-${local.cluster_id}"
@@ -33,7 +33,7 @@ data "harvester_image" "img" {
 }
 
 resource "random_id" "secret" {
-  byte_length = 4
+  byte_length = 8
 }
 
 # Cloud config with secret
