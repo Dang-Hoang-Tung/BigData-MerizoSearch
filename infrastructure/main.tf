@@ -12,13 +12,13 @@ locals {
   worker_vm_name  = "${var.cluster_name}-worker"
   # Hostnames
   hostnames = {
-    hdfs          = "hdfs-${var.username}-${local.cluster_id}"
-    yarn          = "yarn-${var.username}-${local.cluster_id}"
-    prometheus    = "prometheus-${var.username}-${local.cluster_id}"
-    node_exporter = "nodeexporter-${var.username}-${local.cluster_id}"
-    grafana       = "grafana-${var.username}-${local.cluster_id}"
-    minio_s3      = "s3-${var.username}-${local.cluster_id}"
-    minio_console = "cons-${var.username}-${local.cluster_id}"
+    hdfs          = "hdfs-${local.cluster_id}"
+    yarn          = "yarn-${local.cluster_id}"
+    prometheus    = "prometheus-${local.cluster_id}"
+    node_exporter = "nodeexporter-${local.cluster_id}"
+    grafana       = "grafana-${local.cluster_id}"
+    minio_s3      = "s3-${local.cluster_id}"
+    minio_console = "cons-${local.cluster_id}"
   }
 }
 

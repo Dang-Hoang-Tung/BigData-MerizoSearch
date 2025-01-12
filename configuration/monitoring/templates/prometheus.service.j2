@@ -8,7 +8,7 @@ After=network-online.target
 Type=simple
 User=root
 Group=root
-ExecStart=/usr/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.retention.size=1GB --collector.systemd --collector.processes
+ExecStart=/usr/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.retention.size=1GB
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
 RestartSec=2
