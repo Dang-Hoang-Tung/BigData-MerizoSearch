@@ -5,7 +5,7 @@
     - variables.yaml
   tasks:
     - name: Create bucket
-      ansible.builtin.shell: "mc mb {{ minio_outputs_bucket }}"
+      ansible.builtin.shell: "mc mb --ignore-existing {{ minio_outputs_bucket }}"
     - name: Make bucket public
       ansible.builtin.shell: "mc anonymous set download {{ minio_outputs_bucket }}"
 
