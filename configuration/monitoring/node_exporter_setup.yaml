@@ -30,7 +30,7 @@
     - name: Start and enable Node Exporter service
       ansible.builtin.service:
         name: node_exporter
-        state: started
+        state: restarted
         enabled: yes
 
     - name: Check if Node Exporter is accessible

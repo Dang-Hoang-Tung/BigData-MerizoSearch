@@ -59,7 +59,7 @@
     - name: Start and enable Prometheus service
       ansible.builtin.service:
         name: prometheus
-        state: started
+        state: restarted
         enabled: yes
 
     - name: Check if Prometheus is accessible
