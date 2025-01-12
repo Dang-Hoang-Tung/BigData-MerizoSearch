@@ -18,8 +18,8 @@
       ansible.builtin.shell:
         chdir: "{{ storage_data_dir }}"
         cmd: |
-          zip -r {{ ecoli_zip_file }} {{ storage_ecoli_tmp_dir }}
-          zip -r {{ human_zip_file }} {{ storage_human_tmp_dir }}
+          zip -r {{ ecoli_outputs_zip }} {{ storage_ecoli_tmp_dir }}
+          zip -r {{ human_outputs_zip }} {{ storage_human_tmp_dir }}
 
     - name: Extract summary data
       ansible.builtin.shell:
@@ -39,8 +39,8 @@
 
     - name: Upload data
       ansible.builtin.shell: |
-        mc cp {{ ecoli_zip_file }} {{ minio_outputs_bucket }}
-        mc cp {{ human_zip_file }} {{ minio_outputs_bucket }}
+        mc cp {{ ecoli_outputs_zip }} {{ minio_outputs_bucket }}
+        mc cp {{ human_outputs_zip }} {{ minio_outputs_bucket }}
         mc cp {{ ecoli_cath_summary_zip }} {{ minio_outputs_bucket }}
         mc cp {{ human_cath_summary_zip }} {{ minio_outputs_bucket }}
         mc cp {{ plDDT_means_zip }} {{ minio_outputs_bucket }}
