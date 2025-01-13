@@ -50,6 +50,12 @@ Append these files to the URL to curl or download them:
 - ⁠⁠human_cath_summary.zip
 - ⁠⁠plDDT_means.zip
 
+In case this S3 endpoint is not working (intermittent issues?), you can access the files in the MinIO console:
+`cons-1af451c59142fd90.comp0235.condenser.arc.ucl.ac.uk/merizo-outputs/`
+
+The credentials are:
+- username: merizo
+- password: merizo
 
 **VM IDs and IPs**
 
