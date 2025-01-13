@@ -154,6 +154,7 @@ About the configuration pipeline:
 ## Testing a fresh cluster
 
 - Clone this repo to your machine, ensure the conditions mentioned above are met.
+- DELETE THE `infrastructure/terraform.tfstate` file!
 - Initialise and provision the infrastructure
   ```
   (cd infrastructure && terraform init && terraform apply -auto-approve)
