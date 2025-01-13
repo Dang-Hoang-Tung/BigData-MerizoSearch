@@ -40,7 +40,16 @@ These are the default specifications. They adhere to the constraints of the prov
 
 **S3 storage for outputs**
 
-This cluster has been pre-configured to run the pipeline. It is serving the required outputs at `s3-6f80ac3cd9783ccf.comp0235.condenser.arc.ucl.ac.uk/merizo-outputs`.
+This cluster has been pre-configured to run the pipeline. It is serving the required outputs at `s3-1af451c59142fd90.comp0235.condenser.arc.ucl.ac.uk/merizo-outputs/`.
+_(You may need to ignore SSL certificate, there seems to be some problem with Condenser's signing CA)_
+
+Append these files to the URL to curl or download them:
+- ⁠ecoli_cath_summary.zip
+- ⁠⁠human_outputs.zip
+- ⁠⁠ecoli_outputs.zip
+- ⁠⁠human_cath_summary.zip
+- ⁠⁠plDDT_means.zip
+
 
 **VM IDs and IPs**
 
@@ -48,26 +57,26 @@ The IDs and IPs are provided below as per terraform outputs. The `lecturer_key.p
 
 ```
 mgmt_vm_ids = [
-"ucabhtd-comp0235-ns/merizo-search-mgmt-6f80ac3cd9783ccf",
+  "ucabhtd-comp0235-ns/merizo-search-mgmt-1af451c59142fd90",
 ]
 mgmt_vm_ips = [
-"10.134.12.127",
+  "10.134.12.136",
 ]
 storage_vm_ids = [
-"ucabhtd-comp0235-ns/merizo-search-storage-6f80ac3cd9783ccf",
+  "ucabhtd-comp0235-ns/merizo-search-storage-1af451c59142fd90",
 ]
 storage_vm_ips = [
-"10.134.12.132",
+  "10.134.13.0",
 ]
 worker_vm_ids = [
-"ucabhtd-comp0235-ns/merizo-search-worker-1-6f80ac3cd9783ccf",
-"ucabhtd-comp0235-ns/merizo-search-worker-2-6f80ac3cd9783ccf",
-"ucabhtd-comp0235-ns/merizo-search-worker-3-6f80ac3cd9783ccf",
+  "ucabhtd-comp0235-ns/merizo-search-worker-1-1af451c59142fd90",
+  "ucabhtd-comp0235-ns/merizo-search-worker-2-1af451c59142fd90",
+  "ucabhtd-comp0235-ns/merizo-search-worker-3-1af451c59142fd90",
 ]
 worker_vm_ips = [
-"10.134.12.86",
-"10.134.12.91",
-"10.134.12.111",
+  "10.134.12.218",
+  "10.134.12.216",
+  "10.134.12.217",
 ]
 ```
 
@@ -77,13 +86,13 @@ Many services are running as part of the pipeline. The hostnames below can be us
 
 ```
 hostnames = {
-"grafana" = "grafana-6f80ac3cd9783ccf"
-"hdfs" = "hdfs-6f80ac3cd9783ccf"
-"minio_console" = "cons-6f80ac3cd9783ccf"
-"minio_s3" = "s3-6f80ac3cd9783ccf"
-"node_exporter" = "nodeexporter-6f80ac3cd9783ccf"
-"prometheus" = "prometheus-6f80ac3cd9783ccf"
-"yarn" = "yarn-6f80ac3cd9783ccf"
+  "grafana" = "grafana-1af451c59142fd90"
+  "hdfs" = "hdfs-1af451c59142fd90"
+  "minio_console" = "cons-1af451c59142fd90"
+  "minio_s3" = "s3-1af451c59142fd90"
+  "node_exporter" = "nodeexporter-1af451c59142fd90"
+  "prometheus" = "prometheus-1af451c59142fd90"
+  "yarn" = "yarn-1af451c59142fd90"
 }
 ```
 
