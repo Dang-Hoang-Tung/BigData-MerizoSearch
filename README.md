@@ -54,8 +54,8 @@ In case this S3 endpoint is not working (intermittent issues?), you can access t
 `cons-1af451c59142fd90.comp0235.condenser.arc.ucl.ac.uk/merizo-outputs/`
 
 The credentials are:
-- username: merizo
-- password: merizo
+- username: merizo-search
+- password: merizo-search
 
 **VM IDs and IPs**
 
