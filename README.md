@@ -1,6 +1,6 @@
 # Overview
 
-Implemented a 6-node distributed data pipeline (Spark, Hadoop) for protein segmentation.
+A 6-node distributed data pipeline (Spark, Hadoop) for protein segmentation.
 
 Tuned partitioning and IO to reach 10× throughput for 23 GB of data (from AlphaFold), with job retries. 
 
