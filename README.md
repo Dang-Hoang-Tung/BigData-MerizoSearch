@@ -1,6 +1,10 @@
 # Overview
 
-This repository contains the solution to the coursework for module COMP0235 Engineering for Data Analysis 1 (2024/2025).
+Implemented a 6-node distributed data pipeline (Spark, Hadoop) for protein segmentation.
+
+Tuned partitioning and IO to reach 10× throughput for 23 GB of data (from AlphaFold), with job retries. 
+
+Deployed with Terraform/Ansible, monitored via Prometheus/Grafana.
 
 ## Directory Structure
 
